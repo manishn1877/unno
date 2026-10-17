@@ -2,7 +2,15 @@
 <html lang="en" class="h-full">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="description" content="Play a fun online card game with friends: rooms, bots, voice chat, memes and stickers.">
+    <meta name="theme-color" content="#0B0F19">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta property="og:title" content="UNO! - play with friends">
+    <meta property="og:description" content="Create a room, share the 4-digit code and play together.">
+    <meta property="og:type" content="website">
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%23FF3B30'/%3E%3Ctext x='50' y='64' font-size='42' font-weight='900' text-anchor='middle' fill='%23FFCC00' font-family='Arial'%3EUNO%3C/text%3E%3C/svg%3E">
     <title>UNO!</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -327,6 +335,61 @@
         #specPop { position: fixed; left: .5rem; top: 2.6rem; z-index: 56; width: 12rem; max-height: 14rem; overflow-y: auto; background: rgba(15,23,42,.97); border: 1px solid rgba(255,255,255,.2); border-radius: .9rem; padding: .55rem .65rem; color: #fff; box-shadow: 0 10px 30px rgba(0,0,0,.5); }
         body.is-landscape #specEye { top: .4rem; }
         body.spectating #chatBtnTop, body.spectating #micBtnTop { display: none; }
+        /* scroll inside the room screen when the content is taller than the phone */
+        #homeView, #lobbyView { justify-content: safe center !important; }
+        main { scrollbar-width: thin !important; scrollbar-color: rgba(250,204,21,.6) transparent; -webkit-overflow-scrolling: touch; overscroll-behavior: contain; padding-bottom: env(safe-area-inset-bottom); }
+        main::-webkit-scrollbar { display: block !important; width: 5px; }
+        main::-webkit-scrollbar-thumb { background: rgba(250,204,21,.6); border-radius: 4px; }
+        body.in-game main { scrollbar-width: none !important; }
+        body.in-game main::-webkit-scrollbar { display: none !important; }
+
+        /* ===== PATCH 4: XP ring, achievements, customise, challenges ===== */
+        .xp-lv { position: absolute; top: -.55rem; left: -.55rem; min-width: 1.6rem; height: 1.6rem; padding: 0 .3rem; border-radius: 9999px; background: #facc15; color: #0f172a; border: 2px solid #fff; font-family: Fredoka, sans-serif; font-weight: 900; font-size: .8rem; display: flex; align-items: center; justify-content: center; z-index: 25; box-shadow: 0 2px 6px rgba(0,0,0,.5); pointer-events: none; }
+        .xp-ring { position: absolute; pointer-events: none; transform: rotate(-90deg); z-index: 15; filter: drop-shadow(0 0 4px rgba(250,204,21,.5)); }
+        .ach-card { container-type: inline-size; position: relative; width: 100%; aspect-ratio: 2 / 3; transform-origin: 50% -4%; cursor: pointer; border-radius: 12px; }
+        .ach-face { position: absolute; inset: 0; border-radius: 12px; border: 3px solid #fff; box-shadow: 0 6px 14px rgba(0,0,0,.45); overflow: hidden; display: flex; align-items: center; justify-content: center; }
+        .ach-mid { width: 74%; height: 56%; background: rgba(255,255,255,.93); border-radius: 50%; transform: rotate(-14deg); display: flex; align-items: center; justify-content: center; box-shadow: inset 0 0 0 3px rgba(0,0,0,.12); }
+        .ach-mid span { font-family: Fredoka, sans-serif; font-weight: 900; font-size: 34cqw; line-height: 1; transform: rotate(14deg); text-shadow: 2px 2px 0 rgba(0,0,0,.18); }
+        .ach-c { position: absolute; font-family: Fredoka, sans-serif; font-weight: 900; color: #fff; font-size: 13cqw; text-shadow: 1px 1px 0 rgba(0,0,0,.45); line-height: 1; }
+        .ach-c.tl { top: 6cqw; left: 7cqw; } .ach-c.br { bottom: 6cqw; right: 7cqw; transform: rotate(180deg); }
+        .ach-card.locked .ach-face { filter: grayscale(1) brightness(.5); }
+        .ach-lock { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-size: 26cqw; z-index: 3; text-shadow: 0 2px 6px #000; pointer-events: none; }
+        @keyframes achSwing { 0% { transform: rotate(0); } 15% { transform: rotate(20deg); } 35% { transform: rotate(-16deg); } 55% { transform: rotate(10deg); } 75% { transform: rotate(-5deg); } 100% { transform: rotate(0); } }
+        .ach-card.swing { animation: achSwing 1s ease-in-out; }
+        @keyframes achShake { 0%,100% { transform: translateX(0); } 25% { transform: translateX(-6px); } 75% { transform: translateX(6px); } }
+        .ach-card.shake { animation: achShake .35s ease-in-out 2; }
+        @keyframes achFlip { from { transform: perspective(700px) rotateY(95deg) scale(.55); opacity: 0; } to { transform: perspective(700px) rotateY(0) scale(1); opacity: 1; } }
+        .ach-big { width: min(52vw, 210px); animation: achFlip .7s cubic-bezier(.2,.9,.3,1.15) both; }
+        @keyframes achGlow { 50% { box-shadow: 0 0 26px rgba(250,204,21,.9); } }
+        .ach-card.new .ach-face { animation: achGlow 1.4s ease-in-out infinite; }
+        .opt-btn { border-radius: .8rem; border: 2px solid rgba(255,255,255,.18); padding: .4rem; font-size: .68rem; font-weight: 800; text-align: center; background: rgba(255,255,255,.06); color: #fff; position: relative; }
+        .opt-btn.on { border-color: #facc15; box-shadow: 0 0 0 2px rgba(250,204,21,.35); }
+        .opt-btn.lock { opacity: .45; }
+        .sw { height: 3.2rem; border-radius: .5rem; border: 2px solid #fff; margin-bottom: .25rem; }
+
+        /* ===== PATCH 5: profile button, flip-to-reveal meme cards ===== */
+        #lobbyLogo { display: none !important; }
+        #homeView, #lobbyView { padding-top: 6.4rem !important; }
+        #profBtn, #chalBtn { position: fixed; left: .6rem; z-index: 45; display: flex; align-items: center; justify-content: center; border-radius: 9999px; }
+        #profBtn { top: .6rem; width: 2.6rem; height: 2.6rem; }
+        #chalBtn { top: 3.9rem; width: 2.4rem; height: 2.4rem; background: rgba(0,0,0,.6); border: 1px solid rgba(255,255,255,.25); font-size: 1.05rem; color: #fff; }
+        body.light-theme #chalBtn { background: rgba(255,255,255,.9); color: #0f172a; }
+        #chalCount { position: absolute; bottom: -.35rem; right: -.45rem; min-width: 1.35rem; height: 1.1rem; padding: 0 .25rem; border-radius: 9999px; background: #facc15; color: #0f172a; font-size: .6rem; font-weight: 900; display: flex; align-items: center; justify-content: center; border: 1.5px solid #fff; }
+        body.in-game #profBtn, body.in-game #chalBtn { display: none; }
+        .ach-card { perspective: 700px; }
+        .ach-inner { position: absolute; inset: 0; transform-style: preserve-3d; transition: transform .9s cubic-bezier(.3,.7,.3,1); }
+        .ach-inner.flipped { transform: rotateY(180deg); }
+        .ach-face { backface-visibility: hidden; -webkit-backface-visibility: hidden; }
+        .ach-front { transform: rotateY(180deg); }
+        .ach-back { background: linear-gradient(135deg,#dc2626,#7f1d1d 70%,#111); }
+        .ach-uno { width: 74%; height: 50%; border-radius: 50%; background: #ef4444; border: 3px solid #fff; transform: rotate(-14deg); display: flex; align-items: center; justify-content: center; box-shadow: inset 0 0 0 3px rgba(0,0,0,.2); }
+        .ach-uno span { font-family: Fredoka, sans-serif; font-weight: 900; color: #fde047; font-size: 25cqw; letter-spacing: .02em; text-shadow: 2px 2px 0 rgba(0,0,0,.45); }
+        .ach-card.locked .ach-back { filter: grayscale(.85) brightness(.55); }
+        .ach-card.ready .ach-back { animation: achGlow 1.3s ease-in-out infinite; }
+        .ach-lock2 { position: absolute; bottom: 8cqw; left: 0; right: 0; text-align: center; font-size: 22cqw; text-shadow: 0 2px 6px #000; }
+        .ach-front .ach-mid { height: 42%; margin-top: -16cqw; }
+        .ach-front .ach-mid span { font-size: 30cqw; transform: rotate(14deg); }
+        .ach-cap { position: absolute; left: 4%; right: 4%; bottom: 20cqw; text-align: center; font-family: Impact,'Arial Black',Fredoka,sans-serif; font-weight: 900; color: #fff; text-transform: uppercase; font-size: 11cqw; line-height: 1.05; text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000; }
     </style>
 </head>
 <body class="dark-theme min-h-screen overflow-y-auto flex flex-col">
@@ -391,6 +454,11 @@
                     <button id="menuRulesOption" class="w-full px-4 py-2.5 text-left text-xs font-semibold hover:bg-white/10 flex items-center space-x-3 transition">
                         <i class="fa-solid fa-book-open w-5 text-center text-blue-400"></i>
                         <span>Game Rules</span>
+                    </button>
+
+                    <button id="menuAbout" class="w-full px-4 py-2.5 text-left text-xs font-semibold hover:bg-white/10 flex items-center space-x-3 transition">
+                        <i class="fa-solid fa-shield-halved w-5 text-center text-cyan-400"></i>
+                        <span>About &amp; Privacy</span>
                     </button>
 
                     <div class="my-1 border-t border-white/10"></div>
@@ -645,6 +713,18 @@
         </div>
     </div>
 
+    <div id="aboutModal" class="hidden fixed inset-0 z-[96] bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
+        <div class="bg-slate-900 border border-white/15 rounded-3xl shadow-2xl max-w-md w-full max-h-[88vh] overflow-y-auto p-5 text-white text-xs leading-relaxed">
+            <div class="flex items-center justify-between mb-2"><h3 class="font-fun font-black text-lg">About &amp; Privacy</h3><button id="closeAboutBtn" class="text-slate-400 text-xl"><i class="fa-solid fa-xmark"></i></button></div>
+            <p class="mb-2"><b>How it works:</b> rooms run directly between players' phones (peer-to-peer). There is no game account and no game server database. Your name, colour, photo, stickers and favourite memes are stored only in this browser.</p>
+            <p class="mb-2"><b>Microphone:</b> only used if you turn it on, and only streamed to players in your room. Nothing is recorded.</p>
+            <p class="mb-2"><b>Network:</b> to connect phones, your IP address is shared with the other players and with public connection (STUN/relay) services.</p>
+            <p class="mb-2"><b>Be kind:</b> chat, memes and stickers are visible to everyone in the room. The host can remove players and spectators. Don't share content you don't have the right to use or that could offend others.</p>
+            <p class="mb-2"><b>Age:</b> not intended for children under 13 to use without a parent's permission.</p>
+            <p class="text-slate-400">This is an unofficial fan-made card game and is not affiliated with or endorsed by Mattel, Inc. UNO® is a trademark of Mattel.</p>
+        </div>
+    </div>
+
     <div id="countdownOverlay" class="hidden fixed inset-0 z-[90] flex items-center justify-center bg-black/70"><span id="countdownNum" class="font-fun font-black text-9xl text-yellow-400 drop-shadow-2xl animate-bounce"></span></div>
 
     <div id="chatRoot" class="hidden"><button id="chatFab" style="display:none"></button></div>
@@ -673,7 +753,10 @@
                 <button id="stickerAddBtn" class="shrink-0 bg-yellow-400 text-slate-900 font-bold rounded-xl px-3 py-1.5 text-xs">➕ Add</button>
             </div>
             <input type="file" id="stickerFile" accept="image/*,.webp" multiple class="hidden">
+            <div class="text-[11px] font-bold text-slate-300 mb-1">⭐ My stickers <span class="font-normal text-slate-400">(shared with everyone in the room)</span></div>
             <div id="stickerGrid" class="grid grid-cols-4 gap-2"></div>
+            <div class="text-[11px] font-bold text-slate-300 mt-3 mb-1">👥 Stickers shared in this room <span class="font-normal text-slate-400">(tap 💾 to keep one)</span></div>
+            <div id="roomStickerGrid" class="grid grid-cols-4 gap-2"></div>
         </div>
     </div>
 
@@ -1255,7 +1338,7 @@
             const grid = document.getElementById('memeGrid'); if (!grid) return;
             document.getElementById('memeAllBtn').classList.toggle('on', memeFilter === 'all');
             document.getElementById('memeFavBtn').classList.toggle('on', memeFilter === 'fav');
-            const keys = Object.keys(MEMES).filter(k => memeFilter === 'all' || favMemes.includes(k));
+            const keys = Object.keys(MEMES).filter(k => memeUnlocked(k) && (memeFilter === 'all' || favMemes.includes(k)));
             keys.sort((a, b) => favMemes.includes(b) - favMemes.includes(a));      // favourites first
             grid.innerHTML = keys.length ? keys.map(k => { const f = favMemes.includes(k);
                 return `<div class="relative"><button class="w-full active:scale-95 transition" data-m="${k}">${memeHTML(k, 100)}</button><button class="fav-star ${f ? 'on' : ''}" data-f="${k}" title="${f ? 'Remove from favourites' : 'Add to favourites'}">${f ? '★' : '☆'}</button></div>`; }).join('')
@@ -1288,7 +1371,7 @@
                             const sc = Math.min(1, S / Math.max(im.width, im.height)), w = Math.max(1, Math.round(im.width * sc)), h = Math.max(1, Math.round(im.height * sc));
                             const cv = document.createElement('canvas'); cv.width = w; cv.height = h; cv.getContext('2d').drawImage(im, 0, 0, w, h);
                             let d = cv.toDataURL('image/webp', 0.85); if (!okStickerData(d)) d = cv.toDataURL('image/png');
-                            if (okStickerData(d)) { myStickers.push({ id: newStickerId(), d }); saveStickers(); renderStickers(); return; }
+                            if (okStickerData(d)) { const x = { id: newStickerId(), d }; myStickers.push(x); saveStickers(); renderStickers(); shareSticker(x); return; }
                         }
                         showToast('That sticker is too big');
                     };
@@ -1311,6 +1394,36 @@
             if (net.role === 'client') netSend(net.hostConn, { t: 'chat', m: 'sticker:' + x.id, stk: { id: x.id, d: x.d } });
             else hostChat(gameState.localPlayerId, 'sticker:' + x.id, 1, { id: x.id, d: x.d });
         }
+        let roomStickers = [];             // everybody's shared stickers in this room
+        function addRoomSticker(id, d) {
+            if (!STK_ID.test(String(id)) || !okStickerData(d)) return;
+            stickerCache[id] = d;
+            if (!roomStickers.some(x => x.id === id)) { roomStickers.push({ id, d }); if (roomStickers.length > 40) roomStickers.shift(); }
+            renderRoomStickers();
+        }
+        function renderRoomStickers() {
+            const grid = document.getElementById('roomStickerGrid'); if (!grid) return;
+            grid.innerHTML = roomStickers.length ? roomStickers.map(x => `<div class="relative"><button class="w-full aspect-square rounded-xl bg-white/5 border border-white/10 p-1 active:scale-95 transition" data-r="${x.id}"><img src="${x.d}" class="w-full h-full object-contain" alt=""></button><button class="fav-star ${myStickers.some(y => y.d === x.d) ? 'on' : ''}" data-k="${x.id}" title="Keep this sticker">💾</button></div>`).join('')
+                : '<div class="col-span-4 text-center text-xs text-slate-400 py-4">Nothing shared yet. Stickers anyone adds in this room show up here for everyone.</div>';
+            grid.querySelectorAll('[data-r]').forEach(b => b.onclick = () => { const x = roomStickers.find(y => y.id === b.dataset.r); if (x) sendSticker(x); });
+            grid.querySelectorAll('[data-k]').forEach(b => b.onclick = e => {
+                e.stopPropagation(); const x = roomStickers.find(y => y.id === b.dataset.k);
+                if (!x || myStickers.some(y => y.d === x.d)) return;
+                if (myStickers.length >= 40) { showToast('Sticker limit reached (40)'); return; }
+                myStickers.push({ id: newStickerId(), d: x.d }); saveStickers(); renderStickers(); renderRoomStickers(); showToast('Sticker saved');
+            });
+        }
+        function shareSticker(x) {
+            addRoomSticker(x.id, x.d);
+            if (net.role === 'client') netSend(net.hostConn, { t: 'sshare', id: x.id, d: x.d });
+            else if (net.role === 'host') hostShare(gameState.localPlayerId, x);
+        }
+        function hostShare(pid, m) {
+            if (!gameState.players.some(p => p.id === pid) || !m || !STK_ID.test(String(m.id)) || !okStickerData(m.d)) return;
+            addRoomSticker(m.id, m.d);
+            Object.values(net.conns).forEach(c => { if (c.peer !== pid) netSend(c, { t: 'stk', id: m.id, d: m.d }); });
+        }
+        function sendRoomStickers(conn) { if (roomStickers.length) netSend(conn, { t: 'sbulk', list: roomStickers }); }
         function stkHTML(text, w) {
             const t = String(text); if (!t.startsWith('sticker:')) return '';
             const d = stickerCache[t.slice(8)];
@@ -1326,7 +1439,7 @@
                 const sid = text.slice(8);
                 if (!STK_ID.test(sid)) return;
                 if (stk && stk.id === sid && okStickerData(stk.d)) {
-                    stickerCache[sid] = stk.d;
+                    stickerCache[sid] = stk.d; addRoomSticker(sid, stk.d);
                     Object.values(net.conns).forEach(c => netSend(c, { t: 'stk', id: sid, d: stk.d }));
                 } else if (!stickerCache[sid]) return;
             }
@@ -1603,6 +1716,7 @@
                     if (m.t === 'join' || m.t === 'spec') handleJoin(conn, m);
                     else if (m.t === 'act') doAction(conn.peer, m.a, m.v);
                     else if (m.t === 'chat') hostChat(conn.peer, m.m, m.e, m.stk);
+                    else if (m.t === 'sshare') hostShare(conn.peer, m);
                 });
                 conn.on('close', () => onConnClose(conn));
             });
@@ -1627,7 +1741,7 @@
             }
             if (g.players.length >= 16) { netSend(conn, { t: 'err', m: 'Room is full (16)' }); return setTimeout(() => conn.close(), 300); }
             g.players = g.players.filter(x => !(x.left && String(x.baseName || '').toLowerCase() === d.name.toLowerCase()));
-            net.conns[conn.peer] = conn; delete net.pend[conn.peer];
+            net.conns[conn.peer] = conn; delete net.pend[conn.peer]; sendRoomStickers(conn);
             if (d.img) avatarCache[conn.peer] = d.img;
             g.players.push({ id: conn.peer, name: d.name, baseName: d.name, color: d.color, isHost: false, isBot: false, hand: [] });
             renderLobbyPlayers();
@@ -1635,7 +1749,7 @@
         function rejoinPlayer(conn, p, d) {
             const g = gameState, oldId = p.id, newId = conn.peer;
             p.id = newId; p.isBot = false; p.left = false; p.missed = 0; p.name = p.baseName;
-            net.conns[newId] = conn; delete net.pend[newId];
+            net.conns[newId] = conn; delete net.pend[newId]; sendRoomStickers(conn);
             if (d.img) avatarCache[newId] = d.img; else if (avatarCache[oldId]) avatarCache[newId] = avatarCache[oldId];
             if (g.book[oldId]) { g.book[newId] = g.book[oldId]; delete g.book[oldId]; }
             ['activePlays', 'shouts', 'chats', 'activeBubbles'].forEach(k => { if (g[k] && g[k][oldId] !== undefined) { g[k][newId] = g[k][oldId]; delete g[k][oldId]; } });
@@ -1646,7 +1760,7 @@
         function addSpectator(conn, d) {
             const g = gameState;
             if (g.spectators.length >= 20) { netSend(conn, { t: 'err', m: 'Too many spectators' }); return setTimeout(() => conn.close(), 300); }
-            net.conns[conn.peer] = conn; delete net.pend[conn.peer];
+            net.conns[conn.peer] = conn; delete net.pend[conn.peer]; sendRoomStickers(conn);
             if (d.img) avatarCache[conn.peer] = d.img;
             g.spectators.push({ id: conn.peer, name: d.name, color: d.color });
             broadcastAvatars();
@@ -1752,7 +1866,8 @@
                         else if (m.t === 'avatars') Object.assign(avatarCache, m.a || {});
                         else if (m.t === 'err') { clearTimeout(giveUp); fail(m.m); }
                         else if (m.t === 'chat') chatAdd(m.n, m.c, m.m);
-                        else if (m.t === 'stk') { if (STK_ID.test(String(m.id)) && okStickerData(m.d)) stickerCache[m.id] = m.d; }
+                        else if (m.t === 'stk') { addRoomSticker(m.id, m.d); }
+                        else if (m.t === 'sbulk') { (Array.isArray(m.list) ? m.list : []).slice(0, 40).forEach(x => x && addRoomSticker(x.id, x.d)); }
                         else if (m.t === 'kick') { showToast(m.m || 'Removed from the room'); document.getElementById('menuLeaveGame').click(); }
                         else if (m.t === 'inprog') { clearTimeout(giveUp); btn.disabled = false; btn.textContent = 'Join Room'; showSpectatePrompt(conn, name); }
                         else if (m.t === 'cd') { if (m.n > 0) showCountdown(m.n); else hideCountdown(); }
@@ -2985,5 +3100,307 @@ ${avatarWrap}
             document.getElementById('resetBookBtn').onclick = () => { if (net.role === 'client') return; gameState.book = {}; gameState.rounds = 0; renderBook(); broadcastState(); };
         });
     </script>
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const m = document.getElementById('aboutModal');
+        document.getElementById('menuAbout').onclick = () => { m.classList.remove('hidden'); document.getElementById('optionsDropdown').classList.add('hidden'); };
+        document.getElementById('closeAboutBtn').onclick = () => m.classList.add('hidden');
+        m.onclick = e => { if (e.target === m) m.classList.add('hidden'); };
+    });
+    // keep the screen awake during a match (a sleeping phone is what drops players)
+    let _wl = null;
+    async function keepAwake() { try { if ('wakeLock' in navigator && document.body.classList.contains('in-room') && !_wl) { _wl = await navigator.wakeLock.request('screen'); _wl.addEventListener('release', () => { _wl = null; }); } } catch (e) {} }
+    document.addEventListener('visibilitychange', () => { if (!document.hidden) keepAwake(); });
+    setInterval(keepAwake, 5000);
+    // warn before accidentally closing / refreshing while in a room
+    window.addEventListener('beforeunload', e => { if (document.body.classList.contains('in-room')) { e.preventDefault(); e.returnValue = ''; } });
+    // never show a blank screen on an unexpected error
+    window.addEventListener('error', () => { try { showToast('Something went wrong - if the game looks stuck, reopen the page'); } catch (e) {} });
+    window.addEventListener('unhandledrejection', () => {});
+</script>
+<script>
+    // share my stickers with the room once when I enter it; clear the pool when I leave
+    let _sharedMine = false;
+    setInterval(() => {
+        if (!net.role) { if (_sharedMine || roomStickers.length) { _sharedMine = false; roomStickers = []; renderRoomStickers(); } return; }
+        const ready = net.role === 'host' ? (net.peer && net.peer.open && gameState.players.length) : net.joined;
+        if (ready && !_sharedMine) { _sharedMine = true; myStickers.slice(-10).forEach(shareSticker); }
+    }, 1500);
+
+    // ---- progress that keeps people coming back: matches, wins, streaks, XP levels, daily streak ----
+    const STATS_KEY = 'unoStats';
+    function getStats() { try { return Object.assign({ played: 0, wins: 0, streak: 0, best: 0, xp: 0, day: '', dayStreak: 0 }, JSON.parse(localStorage.getItem(STATS_KEY) || '{}')); } catch (e) { return { played: 0, wins: 0, streak: 0, best: 0, xp: 0, day: '', dayStreak: 0 }; } }
+    function putStats(st) { try { localStorage.setItem(STATS_KEY, JSON.stringify(st)); } catch (e) {} }
+    const lvlOf = xp => Math.floor(xp / 100) + 1;
+    const LV_NAMES = ['Rookie', 'Player', 'Card Shark', 'Strategist', 'Master', 'Legend'];
+    const lvlName = l => LV_NAMES[Math.min(LV_NAMES.length - 1, Math.floor((l - 1) / 3))];
+    function dayKey(d) { return d.getFullYear() + '-' + (d.getMonth() + 1) + '-' + d.getDate(); }
+    function dailyCheck() {
+        const st = getStats(), now = new Date(), today = dayKey(now);
+        if (st.day === today) return st;
+        const y = new Date(now); y.setDate(y.getDate() - 1);
+        st.dayStreak = st.day === dayKey(y) ? st.dayStreak + 1 : 1; st.day = today;
+        const bonus = Math.min(st.dayStreak, 7) * 5; st.xp += bonus; putStats(st);
+        setTimeout(() => { try { showToast('🔥 ' + st.dayStreak + '-day streak! +' + bonus + ' XP'); } catch (e) {} }, 1200);
+        return st;
+    }
+    function renderStatsCard() {
+        const home = document.getElementById('homeView'); if (!home) return;
+        let el = document.getElementById('statsCard');
+        if (!el) { el = document.createElement('div'); el.id = 'statsCard'; el.className = 'w-full max-w-md mb-3 bg-white/10 border border-white/15 rounded-2xl px-3 py-2 text-[11px]'; home.insertBefore(el, home.firstChild); }
+        const st = getStats(), lv = lvlOf(st.xp), pct = st.xp % 100;
+        el.innerHTML = `<div class="flex items-center justify-between mb-1"><b class="font-fun text-sm text-yellow-300">Lv ${lv} · ${lvlName(lv)}</b><span>🔥 ${st.dayStreak} day${st.dayStreak === 1 ? '' : 's'} · 🏆 ${st.wins} wins · 🎴 ${st.played} played · best streak ${st.best}</span></div><div class="h-2 rounded-full bg-white/10 overflow-hidden"><div class="h-full bg-gradient-to-r from-yellow-300 to-orange-500" style="width:${pct}%"></div></div>`;
+    }
+    function recordResult(r) {
+        const st = getStats(), me = gameState.localPlayerId, won = (r.winners || []).some(w => w.id === me);
+        const before = lvlOf(st.xp);
+        st.played++; st.xp += 10;
+        if (won) { st.wins++; st.streak++; st.best = Math.max(st.best, st.streak); st.xp += 40 + Math.min(st.streak - 1, 5) * 5; } else st.streak = 0;
+        putStats(st);
+        return { won, xp: won ? 50 : 10, level: lvlOf(st.xp), up: lvlOf(st.xp) > before, streak: st.streak };
+    }
+    const _showWinner = showWinner;
+    showWinner = function (r) {
+        _showWinner(r);
+        try {
+            if (r._rec) return; r._rec = 1;
+            const o = recordResult(r), hero = document.getElementById('winnerHero');
+            const d = document.createElement('div'); d.className = 'relative z-10 mt-2 text-xs font-bold text-emerald-300';
+            d.textContent = `+${o.xp} XP${o.up ? ' · LEVEL UP! Lv ' + o.level + ' 🎉' : ''}${o.won && o.streak > 1 ? ' · 🔥 ' + o.streak + ' wins in a row' : ''}`;
+            hero.appendChild(d);
+        } catch (e) {}
+    };
+    document.addEventListener('DOMContentLoaded', () => { dailyCheck(); renderStatsCard(); });
+    // refresh the card whenever we're back on the home screen
+    setInterval(() => { if (!document.body.classList.contains('in-room')) renderStatsCard(); }, 4000);
+</script>
+
+<script>
+(() => {
+    // ======================= data =======================
+    const fmtT = sec => { sec = Math.floor(sec || 0); const h = Math.floor(sec / 3600), m = Math.floor(sec % 3600 / 60); return h ? h + 'h ' + m + 'm' : m + ' min'; };
+    const ACH = [
+        { id: 't30',  grp: 't', title: 'Warm-Up',        desc: 'Play for 30 minutes in total',  need: 1800,  corner: '30m', sym: '⏱️', fg: '#0369a1', bg: 'linear-gradient(145deg,#38bdf8,#1e3a8a)', meme: ['⏱️', '30 MIN GRIND', '#0284c7'] },
+        { id: 't60',  grp: 't', title: 'Table Regular',  desc: 'Play for 1 hour in total',      need: 3600,  corner: '1h',  sym: '⌛',  fg: '#047857', bg: 'conic-gradient(from 45deg,#22c55e,#064e3b,#22c55e,#064e3b,#22c55e)', meme: ['😎', '1 HOUR HERO', '#16a34a'] },
+        { id: 't120', grp: 't', title: 'Card Veteran',   desc: 'Play for 2 hours in total',     need: 7200,  corner: '2h',  sym: '🏅', fg: '#b45309', bg: 'repeating-linear-gradient(45deg,#f59e0b 0 12px,#b45309 12px 24px)', meme: ['🥵', '2 HRS NO LIFE', '#b45309'] },
+        { id: 't180', grp: 't', title: 'UNO Addict',     desc: 'Play for 3 hours in total',     need: 10800, corner: '3h',  sym: '👑', fg: '#7e22ce', bg: 'radial-gradient(circle at 30% 20%,#f472b6,#7e22ce 60%,#1e1b4b)', meme: ['🧟', '3 HRS ZOMBIE', '#7e22ce'] },
+        { id: 'd1', grp: 'd', n: 1, title: 'Day One',      desc: 'Open the game 1 day',            corner: '1', sym: '1', fg: '#dc2626', bg: 'linear-gradient(145deg,#f87171,#7f1d1d)', meme: ['👋', 'HELLO UNO', '#dc2626'] },
+        { id: 'd2', grp: 'd', n: 2, title: 'Back Again',   desc: '2 days in a row',                corner: '2', sym: '2', fg: '#ea580c', bg: 'linear-gradient(145deg,#fdba74,#9a3412)', meme: ['🔁', 'BACK AGAIN', '#ea580c'] },
+        { id: 'd3', grp: 'd', n: 3, title: 'Hat-Trick',    desc: '3 days in a row',                corner: '3', sym: '3', fg: '#a16207', bg: 'repeating-linear-gradient(-45deg,#fde047 0 10px,#ca8a04 10px 20px)', meme: ['🎩', 'HAT TRICK', '#ca8a04'] },
+        { id: 'd4', grp: 'd', n: 4, title: 'Lucky Four',   desc: '4 days in a row',                corner: '4', sym: '4', fg: '#15803d', bg: 'radial-gradient(circle at 70% 30%,#86efac,#15803d 55%,#052e16)', meme: ['🍀', 'LUCKY FOUR', '#16a34a'] },
+        { id: 'd5', grp: 'd', n: 5, title: 'High Five',    desc: '5 days in a row',                corner: '5', sym: '5', fg: '#0369a1', bg: 'linear-gradient(200deg,#67e8f9,#0369a1 60%,#082f49)', meme: ['🖐️', 'HIGH FIVE', '#0284c7'] },
+        { id: 'd6', grp: 'd', n: 6, title: 'Almost There', desc: '6 days in a row',                corner: '6', sym: '6', fg: '#4338ca', bg: 'conic-gradient(from 0deg at 50% 60%,#818cf8,#312e81,#818cf8,#312e81,#818cf8)', meme: ['😮‍💨', 'ALMOST THERE', '#4f46e5'] },
+        { id: 'd7', grp: 'd', n: 7, title: 'Weekly Legend',desc: '7 days in a row',                corner: '7', sym: '7', fg: '#be185d', bg: 'conic-gradient(#ef4444,#f59e0b,#eab308,#22c55e,#06b6d4,#6366f1,#d946ef,#ef4444)', meme: ['🐐', 'WEEKLY GOAT', '#be185d'] }
+    ];
+    ACH.forEach(a => { a.mk = 'ach_' + a.id; MEMES[a.mk] = a.meme; });
+    const memeUnlockedFn = k => { if (!k.startsWith('ach_')) return true; const st = getStats(); return !!(st.rev && st.rev[k.slice(4)]); };
+    window.memeUnlocked = memeUnlockedFn;
+
+    const BACKS = [['classic', 'Classic', 1, 'linear-gradient(135deg,#dc2626,#881337)'], ['neon', 'Neon', 2, 'linear-gradient(135deg,#06b6d4,#7c3aed)'], ['gold', 'Gold', 4, 'linear-gradient(135deg,#fde047,#b45309)'], ['galaxy', 'Galaxy', 6, 'radial-gradient(circle at 30% 25%,#f0abfc,#6d28d9 45%,#0f0a2e)'], ['fire', 'Fire', 9, 'linear-gradient(0deg,#7f1d1d,#f97316 60%,#fde047)']];
+    const TABLES = [['classic', 'Classic', 1, 'linear-gradient(135deg,#1e293b,#020617)'], ['forest', 'Forest', 3, 'linear-gradient(135deg,#16a34a,#052e16)'], ['sunset', 'Sunset', 5, 'linear-gradient(135deg,#fb923c,#4c0519)'], ['violet', 'Violet', 8, 'linear-gradient(135deg,#a78bfa,#1e1b4b)'], ['ocean', 'Ocean', 11, 'linear-gradient(135deg,#22d3ee,#082f49)']];
+    const frameColor = lv => lv >= 10 ? '#fb923c' : lv >= 7 ? '#c084fc' : lv >= 4 ? '#22d3ee' : '#facc15';
+    const frameName = lv => lv >= 10 ? 'Flame' : lv >= 7 ? 'Amethyst' : lv >= 4 ? 'Ice' : 'Gold';
+
+    const POOL = [
+        { id: 'p5', text: 'Play 5 cards', ev: 'play', goal: 5 }, { id: 'p10', text: 'Play 10 cards', ev: 'play', goal: 10 },
+        { id: 'sk', text: 'Play 2 Skip cards', ev: 'skip', goal: 2 }, { id: 'rv', text: 'Play a Reverse card', ev: 'reverse', goal: 1 },
+        { id: 'd2', text: 'Play a +2 card', ev: 'draw2', goal: 1 }, { id: 'wl', text: 'Play a Wild card', ev: 'wild', goal: 1 },
+        { id: 'd4', text: 'Play a +4 card', ev: 'draw4', goal: 1 }, { id: 'nm', text: 'Play 8 number cards', ev: 'number', goal: 8 },
+        { id: 'mt', text: 'Finish 2 matches', ev: 'match', goal: 2 }, { id: 'wn', text: 'Win a match', ev: 'win', goal: 1 }
+    ];
+
+    // ======================= storage helpers =======================
+    const wkKey = () => { const d = new Date(); d.setHours(0, 0, 0, 0); d.setDate(d.getDate() - (d.getDay() + 6) % 7); return dayKey(d); };
+    const weekXP = st => (st.wk && st.wk.key === wkKey()) ? st.wk.xp : 0;
+    function addWeek(st, n) { if (!st.wk || st.wk.key !== wkKey()) st.wk = { key: wkKey(), xp: 0 }; st.wk.xp += Math.max(0, n); }
+    function award(n) {
+        const st = getStats(), b = lvlOf(st.xp); st.xp += n; addWeek(st, n); putStats(st);
+        if (lvlOf(st.xp) > b) { showToast('🎉 Level up! You are now Lv ' + lvlOf(st.xp)); applyPrefs(); }
+        decorateHome(); renderStatsCard();
+    }
+    function ensureCh(st) {
+        const today = dayKey(new Date());
+        if (st.ch && st.ch.day === today) return st.ch;
+        const [y, m, d] = today.split('-').map(Number), seed = y * 372 + m * 31 + d, arr = POOL.map(p => p.id), pick = [];
+        for (let i = 0; i < 3; i++) pick.push(arr.splice((seed * (i + 3) + i * 7) % arr.length, 1)[0]);
+        st.ch = { day: today, ids: pick, prog: {}, done: {} }; putStats(st); return st.ch;
+    }
+    function challengeEvent(ev) {
+        const st = getStats(), ch = ensureCh(st); let changed = false;
+        ch.ids.forEach(id => {
+            const c = POOL.find(p => p.id === id); if (!c || ch.done[id] || c.ev !== ev) return;
+            ch.prog[id] = (ch.prog[id] || 0) + 1; changed = true;
+            if (ch.prog[id] >= c.goal) { ch.done[id] = true; setTimeout(() => showToast('🎯 Challenge done: ' + c.text + '  +30 XP'), 300); }
+        });
+        if (!changed) return;
+        putStats(st);
+        const doneNow = ch.ids.filter(i => ch.done[i]).length, was = ch.paid || 0;
+        const gain = (doneNow - was) * 30 + (doneNow === 3 && !ch.bonus ? 20 : 0);
+        if (gain) { ch.paid = doneNow; if (doneNow === 3) ch.bonus = true; putStats(st); if (doneNow === 3 && gain > 30) setTimeout(() => showToast('🌟 All 3 daily challenges done! +20 bonus XP'), 1800); award(gain); }
+    }
+    function checkAch() {
+        const st = getStats(); st.ach = st.ach || {}; st.bestDay = Math.max(st.bestDay || 0, st.dayStreak || 0); let any = false;
+        ACH.forEach(a => {
+            const ok = a.grp === 't' ? (st.sec || 0) >= a.need : st.bestDay >= a.n;
+            if (ok && !st.ach[a.id]) { st.ach[a.id] = Date.now(); any = true; setTimeout(() => showToast('🏅 Achievement unlocked: ' + a.title + ' (tap your profile at the top left)'), 600); }
+        });
+        if (any) { putStats(st); if (typeof renderMemes === 'function') renderMemes(); } else putStats(st);
+    }
+
+    // ======================= XP ring around the profile pic =======================
+    const ringSVG = (col, pct, inset) => `<svg class="xp-ring" style="inset:${inset}px;width:calc(100% + ${-2 * inset}px);height:calc(100% + ${-2 * inset}px)" viewBox="0 0 100 100"><circle cx="50" cy="50" r="47" fill="none" stroke="rgba(255,255,255,.2)" stroke-width="5"/><circle cx="50" cy="50" r="47" fill="none" stroke="${col}" stroke-width="5" stroke-linecap="round" stroke-dasharray="295.3" stroke-dashoffset="${(295.3 * (1 - pct)).toFixed(1)}"/></svg>`;
+    function decorateHome() {
+        const av = document.getElementById('avatarPreview'); if (!av) return;
+        const par = av.parentElement, st = getStats(), lv = lvlOf(st.xp), pct = (st.xp % 100) / 100;
+        par.querySelectorAll('.xp-ring,.xp-lv').forEach(e => e.remove());
+        par.insertAdjacentHTML('beforeend', ringSVG(frameColor(lv), pct, -10) + `<div class="xp-lv">${lv}</div>`);
+    }
+    function decorateSeat() {
+        const me = gameState.localPlayerId; if (!me) return;
+        const av = document.querySelector(`#tableSeatsContainer [data-pid="${me}"] .seat-avatar`); if (!av) return;
+        const par = av.parentElement; if (par.querySelector('.xp-ring')) return;
+        const st = getStats(), lv = lvlOf(st.xp);
+        par.insertAdjacentHTML('beforeend', ringSVG(frameColor(lv), (st.xp % 100) / 100, -9) + `<div class="xp-lv" style="top:-.7rem;left:-.7rem;min-width:1.25rem;height:1.25rem;font-size:.65rem">${lv}</div>`);
+    }
+    const _rg = renderGame; renderGame = function () { _rg.apply(this, arguments); try { decorateSeat(); } catch (e) {} };
+
+    // ======================= modals =======================
+    function xModal(title, html) {
+        let m = document.getElementById('xModal');
+        if (!m) {
+            m = document.createElement('div'); m.id = 'xModal'; m.className = 'hidden fixed inset-0 z-[97] bg-black/80 backdrop-blur-sm flex items-center justify-center p-3';
+            m.innerHTML = '<div class="bg-slate-900 border border-white/15 rounded-3xl shadow-2xl w-full max-w-md max-h-[88vh] flex flex-col text-white"><div class="flex items-center justify-between px-4 pt-3 pb-2"><h3 id="xTitle" class="font-fun font-black text-lg"></h3><button id="xClose" class="text-slate-400 text-xl">✕</button></div><div id="xBody" class="overflow-y-auto px-4 pb-4"></div></div>';
+            document.body.appendChild(m); m.onclick = e => { if (e.target === m) m.classList.add('hidden'); }; m.querySelector('#xClose').onclick = () => m.classList.add('hidden');
+        }
+        m.querySelector('#xTitle').textContent = title; const b = m.querySelector('#xBody'); b.innerHTML = html; m.classList.remove('hidden');
+        const dd = document.getElementById('optionsDropdown'); if (dd) dd.classList.add('hidden');
+        return b;
+    }
+    const achBack = (a, got) => `<div class="ach-face ach-back"><div class="ach-uno"><span>UNO</span></div>${got ? '' : '<div class="ach-lock2">🔒</div>'}</div>`;
+    const achFront = a => `<div class="ach-face ach-front" style="background:${a.bg}"><span class="ach-c tl">${a.corner}</span><div class="ach-mid"><span>${a.meme[0]}</span></div><div class="ach-cap">${a.meme[1]}</div><span class="ach-c br">${a.corner}</span></div>`;
+    function unlockSound() {                 // a "lock clunk" followed by a rising sparkle
+        try {
+            if (!soundEnabled) return;
+            tone(190, 90, .10, 'square', .14); setTimeout(() => tone(330, 330, .06, 'square', .10), 120);
+            [523, 659, 784, 1047, 1319].forEach((f, i) => setTimeout(() => tone(f, f * 1.01, .24, 'triangle', .16), 280 + i * 95));
+            setTimeout(() => tone(2093, 2093, .4, 'sine', .09), 780);
+        } catch (e) {}
+    }
+    function profileData() { return { nm: cleanName(document.getElementById('playerNameInput').value) || 'Player', color: selectedAvatarColor, img: selectedAvatarImg }; }
+    function avatarHTML(size) {
+        const p = profileData();
+        return `<div style="width:${size}px;height:${size}px;border-radius:50%;background:${p.color};overflow:hidden;display:flex;align-items:center;justify-content:center;font:900 ${Math.round(size * .42)}px Fredoka,sans-serif;color:#fff;border:2px solid rgba(255,255,255,.65)">${p.img ? `<img src="${p.img}" style="width:100%;height:100%;object-fit:cover" alt="">` : p.nm.charAt(0).toUpperCase()}</div>`;
+    }
+    function openProfile() {
+        checkAch(); const st = getStats(), lv = lvlOf(st.xp), pct = st.xp % 100, got = st.ach || {}, rev = st.rev || {}, p = profileData();
+        const earned = ACH.filter(a => got[a.id]).length;
+        const bar = a => { const v = a.grp === 't' ? Math.min(a.need, st.sec || 0) / a.need : Math.min(a.n, Math.max(st.dayStreak || 0, st.bestDay || 0)) / a.n; return Math.round(v * 100); };
+        const cell = a => { const g = !!got[a.id], r = !!rev[a.id];
+            return `<div><div class="ach-card ${g ? (r ? '' : 'ready') : 'locked'}" data-a="${a.id}"><div class="ach-inner ${r ? 'flipped' : ''}">${achBack(a, g)}${achFront(a)}</div></div>
+            <div class="text-[10px] font-bold text-center mt-1 leading-tight ${g && !r ? 'text-yellow-300' : ''}">${r ? a.title : g ? 'Tap to open!' : a.desc}</div>
+            ${g ? '' : `<div class="h-1 rounded bg-white/10 mt-1 overflow-hidden"><div class="h-full bg-yellow-400" style="width:${bar(a)}%"></div></div>`}</div>`; };
+        const b = xModal('Profile', `
+            <div class="rounded-2xl bg-white/5 border border-white/15 p-3 flex items-center gap-3 mb-3">
+                <div class="relative shrink-0" style="width:64px;height:64px">${avatarHTML(64)}${ringSVG(frameColor(lv), pct / 100, -8)}<div class="xp-lv">${lv}</div></div>
+                <div class="min-w-0"><div class="font-fun font-black text-lg truncate">${p.nm}</div><div class="text-sm font-bold text-yellow-300">Lv ${lv} · ${lvlName(lv)}</div><div class="text-[10px] text-slate-400">${pct}/100 XP · 🏆 ${st.wins} wins · 🎴 ${st.played} played</div></div>
+            </div>
+            <div class="rounded-2xl bg-white/5 border border-white/15 p-3">
+                <div class="flex items-center justify-between mb-1"><b class="text-sm">🏅 Achievements</b><span class="text-xs font-bold text-yellow-300">${earned} / ${ACH.length}</span></div>
+                <p class="text-[10px] text-slate-400 mb-2">Every achievement hides its own meme card. When one unlocks it glows - tap it to flip it open.</p>
+                <div class="text-xs font-bold text-yellow-300 mb-1.5">⏱ Time played · ${fmtT(st.sec)}</div><div class="grid grid-cols-4 gap-2 mb-4">${ACH.filter(a => a.grp === 't').map(cell).join('')}</div>
+                <div class="text-xs font-bold text-yellow-300 mb-1.5">🔥 Daily streak · ${st.dayStreak || 0} day${st.dayStreak === 1 ? '' : 's'}</div><div class="grid grid-cols-4 gap-2">${ACH.filter(a => a.grp === 'd').map(cell).join('')}</div>
+            </div>`);
+        b.querySelectorAll('.ach-card').forEach(el => el.onclick = () => {
+            const a = ACH.find(x => x.id === el.dataset.a); if (!a) return;
+            const inner = el.querySelector('.ach-inner');
+            if (el.classList.contains('locked')) { el.classList.remove('shake'); void el.offsetWidth; el.classList.add('shake'); showToast('🔒 ' + a.desc); return; }
+            if (!inner.classList.contains('flipped')) {          // first time: rotate it open with the unlock sound
+                inner.classList.add('flipped'); el.classList.remove('ready'); unlockSound();
+                const s2 = getStats(); s2.rev = s2.rev || {}; s2.rev[a.id] = Date.now(); putStats(s2);
+                setTimeout(() => { try { confetti({ particleCount: 90, spread: 70, origin: { y: .55 } }); } catch (e) {} showToast('🎁 Meme card unlocked: ' + a.meme[1]); if (typeof renderMemes === 'function') renderMemes(); openProfileLabelFix(el, a); }, 950);
+            } else { el.classList.remove('swing'); void el.offsetWidth; el.classList.add('swing'); setTimeout(() => showAchDetail(a), 800); }
+        });
+    }
+    function openProfileLabelFix(el, a) { const t = el.parentElement.querySelector('.text-center'); if (t) { t.textContent = a.title; t.classList.remove('text-yellow-300'); } }
+    function showAchDetail(a) {
+        let d = document.getElementById('achDetail');
+        if (!d) { d = document.createElement('div'); d.id = 'achDetail'; d.className = 'fixed inset-0 z-[98] bg-black/85 backdrop-blur flex items-center justify-center p-4'; d.onclick = () => d.classList.add('hidden'); document.body.appendChild(d); }
+        d.innerHTML = `<div class="flex flex-col items-center gap-3 text-center text-white"><div class="ach-card ach-big"><div class="ach-inner flipped">${achBack(a, true)}${achFront(a)}</div></div><div class="font-fun font-black text-xl text-yellow-300">${a.title}</div><div class="text-xs text-slate-300">${a.desc}</div><div class="text-[11px] font-bold text-emerald-300">🎁 This meme is in your Chat → Memes tab</div><div class="text-[10px] text-slate-500">tap anywhere to close</div></div>`;
+        d.classList.remove('hidden'); try { playSound('win'); } catch (e) {}
+    }
+    function openChallenges() {
+        const st = getStats(), ch = ensureCh(st);
+        xModal('🎯 Daily challenges', `<p class="text-[11px] text-slate-400 mb-2">3 new challenges every day: +30 XP each, +20 bonus for finishing all three.</p>` + ch.ids.map(id => {
+            const c = POOL.find(p => p.id === id), p = Math.min(c.goal, ch.prog[id] || 0), done = !!ch.done[id];
+            return `<div class="rounded-2xl border ${done ? 'border-emerald-400/60 bg-emerald-500/10' : 'border-white/15 bg-white/5'} p-3 mb-2"><div class="flex justify-between text-sm font-bold"><span>${done ? '✅' : '🎯'} ${c.text}</span><span class="text-yellow-300 text-xs">+30 XP</span></div><div class="h-2 rounded-full bg-white/10 mt-2 overflow-hidden"><div class="h-full bg-gradient-to-r from-yellow-300 to-orange-500" style="width:${p / c.goal * 100}%"></div></div><div class="text-[10px] text-slate-400 mt-1">${p} / ${c.goal}</div></div>`;
+        }).join('') + `<div class="text-[11px] text-slate-400 text-center mt-1">New challenges appear at midnight.</div>`);
+    }
+    function applyPrefs() { delete document.body.dataset.back; delete document.body.dataset.table; }
+
+    // ======================= top-left profile + challenges buttons =======================
+    renderStatsCard = function () { const old = document.getElementById('statsCard'); if (old) old.remove(); renderProfBtn(); };
+    function buildTopLeft() {
+        if (document.getElementById('profBtn')) return;
+        document.body.insertAdjacentHTML('beforeend', '<button id="profBtn" title="Profile"></button><button id="chalBtn" title="Daily challenges">🎯<span id="chalCount"></span></button>');
+        document.getElementById('profBtn').onclick = openProfile; document.getElementById('chalBtn').onclick = openChallenges;
+        renderProfBtn();
+    }
+    function renderProfBtn() {
+        const b = document.getElementById('profBtn'); if (!b) return;
+        const st = getStats(), lv = lvlOf(st.xp), ch = ensureCh(st), done = ch.ids.filter(i => ch.done[i]).length;
+        b.innerHTML = avatarHTML(40) + ringSVG(frameColor(lv), (st.xp % 100) / 100, -6) + `<div class="xp-lv" style="top:-.45rem;left:-.45rem;min-width:1.2rem;height:1.2rem;font-size:.65rem">${lv}</div>`;
+        const c = document.getElementById('chalCount'); if (c) c.textContent = done + '/3';
+    }
+    document.getElementById('playerNameInput') && ['input', 'change'].forEach(ev => document.getElementById('playerNameInput').addEventListener(ev, () => setTimeout(renderProfBtn, 50)));
+    document.getElementById('avatarFileInput') && document.getElementById('avatarFileInput').addEventListener('change', () => setTimeout(renderProfBtn, 600));
+    document.querySelectorAll('.avatar-color-btn').forEach(b => b.addEventListener('click', () => setTimeout(renderProfBtn, 50)));
+    document.getElementById('avatarClearBtn') && document.getElementById('avatarClearBtn').addEventListener('click', () => setTimeout(renderProfBtn, 50));
+
+    // ======================= rematch + share link =======================
+    function addRoomExtras() {
+        const rl = document.getElementById('returnLobbyBtn');
+        if (rl && !document.getElementById('rematchBtn')) {
+            rl.insertAdjacentHTML('afterend', '<button id="rematchBtn" class="hidden shrink-0 px-3 rounded-xl bg-blue-500/25 border border-blue-400/50 text-blue-100 text-xs font-bold">🔁 Rematch</button>');
+            document.getElementById('rematchBtn').onclick = () => { rl.click(); setTimeout(() => { if (net.role === 'host') startGame(); }, 600); };
+        }
+        const cp = document.getElementById('copyRoomBtn');
+        if (cp && !document.getElementById('shareRoomBtn')) {
+            cp.insertAdjacentHTML('afterend', '<button id="shareRoomBtn" class="bg-emerald-500/25 hover:bg-emerald-500/40 border border-emerald-400/40 px-3 py-1.5 rounded-lg text-xs font-semibold transition">🔗 Share link</button>');
+            document.getElementById('shareRoomBtn').onclick = async () => {
+                const url = location.href.split('#')[0] + '#' + gameState.roomCode, text = 'Join my UNO room! Code: ' + gameState.roomCode;
+                try { if (navigator.share) { await navigator.share({ title: 'UNO!', text, url }); return; } } catch (e) { return; }
+                try { await navigator.clipboard.writeText(text + '\n' + url); showToast('Invite link copied!'); } catch (e) { showToast(url); }
+            };
+        }
+    }
+    function prefillFromLink() {
+        const m = location.hash.match(/^#(\d{4})$/); if (!m) return;
+        const boxes = [...document.querySelectorAll('#roomBoxes .room-box')]; if (boxes.length !== 4) return;
+        boxes.forEach((b, i) => { b.value = m[1][i]; b.classList.add('filled'); });
+        setTimeout(() => showToast('Room code ' + m[1] + ' filled in - tap Join Room'), 800);
+    }
+    const _sw2 = showWinner;
+    showWinner = function (r) { _sw2(r); const b = document.getElementById('rematchBtn'); if (b) b.classList.toggle('hidden', net.role !== 'host'); };
+
+    // ======================= wrappers: events + play time =======================
+    const _rec2 = recordResult;
+    recordResult = function (r) {
+        if (document.body.classList.contains('spectating')) return { won: false, xp: 0, level: lvlOf(getStats().xp), up: false, streak: 0 };   // watching doesn't earn XP
+        const b = getStats().xp, o = _rec2(r), st = getStats(); addWeek(st, st.xp - b); putStats(st);
+        challengeEvent('match'); if (o.won) challengeEvent('win'); checkAch(); decorateHome(); applyPrefs(); return o;
+    };
+    const _ap2 = animatePlay;
+    animatePlay = function (pid, card) { try { if (pid === gameState.localPlayerId && card) { challengeEvent('play'); challengeEvent(card.type); } } catch (e) {} return _ap2.apply(this, arguments); };
+    setInterval(() => {
+        if (document.hidden || !gameState.gameStarted || !document.body.classList.contains('in-game') || document.body.classList.contains('spectating')) return;
+        const st = getStats(); st.sec = (st.sec || 0) + 5; putStats(st); checkAch();
+    }, 5000);
+    document.addEventListener('DOMContentLoaded', () => {
+        buildTopLeft(); addRoomExtras(); applyPrefs(); checkAch(); decorateHome(); renderStatsCard(); ensureCh(getStats()); prefillFromLink();
+        if (typeof renderMemes === 'function') renderMemes();
+    });
+    window.UNO_X = { checkAch, openProfile, ensureCh, POOL, challengeEvent, award };
+})();
+</script>
 </body>
 </html>
