@@ -234,6 +234,31 @@
         body.is-landscape .seat-cards > div:not(.uno-card):not(.more) { width: calc(var(--u) * 6.5) !important; height: calc(var(--u) * 9.5) !important; }
         body.is-landscape .seat-cards > div:not(.uno-card):not(.more):not(:first-child) { margin-left: calc(var(--u) * -3.8) !important; margin-right: 0 !important; }
         #infoBox:empty { display: none; }
+        #topTools { position: fixed; top: .5rem; right: 3.9rem; z-index: 41; display: none; gap: .4rem; }
+        body.in-room #topTools { display: flex; }
+        .top-btn { position: relative; width: 2.5rem; height: 2.5rem; border-radius: .75rem; background: rgba(0,0,0,.55); border: 1px solid rgba(255,255,255,.22); color: #fff; font-size: 1rem; display: inline-flex; align-items: center; justify-content: center; transition: transform .15s, background .15s; }
+        .top-btn:active { transform: scale(.92); }
+        body.light-theme .top-btn { background: rgba(255,255,255,.88); color: #0f172a; border-color: rgba(0,0,0,.15); }
+        .top-btn.voice-mic-btn { color: #cbd5e1; }
+        .top-btn.voice-mic-btn.mic-live { color: #34d399; }
+        .top-btn.voice-mic-btn.mic-live::after { content: ''; position: absolute; top: 4px; right: 4px; width: 8px; height: 8px; border-radius: 50%; background: #ef4444; box-shadow: 0 0 6px #ef4444; animation: recBlink 1s steps(2) infinite; }
+        @keyframes recBlink { 50% { opacity: .15; } }
+        .top-btn.spk-btn { color: #fde047; background: rgba(234,179,8,.25); border-color: rgba(250,204,21,.6); }
+        .top-btn.spk-btn.spk-off { color: #94a3b8; background: rgba(0,0,0,.55); border-color: rgba(255,255,255,.22); }
+        .tool-btn { width: 3rem; height: 3rem; border-radius: 9999px; background: rgba(255,255,255,.1); border: 1px solid rgba(255,255,255,.22); font-size: 1.3rem; display: inline-flex; align-items: center; justify-content: center; transition: transform .15s, background .15s; }
+        .tool-btn:active { transform: scale(.92); }
+        .tool-btn.sm { width: 2rem; height: 2rem; font-size: .95rem; background: rgba(0,0,0,.7); border-color: rgba(255,255,255,.15); position: fixed; top: .5rem; z-index: 50; }
+        .voice-mic-btn.mic-live { border-color: #34d399; background: rgba(16,185,129,.35); box-shadow: 0 0 0 3px rgba(52,211,153,.3); animation: micPulse 1.6s ease-in-out infinite; }
+        .voice-mic-btn.mic-talk { box-shadow: 0 0 0 6px rgba(52,211,153,.55); }
+        @keyframes micPulse { 0%,100% { box-shadow: 0 0 0 2px rgba(52,211,153,.25); } 50% { box-shadow: 0 0 0 6px rgba(52,211,153,.4); } }
+        .chat-tab { flex: 1; padding: .45rem 0; font-size: .72rem; font-weight: 800; color: #94a3b8; border-bottom: 2px solid transparent; }
+        .chat-tab.on { color: #fde047; border-bottom-color: #fde047; }
+        .meme-card { position: relative; border-radius: .8rem; overflow: hidden; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; border: 2px solid rgba(255,255,255,.85); box-shadow: 0 6px 14px rgba(0,0,0,.4); }
+        .meme-card .me { line-height: 1; filter: drop-shadow(0 2px 2px rgba(0,0,0,.4)); }
+        .meme-card .mc { font-family: Impact, 'Arial Black', Fredoka, sans-serif; font-weight: 900; color: #fff; text-transform: uppercase; letter-spacing: .02em; line-height: 1.05; text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000; }
+        #chatFeed .feed-item { animation: feedIn .25s ease-out; }
+        @keyframes feedIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+        .vol-range { width: 100%; accent-color: #facc15; }
         .book-paper { background-image: repeating-linear-gradient(transparent 0 31px, rgba(255,255,255,.06) 31px 32px); background-color: rgba(250,204,21,.03); }
         .book-table { width: 100%; border-collapse: collapse; font-size: 12px; }
         .book-table th { font-size: 10px; text-transform: uppercase; letter-spacing: .05em; color: #94a3b8; font-weight: 700; padding: 4px 6px; text-align: center; white-space: nowrap; }
@@ -246,7 +271,7 @@
         .crown-bob { animation: crownBob 1.6s ease-in-out infinite; }
         @keyframes crownBob { 0%,100% { transform: translateY(0) rotate(-6deg); } 50% { transform: translateY(-4px) rotate(6deg); } }
         body.is-landscape #matchClock { top: 0.4rem !important; }
-        body.is-landscape #infoBox { top: 2.3rem !important; width: 8.5rem !important; }
+        body.is-landscape #infoBox { top: auto !important; bottom: .5rem; width: 8.5rem !important; }
         body.is-landscape #infoBox div { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
         body.is-landscape #infoBox div:nth-last-child(n+4) { display: none; }
         body.is-landscape #drawnCardChoiceBar { position: fixed; left: 50%; bottom: 0.4rem; transform: translateX(-50%); width: auto; margin: 0 !important; padding: 0.4rem 0.8rem !important; animation: none !important; z-index: 60; }
@@ -273,6 +298,14 @@
     <!-- MAIN APP CONTAINER -->
     <div id="app" class="flex-1 flex flex-col min-h-screen relative">
         
+        <!-- TOOLS NEXT TO THE 3-DOT MENU: chat, mic, scorebook, speaker -->
+        <div id="topTools">
+            <button id="chatBtnTop" class="top-btn" title="Chat"><i class="fa-solid fa-comment-dots"></i></button>
+            <button id="micBtnTop" class="top-btn voice-mic-btn" title="Microphone"><i class="fa-solid fa-microphone-slash"></i></button>
+            <button id="bookBtnTop" class="top-btn" title="Scorebook">📒</button>
+            <button id="spkBtnTop" class="top-btn spk-btn" title="Hear players"><i class="fa-solid fa-volume-high"></i></button>
+        </div>
+
         <!-- HEADER BAR WITH CLEAN 3-DOT MENU -->
         <header class="header-bar backdrop-blur-md px-4 md:px-6 py-2.5 flex items-center justify-between z-40 sticky top-0 transition-colors">
             <div class="flex items-center space-x-3">
@@ -307,6 +340,16 @@
                     <button id="menuThemeToggle" class="w-full px-4 py-2.5 text-left text-xs font-semibold hover:bg-white/10 flex items-center space-x-3 transition">
                         <i class="fa-solid fa-moon w-5 text-center text-indigo-400" id="menuThemeIcon"></i>
                         <span id="menuThemeText">Switch to Light Mode</span>
+                    </button>
+
+                    <button id="menuMusicToggle" class="w-full px-4 py-2.5 text-left text-xs font-semibold hover:bg-white/10 flex items-center space-x-3 transition">
+                        <i class="fa-solid fa-music w-5 text-center text-pink-400"></i>
+                        <span id="menuMusicText">Turn Music Off</span>
+                    </button>
+
+                    <button id="menuVoiceOption" class="w-full px-4 py-2.5 text-left text-xs font-semibold hover:bg-white/10 flex items-center space-x-3 transition">
+                        <i class="fa-solid fa-microphone w-5 text-center text-emerald-400"></i>
+                        <span>Voice &amp; Sound Check</span>
                     </button>
 
                     <button id="menuRulesOption" class="w-full px-4 py-2.5 text-left text-xs font-semibold hover:bg-white/10 flex items-center space-x-3 transition">
@@ -392,7 +435,10 @@
 
             <!-- SCREEN 2: LOBBY WAITING -->
             <section id="lobbyView" class="hidden flex-1 flex flex-col items-center justify-center p-4 md:p-6 max-w-4xl mx-auto w-full">
-                <div class="w-full max-w-2xl space-y-6 px-1">
+                <div class="w-full max-w-2xl space-y-5 px-1">
+                    <div id="lobbyLogo" class="fixed left-3 top-2.5 z-40 bg-gradient-to-r from-red-600 via-yellow-500 to-blue-600 px-3 py-1 rounded-2xl shadow-xl transform -rotate-2">
+                        <span class="font-fun font-black text-2xl text-white tracking-widest drop-shadow">UNO!</span>
+                    </div>
                     <div class="flex flex-col sm:flex-row justify-between items-center pb-2 gap-3">
                         <div>
                             <span class="text-xs uppercase tracking-wider opacity-70 font-semibold">Room ID</span>
@@ -402,7 +448,6 @@
                                     <i class="fa-regular fa-copy"></i>
                                     <span>Copy</span>
                                 </button>
-                                <button id="bookBtnLobby" class="bg-white/10 hover:bg-white/20 w-9 h-8 rounded-lg text-base transition" title="Scorebook">📒</button>
                             </div>
                         </div>
                         <div class="flex items-center space-x-2 bg-black/30 px-4 py-2 rounded-xl border border-white/10">
@@ -458,7 +503,6 @@
             <section id="gameView" class="hidden flex-1 flex flex-col relative p-2 md:p-4 max-w-7xl mx-auto w-full justify-between select-none min-h-[85vh]">
                 <div id="matchClock" class="fixed left-2 top-2 z-50 bg-black/70 border border-white/15 rounded-full px-3 py-1 text-xs font-bold text-yellow-300">⏱ 3:00</div>
                 <div id="infoBox" class="fixed left-2 top-11 z-40 w-40 bg-black/70 border border-white/15 rounded-xl p-2 text-[10px] text-slate-200 space-y-0.5"></div>
-                <button id="bookBtnGame" style="left:5.8rem" class="fixed top-2 z-50 w-8 h-8 rounded-full bg-black/70 border border-white/15 text-base flex items-center justify-center" title="Scorebook">📒</button>
                 <button onclick="rotateScreen()" class="fixed right-2 bottom-3 z-50 w-9 h-9 rounded-full bg-slate-700 border-2 border-white text-base shadow-xl">🔄</button>
                 
                 <!-- (direction/status banner removed; hidden stubs keep the render code safe) -->
@@ -555,18 +599,57 @@
 
     <div id="countdownOverlay" class="hidden fixed inset-0 z-[90] flex items-center justify-center bg-black/70"><span id="countdownNum" class="font-fun font-black text-9xl text-yellow-400 drop-shadow-2xl animate-bounce"></span></div>
 
-    <div id="chatRoot" class="hidden fixed left-2 bottom-3 z-50 flex flex-col items-start gap-2">
-        <button id="chatFab" onclick="document.getElementById('chatPanel').classList.toggle('hidden')" class="w-10 h-10 rounded-full bg-indigo-600 border-2 border-white shadow-xl text-lg">💬</button>
-        <div id="chatPanel" class="hidden fixed left-2 bottom-16 z-50 w-60 max-w-[75vw] bg-black/85 border border-white/15 rounded-2xl p-2 backdrop-blur">
-            <div class="flex justify-between items-center mb-1"><span class="text-xs font-bold text-white">💬 Chat</span><button onclick="document.getElementById('chatPanel').classList.add('hidden')" class="text-white text-sm px-2">✕</button></div>
-            
-            <div class="flex flex-wrap gap-1 mb-2 max-h-24 overflow-y-auto"><button onclick="sendChat('😂',1)" class="text-lg">😂</button><button onclick="sendChat('😎',1)" class="text-lg">😎</button><button onclick="sendChat('😡',1)" class="text-lg">😡</button><button onclick="sendChat('👏',1)" class="text-lg">👏</button><button onclick="sendChat('🔥',1)" class="text-lg">🔥</button><button onclick="sendChat('😭',1)" class="text-lg">😭</button><button onclick="sendChat('❤️',1)" class="text-lg">❤️</button><button onclick="sendChat('👍',1)" class="text-lg">👍</button><button onclick="sendChat('Oh sorry 😅',1)" class="bg-white/10 rounded-full px-2 py-0.5 text-[10px] text-white">Oh sorry 😅</button><button onclick="sendChat('Thank you! 🙏',1)" class="bg-white/10 rounded-full px-2 py-0.5 text-[10px] text-white">Thank you! 🙏</button><button onclick="sendChat('Nice card! 👏',1)" class="bg-white/10 rounded-full px-2 py-0.5 text-[10px] text-white">Nice card! 👏</button><button onclick="sendChat('Put +4 😈',1)" class="bg-white/10 rounded-full px-2 py-0.5 text-[10px] text-white">Put +4 😈</button><button onclick="sendChat('Put +2 😏',1)" class="bg-white/10 rounded-full px-2 py-0.5 text-[10px] text-white">Put +2 😏</button><button onclick="sendChat('Play a skip ⛔',1)" class="bg-white/10 rounded-full px-2 py-0.5 text-[10px] text-white">Play a skip ⛔</button><button onclick="sendChat('Hurry up ⏰',1)" class="bg-white/10 rounded-full px-2 py-0.5 text-[10px] text-white">Hurry up ⏰</button><button onclick="sendChat('Oh no! 😱',1)" class="bg-white/10 rounded-full px-2 py-0.5 text-[10px] text-white">Oh no! 😱</button><button onclick="sendChat('Good game 🤝',1)" class="bg-white/10 rounded-full px-2 py-0.5 text-[10px] text-white">Good game 🤝</button><button onclick="sendChat('Change colour 🌈',1)" class="bg-white/10 rounded-full px-2 py-0.5 text-[10px] text-white">Change colour 🌈</button><button onclick="randomChat()" class="bg-yellow-400 text-slate-900 rounded-full px-2 py-0.5 text-[10px] font-bold">🎲 Random</button></div>
-            <div class="flex gap-1">
-                <input onkeydown="if(event.key==='Enter')sendChatInput()" id="chatInput" maxlength="60" placeholder="Message..." class="flex-1 min-w-0 bg-white/10 rounded-lg px-2 py-1 text-xs text-white outline-none">
-                <button onclick="sendChatInput()" class="bg-yellow-400 text-slate-900 font-bold rounded-lg px-2 text-xs">Send</button>
+    <div id="chatRoot" class="hidden"><button id="chatFab" style="display:none"></button></div>
+    <div id="chatFeed" class="fixed left-2 bottom-3 z-40 flex flex-col gap-1.5 items-start pointer-events-none" style="max-width:70vw"></div>
+    <div id="chatPanel" class="hidden fixed flex flex-col bg-slate-900/95 border border-white/15 rounded-2xl shadow-2xl backdrop-blur text-white" style="left:50%;transform:translateX(-50%);bottom:.6rem;width:min(94vw,26rem);max-height:68vh;z-index:70">
+        <div class="flex items-center border-b border-white/10 pl-1">
+            <button class="chat-tab on" data-tab="msg">💬 Messages</button>
+            <button class="chat-tab" data-tab="emoji">😀 Emojis</button>
+            <button class="chat-tab" data-tab="meme">🎭 Memes</button>
+            <button onclick="document.getElementById('chatPanel').classList.add('hidden')" class="px-3 text-slate-300 text-lg">✕</button>
+        </div>
+        <div id="chatPane_msg" class="p-2 overflow-y-auto">
+            <div id="quickMsgs" class="flex flex-wrap gap-1.5 mb-2"></div>
+            <div class="flex gap-1.5">
+                <input onkeydown="if(event.key==='Enter')sendChatInput()" id="chatInput" maxlength="60" placeholder="Type a message..." class="flex-1 min-w-0 bg-white/10 rounded-xl px-3 py-2 text-sm text-white outline-none focus:ring-2 focus:ring-yellow-400/60">
+                <button onclick="sendChatInput()" class="bg-yellow-400 text-slate-900 font-bold rounded-xl px-4 text-sm">Send</button>
             </div>
         </div>
+        <div id="chatPane_emoji" class="hidden p-2 overflow-y-auto"><div id="emojiGrid" class="grid grid-cols-8 gap-1"></div></div>
+        <div id="chatPane_meme" class="hidden p-2 overflow-y-auto"><div id="memeGrid" class="grid grid-cols-3 gap-2"></div></div>
     </div>
+
+    <!-- VOICE & SOUND SHEET -->
+    <div id="voiceModal" class="hidden fixed inset-0 bg-black/75 backdrop-blur-sm flex items-center justify-center p-3" style="z-index:75">
+        <div class="bg-slate-900 text-white border border-white/15 rounded-3xl shadow-2xl w-full max-w-sm max-h-[92vh] overflow-y-auto">
+            <div class="flex items-center justify-between px-4 py-3 border-b border-white/10">
+                <h3 class="font-fun font-black text-lg">🎧 Voice &amp; Sound</h3>
+                <button id="closeVoiceBtn" class="text-slate-400 text-xl"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="p-4 space-y-4 text-sm">
+                <div>
+                    <div class="flex items-center justify-between mb-1.5"><span class="font-bold">🎤 Microphone</span><button id="voiceMicToggle" class="px-3 py-1 rounded-full text-xs font-bold bg-emerald-500 text-white">Turn on</button></div>
+                    <div class="h-3 rounded-full bg-white/10 overflow-hidden"><div id="micMeter" class="h-full rounded-full bg-gradient-to-r from-emerald-400 to-yellow-300" style="width:0%"></div></div>
+                    <p id="micStatus" class="text-[11px] text-slate-400 mt-1">Mic is off. Turn it on, say something and watch the bar move.</p>
+                </div>
+                <div>
+                    <div class="flex items-center justify-between mb-1.5"><span class="font-bold">🔊 Speaker</span><button id="speakerTest" class="px-3 py-1 rounded-full text-xs font-bold bg-blue-500 text-white">Play test sound</button></div>
+                    <p id="speakerStatus" class="text-[11px] text-slate-400">You should hear 3 rising notes. If not, raise your phone volume.</p>
+                </div>
+                <div>
+                    <label class="text-xs font-bold text-slate-300">Players' voices <span id="voiceVolVal" class="text-yellow-300"></span></label>
+                    <input id="voiceVol" type="range" min="0" max="100" value="100" class="vol-range">
+                    <label class="text-xs font-bold text-slate-300">Music <span id="musicVolVal" class="text-yellow-300"></span></label>
+                    <input id="musicVol" type="range" min="0" max="100" value="55" class="vol-range">
+                </div>
+                <div class="grid grid-cols-2 gap-2 text-xs font-bold">
+                    <button id="vMusicToggle" class="rounded-xl py-2 border border-white/15 bg-white/10">🎵 Music: on</button>
+                    <button id="vSfxToggle" class="rounded-xl py-2 border border-white/15 bg-white/10">🔔 Sounds: on</button>
+                    <button id="vDeafToggle" class="rounded-xl py-2 border border-white/15 bg-white/10 col-span-2">🔈 Hear players: on</button>
+                </div>
+                <p id="voicePeers" class="text-[11px] text-slate-400">Voice chat connects automatically with the other phones in your room.</p>
+            </div>
+        </div>
     </div>
 
     <!-- COLOR SELECTION MODAL FOR WILD CARDS -->
@@ -679,64 +762,87 @@
         function cardSfx(c) {
             playSound(c.type === 'skip' ? 'skip' : c.type === 'reverse' ? 'reverse' : (c.type === 'draw2' || c.type === 'draw4') ? 'plus' : c.type === 'wild' ? 'wild' : 'card');
         }
-        let musicTimer = null, musicStep = 0, noiseBuf = null;
-        function startMusic() {
-            try {
-                if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-                if (audioCtx.state === 'suspended') audioCtx.resume();
-            } catch (e) { return; }
-            if (musicTimer) return;
-            if (!noiseBuf) {
-                noiseBuf = audioCtx.createBuffer(1, audioCtx.sampleRate * 0.3, audioCtx.sampleRate);
-                const d = noiseBuf.getChannelData(0);
-                for (let k = 0; k < d.length; k++) d[k] = Math.random() * 2 - 1;
+        // ---- background music: a laid-back groove with real beats (kick / snare / hats / bass / soft chords) ----
+        let musicTimer = null, musicStep = 0, musicNext = 0, musicGain = null, musicEnabled = true, musicVol = 0.55;
+        const BPM = 102, STEP = 60 / BPM / 4;
+        const NZ = new WeakMap();
+        function ensureAudio() {
+            if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            if (audioCtx.state === 'suspended') audioCtx.resume();
+            if (!musicGain) {
+                musicGain = audioCtx.createGain(); musicGain.gain.value = musicVol * 1.3;
+                const lp = audioCtx.createBiquadFilter(); lp.type = 'lowpass'; lp.frequency.value = 7000;
+                const comp = audioCtx.createDynamicsCompressor(); comp.threshold.value = -14; comp.ratio.value = 4;
+                musicGain.connect(lp); lp.connect(comp); comp.connect(audioCtx.destination);
             }
-            const _ = null;
-            // 4-bar loop: C - Am - F - G
-            const chords = [[0, 4, 7], [9, 12, 16], [5, 9, 12], [7, 11, 14]];
-            const roots = [-12, -3, -7, -5];
-            const mel = [
-                [19, _, _, 16, _, 19, _, _, 21, _, 19, _, 16, _, _, _],
-                [16, _, _, 19, _, 21, _, _, 24, _, 21, _, 19, _, _, _],
-                [17, _, _, 21, _, 24, _, _, 21, _, 17, _, 21, _, _, _],
-                [19, _, _, 23, _, 26, _, _, 23, _, 19, _, 14, _, 16, _]
-            ];
-            const freq = s => 262 * Math.pow(2, s / 12);
+            return audioCtx;
+        }
+        function noiseFor(ctx) {
+            let b = NZ.get(ctx);
+            if (!b) { b = ctx.createBuffer(1, Math.floor(ctx.sampleRate * 0.5), ctx.sampleRate); const d = b.getChannelData(0); for (let k = 0; k < d.length; k++) d[k] = Math.random() * 2 - 1; NZ.set(ctx, b); }
+            return b;
+        }
+        function mKick(ctx, d, t, v) {
+            const o = ctx.createOscillator(), g = ctx.createGain();
+            o.frequency.setValueAtTime(155, t); o.frequency.exponentialRampToValueAtTime(42, t + 0.13);
+            g.gain.setValueAtTime(v, t); g.gain.exponentialRampToValueAtTime(0.001, t + 0.32);
+            o.connect(g); g.connect(d); o.start(t); o.stop(t + 0.34);
+        }
+        function mNoise(ctx, d, t, v, dur, type, freq, q) {
+            const src = ctx.createBufferSource(), f = ctx.createBiquadFilter(), g = ctx.createGain();
+            src.buffer = noiseFor(ctx); f.type = type; f.frequency.value = freq; if (q) f.Q.value = q;
+            g.gain.setValueAtTime(v, t); g.gain.exponentialRampToValueAtTime(0.001, t + dur);
+            src.connect(f); f.connect(g); g.connect(d); src.start(t); src.stop(t + dur + 0.02);
+        }
+        function mTone(ctx, d, t, freq, v, dur, type, cut) {
+            const o = ctx.createOscillator(), g = ctx.createGain();
+            o.type = type; o.frequency.setValueAtTime(freq, t);
+            if (cut) { const f = ctx.createBiquadFilter(); f.type = 'lowpass'; f.frequency.value = cut; o.connect(f); f.connect(g); } else o.connect(g);
+            g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(v, t + 0.012); g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+            g.connect(d); o.start(t); o.stop(t + dur + 0.03);
+        }
+        const M_ROOTS = [55, 43.65, 65.41, 49];                       // bass: Am  F  C  G
+        const M_CHORD = [[0, 3, 7], [-4, 0, 3], [3, 7, 10], [-2, 2, 5]]; // semitones from A3
+        const M_LEAD = [null, null, null, null, { 2: 7, 6: 5, 10: 3, 14: 5 }, { 2: 3, 8: 5, 12: 7 }, { 4: 10, 8: 7, 12: 5 }, { 2: 5, 6: 3, 10: 0, 13: 3 }];
+        const mHz = (semi, base) => (base || 220) * Math.pow(2, semi / 12);
+        function musicSchedule(ctx, d, t, i) {
+            const s = i % 16, bar = Math.floor(i / 16) % 8, ch = bar % 4;
+            const T = t + (s % 2 ? STEP * 0.16 : 0);                  // light swing on the off-beats
+            // drums
+            if (s === 0 || s === 8) mKick(ctx, d, t, 0.62);
+            if (s === 10) mKick(ctx, d, t, 0.38);
+            if (bar % 2 === 1 && s === 3) mKick(ctx, d, t, 0.3);
+            if (s === 4 || s === 12) { mNoise(ctx, d, t, 0.26, 0.16, 'bandpass', 1700, 0.8); mTone(ctx, d, t, 190, 0.12, 0.09, 'triangle'); }
+            if (bar === 7 && s >= 12) mNoise(ctx, d, t, 0.14, 0.07, 'bandpass', 2200, 0.8);   // snare fill before the loop restarts
+            if (s % 2 === 0) mNoise(ctx, d, T, s % 4 === 0 ? 0.075 : 0.05, 0.045, 'highpass', 8500);
+            if (s === 14) mNoise(ctx, d, T, 0.06, 0.2, 'highpass', 7000);
+            if (s % 2 === 1) mNoise(ctx, d, T, 0.022, 0.03, 'highpass', 6000);
+            // bass groove
+            const BP = { 0: 1, 3: 1, 6: 0.8, 8: 1, 10: 0.9, 14: 0.8 };
+            if (BP[s]) mTone(ctx, d, T, M_ROOTS[ch] * (s === 3 || s === 14 ? 2 : 1), 0.19 * BP[s], 0.2, 'sawtooth', 420);
+            // warm chords: a long pad on the bar line + two short stabs
+            if (s === 0) M_CHORD[ch].forEach(x => mTone(ctx, d, t, mHz(x), 0.035, STEP * 7, 'triangle', 1600));
+            if (s === 3 || s === 10) M_CHORD[ch].forEach(x => mTone(ctx, d, T, mHz(x + 12), 0.028, 0.22, 'triangle', 2400));
+            // soft pluck melody only in the second half of the 8-bar loop
+            const L = M_LEAD[bar];
+            if (L && L[s] !== undefined) mTone(ctx, d, T, mHz(L[s], 440), 0.03, 0.4, 'sine');
+        }
+        function startMusic() {
+            try { ensureAudio(); } catch (e) { return; }
+            if (musicTimer) return;
+            musicStep = 0; musicNext = audioCtx.currentTime + 0.12;
             musicTimer = setInterval(() => {
-                if (!soundEnabled || !audioCtx) return;
-                const t = audioCtx.currentTime, i = musicStep++;
-                const s = i % 16, bar = Math.floor(i / 16) % 4, loop = Math.floor(i / 64) % 2;
-                const tone2 = (f, type, vol, dur, f2) => {
-                    const o = audioCtx.createOscillator(), g = audioCtx.createGain();
-                    o.type = type; o.frequency.setValueAtTime(f, t);
-                    if (f2) o.frequency.exponentialRampToValueAtTime(f2, t + dur);
-                    o.connect(g); g.connect(audioCtx.destination);
-                    g.gain.setValueAtTime(vol, t); g.gain.exponentialRampToValueAtTime(0.001, t + dur);
-                    o.start(t); o.stop(t + dur + 0.02);
-                };
-                const noise = (vol, dur, hp) => {
-                    const src = audioCtx.createBufferSource(), g = audioCtx.createGain(), fl = audioCtx.createBiquadFilter();
-                    src.buffer = noiseBuf; fl.type = 'highpass'; fl.frequency.value = hp;
-                    src.connect(fl); fl.connect(g); g.connect(audioCtx.destination);
-                    g.gain.setValueAtTime(vol, t); g.gain.exponentialRampToValueAtTime(0.001, t + dur);
-                    src.start(t); src.stop(t + dur);
-                };
-                // drums
-                if (s % 8 === 0) tone2(160, 'sine', 0.12, 0.18, 45);           // kick
-                if (s === 4 || s === 12) noise(0.05, 0.12, 1500);              // clap/snare
-                if (s % 2 === 0) noise(s % 4 === 0 ? 0.025 : 0.015, 0.04, 7000); // hi-hat
-                // bass groove
-                if ([0, 3, 6, 8, 11, 14].includes(s)) tone2(freq(roots[bar]), 'triangle', 0.09, 0.22);
-                // sparkly arpeggio
-                if (s % 2 === 0) tone2(freq(chords[bar][(s / 2) % 3] + 12), 'sine', 0.035, 0.16);
-                // pad on the bar start
-                if (s === 0) chords[bar].forEach(c => tone2(freq(c), 'triangle', 0.025, 1.4));
-                // melody (lead switches colour every second loop)
-                const m = mel[bar][s];
-                if (m !== null) tone2(freq(m), loop ? 'square' : 'triangle', loop ? 0.03 : 0.06, 0.28);
-            }, 150);
+                if (!audioCtx) return;
+                const now = audioCtx.currentTime;
+                if (musicNext < now - 0.3) musicNext = now + 0.05;      // tab was asleep: don't replay the past
+                while (musicNext < now + 0.35) {
+                    if (soundEnabled && musicEnabled) musicSchedule(audioCtx, musicGain, musicNext, musicStep);
+                    musicStep++; musicNext += STEP;
+                }
+            }, 50);
         }
         function stopMusic() { clearInterval(musicTimer); musicTimer = null; }
+        function setMusicLevel() { if (musicGain && audioCtx) musicGain.gain.setTargetAtTime(musicVol * 1.3 * (voice.hearing > 0 ? 0.45 : 1), audioCtx.currentTime, 0.2); }
         function showCountdown(n) {
             document.getElementById('countdownNum').textContent = n;
             document.getElementById('countdownOverlay').classList.remove('hidden');
@@ -974,7 +1080,7 @@
             document.getElementById('homeView').classList.add('hidden');
             document.getElementById('lobbyView').classList.remove('hidden');
             document.getElementById('gameView').classList.add('hidden');
-            document.body.classList.remove('in-game');
+            document.body.classList.remove('in-game'); document.body.classList.add('in-room');
             document.getElementById('roomBadge').classList.remove('hidden');
             document.getElementById('badgeRoomCode').innerText = gameState.roomCode;
             document.getElementById('displayRoomCode').innerHTML = String(gameState.roomCode).split('').map(d => `<span class="room-digit">${d}</span>`).join('');
@@ -1027,12 +1133,45 @@
             updateLobbySettings(); broadcastState();
         }
         function chatAdd(name, color, text) {
-            const log = document.getElementById('chatLog');
-            if (!log) return;
+            const feed = document.getElementById('chatFeed');
+            if (!feed || gameState.gameStarted) return;                 // during a match the message pops up beside the player instead
             const d = document.createElement('div');
-            d.innerHTML = `<b style="color:${color}">${name}:</b> ${text}`;
-            log.appendChild(d); log.scrollTop = log.scrollHeight;
+            d.className = 'feed-item bg-black/75 border border-white/15 rounded-2xl px-2.5 py-1 text-xs text-white';
+            const mk = String(text).startsWith('meme:') ? String(text).slice(5) : null;
+            d.innerHTML = `<b style="color:${color}">${name}</b> ` + (mk && MEMES[mk] ? '<div class="mt-1">' + memeHTML(mk, 84) + '</div>' : text);
+            feed.appendChild(d); while (feed.children.length > 4) feed.firstChild.remove();
+            setTimeout(() => d.remove(), 6500);
         }
+        // ---- chat content: quick messages, emojis and meme cards ----
+        const MEMES = {
+            gg: ['😎', 'GG EZ', '#16a34a'], bruh: ['😐', 'BRUH', '#475569'], rip: ['💀', 'RIP', '#334155'], wow: ['😲', 'WOW!', '#7c3aed'],
+            cook: ['🧑‍🍳', 'LET HIM COOK', '#ea580c'], sus: ['🤨', 'KINDA SUS', '#dc2626'], pain: ['😭', 'PAIN', '#2563eb'], yeet: ['🚀', 'YEET', '#0891b2'],
+            nice: ['👌', 'NICE ONE', '#ca8a04'], skill: ['🤡', 'SKILL ISSUE', '#be185d'], sorry: ['🙏', 'SORRY NOT SORRY', '#9333ea'], fire: ['🔥', 'ON FIRE', '#e11d48'],
+            trap: ['🪤', 'IT IS A TRAP', '#0d9488'], cold: ['🥶', 'COLD MOVE', '#0ea5e9'], uno: ['☝️', 'UNO!', '#f59e0b'], dead: ['🤣', 'I AM DEAD', '#65a30d']
+        };
+        function memeHTML(key, w) {
+            const m = MEMES[key]; if (!m) return '';
+            return `<div class="meme-card" style="width:${w}px;height:${Math.round(w * 0.86)}px;background:linear-gradient(150deg,${m[2]},#0f172a 140%)"><div class="me" style="font-size:${Math.round(w * 0.4)}px">${m[0]}</div><div class="mc" style="font-size:${Math.max(8, Math.round(w * 0.125))}px;padding:0 3px">${m[1]}</div></div>`;
+        }
+        function chatBubbleHTML(t) {
+            if (String(t).startsWith('meme:') && MEMES[String(t).slice(5)]) return `<div class="move-bubble absolute bottom-full left-1/2 -translate-x-1/2 mb-2 z-50 pointer-events-none">${memeHTML(String(t).slice(5), 78)}</div>`;
+            return `<div class="move-bubble absolute bottom-full left-1/2 -translate-x-1/2 mb-3 z-50 bg-white text-slate-900 font-bold text-xs px-2.5 py-1 rounded-2xl shadow-2xl border-2 border-indigo-500 whitespace-nowrap">${t}</div>`;
+        }
+        function buildChat() {
+            const QUICK = ["Your turn! 👉", "Oh sorry 😅", "Thank you! 🙏", "Nice card! 👏", "Put +4 😈", "Put +2 😏", "Play a skip ⛔", "Hurry up ⏰", "Oh no! 😱", "Good game 🤝", "Well played 👏", "Change colour 🌈", "Wait for me ⏳", "Not fair 😤", "I'm winning 😎", "One more round? 🔁"];
+            document.getElementById('quickMsgs').innerHTML = QUICK.map(q => `<button class="bg-white/10 hover:bg-white/20 rounded-full px-3 py-1.5 text-xs" data-q="${q}">${q}</button>`).join('') + '<button class="bg-yellow-400 text-slate-900 rounded-full px-3 py-1.5 text-xs font-bold" data-q="__rand">🎲 Random</button>';
+            document.querySelectorAll('#quickMsgs [data-q]').forEach(b => b.onclick = () => b.dataset.q === '__rand' ? randomChat() : sendChat(b.dataset.q, 1));
+            const EMO = ['😂', '😎', '😡', '👏', '🔥', '😭', '❤️', '👍', '😱', '😅', '🙏', '🤝', '😈', '😏', '🤔', '😴', '🥳', '😤', '🤯', '😜', '🥲', '😇', '🤩', '😬', '🙄', '😢', '🤡', '💀', '👀', '🎉', '💪', '🍀', '⭐', '🌈', '⛔', '⏰', '🤞', '👋', '🙌', '🫡', '😮', '🥶', '🤣', '😘', '😁', '🫠', '🤭', '🧠'];
+            document.getElementById('emojiGrid').innerHTML = EMO.map(e => `<button class="text-2xl py-1 rounded-lg hover:bg-white/10 active:scale-90 transition" data-e="${e}">${e}</button>`).join('');
+            document.querySelectorAll('#emojiGrid [data-e]').forEach(b => b.onclick = () => sendChat(b.dataset.e, 1));
+            document.getElementById('memeGrid').innerHTML = Object.keys(MEMES).map(k => `<button class="active:scale-95 transition" data-m="${k}">${memeHTML(k, 100)}</button>`).join('');
+            document.querySelectorAll('#memeGrid [data-m]').forEach(b => b.onclick = () => sendChat('meme:' + b.dataset.m, 1));
+            document.querySelectorAll('.chat-tab[data-tab]').forEach(t => t.onclick = () => {
+                document.querySelectorAll('.chat-tab[data-tab]').forEach(x => x.classList.toggle('on', x === t));
+                ['msg', 'emoji', 'meme'].forEach(n => document.getElementById('chatPane_' + n).classList.toggle('hidden', n !== t.dataset.tab));
+            });
+        }
+        function toggleChat() { document.getElementById('chatPanel').classList.toggle('hidden'); }
         function hostChat(pid, text, emoji) {
             const p = gameState.players.find(x => x.id === pid);
             text = cleanName(String(text || '')).slice(0, 60);
@@ -1054,6 +1193,155 @@
             const L = ["Oh sorry 😅", "Thank you! 🙏", "Nice card! 👏", "Put +4 😈", "Put +2 😏", "Play a skip ⛔", "Hurry up ⏰", "Oh no! 😱", "Good game 🤝", "Change colour 🌈", "Special card! 🔥", "Your turn? 👀"];
             sendChat(L[Math.floor(Math.random() * L.length)], 1);
         }
+
+        // ===================== VOICE CHAT (WebRTC audio between the phones in the room) =====================
+        const voice = { stream: null, on: false, vol: 1, deaf: false, audios: {}, sent: {}, an: null, raf: 0, level: 0, hearing: 0 };
+        function voiceTargets() {
+            const g = gameState, out = [];
+            g.players.forEach(p => { if (p.isBot || p.id === g.localPlayerId) return; out.push(p.isHost ? PEER_PREFIX + g.roomCode : p.id); });
+            return out.filter(id => !net.peer || id !== net.peer.id);
+        }
+        function attachRemote(id, stream) {
+            let a = voice.audios[id];
+            if (!a) { a = document.createElement('audio'); a.autoplay = true; a.setAttribute('playsinline', ''); a.style.display = 'none'; document.body.appendChild(a); voice.audios[id] = a; }
+            if (a.srcObject !== stream) a.srcObject = stream;
+            a.volume = voice.vol; a.muted = voice.deaf;
+            const p = a.play && a.play(); if (p && p.catch) p.catch(() => {});
+            updateVoiceUI();
+        }
+        function dropRemote(id) { const a = voice.audios[id]; if (a) { try { a.srcObject = null; a.remove(); } catch (e) {} delete voice.audios[id]; } updateVoiceUI(); }
+        function voiceAttach(peer) {
+            peer.on('call', call => {                       // every phone answers; it sends its own voice back only if its mic is on
+                const mic = !!voice.stream;
+                try { call.answer(voice.stream || undefined); } catch (e) { return; }
+                if (mic) voice.sent[call.peer] = true;
+                call.on('stream', rs => attachRemote(call.peer, rs));
+                call.on('close', () => dropRemote(call.peer));
+                call.on('error', () => {});
+            });
+        }
+        function voiceSync() {
+            if (!voice.stream || !net.peer || net.peer.destroyed || !net.peer.open) return;
+            voiceTargets().forEach(id => {
+                if (voice.sent[id]) return;
+                try {
+                    const call = net.peer.call(id, voice.stream);
+                    if (!call) return;
+                    voice.sent[id] = true;
+                    call.on('stream', rs => attachRemote(id, rs));
+                    call.on('close', () => { delete voice.sent[id]; dropRemote(id); });
+                    call.on('error', () => { delete voice.sent[id]; });
+                    setTimeout(() => { if (!call.open) delete voice.sent[id]; }, 8000);   // never answered: try again on the next sync
+                } catch (e) { delete voice.sent[id]; }
+            });
+        }
+        function startMeter() {
+            if (voice.an || !voice.stream) return;
+            try {
+                const ctx = ensureAudio(), src = ctx.createMediaStreamSource(voice.stream), an = ctx.createAnalyser();
+                an.fftSize = 512; src.connect(an); voice.an = an; voice.src = src;     // analyser only: never routed to the speaker, so no echo
+                const buf = new Uint8Array(an.fftSize), bar = document.getElementById('micMeter');
+                const tick = () => {
+                    if (!voice.an) return;
+                    an.getByteTimeDomainData(buf);
+                    let sum = 0; for (let k = 0; k < buf.length; k++) { const v = (buf[k] - 128) / 128; sum += v * v; }
+                    voice.level = Math.min(1, Math.sqrt(sum / buf.length) * 5);
+                    if (bar) bar.style.width = (voice.on ? Math.round(voice.level * 100) : 0) + '%';
+                    const talk = voice.on && voice.level > 0.18;
+                    document.querySelectorAll('.voice-mic-btn').forEach(b => b.classList.toggle('mic-talk', talk));
+                    voice.raf = requestAnimationFrame(tick);
+                };
+                tick();
+            } catch (e) {}
+        }
+        function micError(e) {
+            if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) return 'Voice needs a secure page (https). Open the game from a web link instead of a local file.';
+            if (e && e.name === 'NotAllowedError') return 'Microphone is blocked. Allow it in your browser / site settings and try again.';
+            if (e && e.name === 'NotFoundError') return 'No microphone was found on this device.';
+            if (e && e.name === 'NotReadableError') return 'Another app is using the microphone.';
+            return 'Could not start the microphone.';
+        }
+        async function toggleMic() {
+            if (!voice.stream) {
+                if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) { showToast(micError()); updateVoiceUI(micError()); return; }
+                try { voice.stream = await navigator.mediaDevices.getUserMedia({ audio: { echoCancellation: true, noiseSuppression: true, autoGainControl: true } }); }
+                catch (e) { const m = micError(e); showToast(m); updateVoiceUI(m); return; }
+                voice.on = true; startMeter(); voiceSync();
+            } else {
+                voice.on = !voice.on;
+                voice.stream.getAudioTracks().forEach(t => t.enabled = voice.on);
+            }
+            playSound('click'); updateVoiceUI();
+        }
+        function stopVoice() {
+            cancelAnimationFrame(voice.raf); voice.an = null;
+            try { if (voice.src) voice.src.disconnect(); } catch (e) {}
+            if (voice.stream) voice.stream.getTracks().forEach(t => t.stop());
+            Object.keys(voice.audios).forEach(dropRemote);
+            voice.stream = null; voice.on = false; voice.sent = {}; voice.level = 0;
+            updateVoiceUI();
+        }
+        function updateVoiceUI(msg) {
+            voice.hearing = Object.keys(voice.audios).length;
+            document.querySelectorAll('.voice-mic-btn').forEach(b => {
+                b.classList.toggle('mic-live', voice.on); b.title = voice.on ? 'Mic on (recording) – tap to turn off' : 'Mic off – tap to turn on';
+                const ic = b.querySelector('i'); if (ic) ic.className = 'fa-solid ' + (voice.on ? 'fa-microphone' : 'fa-microphone-slash');
+            });
+            document.querySelectorAll('.spk-btn').forEach(b => {
+                b.classList.toggle('spk-off', voice.deaf); b.title = voice.deaf ? 'Not hearing players – tap to hear' : 'Hearing players – tap to mute';
+                const ic = b.querySelector('i'); if (ic) ic.className = 'fa-solid ' + (voice.deaf ? 'fa-volume-xmark' : 'fa-volume-high');
+            });
+            const t = document.getElementById('voiceMicToggle'); if (t) { t.textContent = voice.on ? 'Mute mic' : (voice.stream ? 'Unmute mic' : 'Turn on'); t.className = 'px-3 py-1 rounded-full text-xs font-bold text-white ' + (voice.on ? 'bg-red-500' : 'bg-emerald-500'); }
+            const st = document.getElementById('micStatus'); if (st) st.textContent = msg || (voice.on ? 'Mic is live. Speak – the bar should move. Others in the room can hear you.' : voice.stream ? 'Mic is muted.' : 'Mic is off. Turn it on, say something and watch the bar move.');
+            const pe = document.getElementById('voicePeers'); if (pe) pe.textContent = voice.hearing ? `🔗 Voice link with ${voice.hearing} player${voice.hearing > 1 ? 's' : ''} is active.` : 'Voice chat connects automatically with the other phones in your room once someone turns their mic on.';
+            const m = document.getElementById('vMusicToggle'); if (m) m.textContent = '🎵 Music: ' + (musicEnabled ? 'on' : 'off');
+            const sx = document.getElementById('vSfxToggle'); if (sx) sx.textContent = '🔔 Sounds: ' + (soundEnabled ? 'on' : 'off');
+            const dd = document.getElementById('vDeafToggle'); if (dd) dd.textContent = '🔈 Hear players: ' + (voice.deaf ? 'off' : 'on');
+            const mi = document.getElementById('menuMusicText'); if (mi) mi.textContent = musicEnabled ? 'Turn Music Off' : 'Turn Music On';
+            setMusicLevel();
+        }
+        function toggleHear() {
+            voice.deaf = !voice.deaf;
+            Object.values(voice.audios).forEach(a => a.muted = voice.deaf);
+            playSound('click'); updateVoiceUI();
+            showToast(voice.deaf ? 'Players\' voices muted' : 'You can hear players\' voices');
+        }
+        function speakerTest() {
+            try {
+                const ctx = ensureAudio(), n = ctx.currentTime + 0.05;
+                [523.25, 659.25, 783.99].forEach((f, k) => {
+                    const o = ctx.createOscillator(), g = ctx.createGain();
+                    o.type = 'sine'; o.frequency.value = f; g.gain.setValueAtTime(0.0001, n + k * 0.28); g.gain.exponentialRampToValueAtTime(0.35, n + k * 0.28 + 0.02); g.gain.exponentialRampToValueAtTime(0.0001, n + k * 0.28 + 0.26);
+                    o.connect(g); g.connect(ctx.destination); o.start(n + k * 0.28); o.stop(n + k * 0.28 + 0.3);
+                });
+                document.getElementById('speakerStatus').textContent = ctx.state === 'running' ? '▶ Played 3 rising notes. Heard them? If not, raise the phone volume and turn off silent mode.' : 'Audio is paused by the browser – tap the button once more.';
+            } catch (e) { document.getElementById('speakerStatus').textContent = 'This browser could not play sound.'; }
+        }
+        function setSound(on) {
+            soundEnabled = on;
+            document.getElementById('menuSoundIcon').className = on ? "fa-solid fa-volume-high w-5 text-center text-yellow-400" : "fa-solid fa-volume-xmark w-5 text-center text-slate-500";
+            document.getElementById('menuSoundText').innerText = on ? "Mute Audio" : "Unmute Audio";
+            updateVoiceUI();
+        }
+        function wireVoiceUI() {
+            document.getElementById('chatBtnTop').onclick = toggleChat;
+            ['micBtnTop', 'voiceMicToggle'].forEach(id => document.getElementById(id).onclick = toggleMic);
+            document.getElementById('spkBtnTop').onclick = toggleHear;
+            const open = () => { document.getElementById('voiceModal').classList.remove('hidden'); updateVoiceUI(); };
+            document.getElementById('menuVoiceOption').onclick = () => { open(); document.getElementById('optionsDropdown').classList.add('hidden'); };
+            document.getElementById('closeVoiceBtn').onclick = () => document.getElementById('voiceModal').classList.add('hidden');
+            document.getElementById('speakerTest').onclick = speakerTest;
+            document.getElementById('menuMusicToggle').onclick = () => { musicEnabled = !musicEnabled; document.getElementById('optionsDropdown').classList.add('hidden'); updateVoiceUI(); };
+            document.getElementById('vMusicToggle').onclick = () => { musicEnabled = !musicEnabled; updateVoiceUI(); };
+            document.getElementById('vSfxToggle').onclick = () => setSound(!soundEnabled);
+            document.getElementById('vDeafToggle').onclick = toggleHear;
+            const vv = document.getElementById('voiceVol'), mv = document.getElementById('musicVol');
+            vv.oninput = () => { voice.vol = vv.value / 100; document.getElementById('voiceVolVal').textContent = vv.value + '%'; Object.values(voice.audios).forEach(a => a.volume = voice.vol); };
+            mv.oninput = () => { musicVol = mv.value / 100; document.getElementById('musicVolVal').textContent = mv.value + '%'; setMusicLevel(); };
+            vv.oninput(); mv.oninput();
+            buildChat(); updateVoiceUI();
+        }
+
         function sendChatInput() {
             const i = document.getElementById('chatInput');
             sendChat(i.value); i.value = '';
@@ -1125,6 +1413,7 @@
         }
         function broadcastState() {
             if (net.role !== 'host') return;
+            if (voice.stream) voiceSync();
             Object.keys(net.conns).forEach(pid => netSend(net.conns[pid], { t: 'state', s: snapFor(pid) }));
         }
 
@@ -1137,7 +1426,7 @@
             net.role = 'host';
             const peer = new Peer(PEER_PREFIX + code, PEER_OPTS);
             net.peer = peer;
-            keepAlive(peer);
+            keepAlive(peer); voiceAttach(peer);
             peer.on('open', () => {
                 gameState.roomCode = code;
                 gameState.localPlayerId = 'host_' + Math.random().toString(36).substring(2, 7);
@@ -1199,7 +1488,7 @@
                 btn.disabled = true; btn.textContent = n ? 'Trying again…' : 'Connecting…';
                 const peer = new Peer(undefined, PEER_OPTS);
                 net.peer = peer;
-                keepAlive(peer);
+                keepAlive(peer); voiceAttach(peer);
                 clearTimeout(net._gu);
                 const giveUp = net._gu = setTimeout(() => retryOrFail("Couldn't reach the room. Check the 4 digits and that both phones are online."), 14000);
                 peer.on('open', () => {
@@ -1236,6 +1525,7 @@
             if (!s.started && g.gameStarted) return;                              // wait for the result message first
             net.joined = true; { const jb = document.getElementById('joinRoomBtn'); if (jb) { jb.disabled = false; jb.textContent = 'Join Room'; } }
             g.round = s.round; g.rounds = s.rounds; g.book = s.book || {};
+            if (voice.stream) setTimeout(voiceSync, 0);
             g.roomCode = s.roomCode; g.localPlayerId = myId; g.isBotOnlyMatch = false;
             g.players = s.players; g.currentTurnIndex = s.turn; g.direction = s.dir; g.currentColor = s.color;
             g.deck = new Array(s.deckN); g.discardPile = s.discard; g.hasCalledUno = s.called;
@@ -1787,7 +2077,7 @@
                     const half = (w > 1 ? 60 : 38) * sc;
                     let x = W * (0.5 + 0.46 * Math.cos(th));
                     x = Math.max(half + 4, Math.min(W - half - 4, x));
-                    let y = H * (0.30 - 0.27 * t);
+                    let y = H * (0.35 - 0.26 * t);
                     if (m > 6 && k % 2) y += H * 0.14 * sc * (1 - 0.85 * t);   // stagger neighbours when crowded (not above the piles)
                     lpos[i] = { x, y, s: sc };
                 });
@@ -1817,7 +2107,7 @@
 
                 const avatarWrap = `
                         <div class="relative shrink-0">
-                            ${gameState.chats[p.id] ? `<div class="move-bubble absolute bottom-full left-1/2 -translate-x-1/2 mb-3 z-50 bg-white text-slate-900 font-bold text-xs px-2.5 py-1 rounded-2xl shadow-2xl border-2 border-indigo-500 whitespace-nowrap">${gameState.chats[p.id]}</div>` : ''}
+                            ${gameState.chats[p.id] ? chatBubbleHTML(gameState.chats[p.id]) : ''}
                             ${isCurrent ? `
                             <svg class="absolute -inset-2 w-[calc(100%+16px)] h-[calc(100%+16px)] -rotate-90 pointer-events-none z-10" viewBox="0 0 44 44">
                                 <circle cx="22" cy="22" r="20" stroke="rgba(255,255,255,0.18)" stroke-width="3" fill="none"></circle>
@@ -1833,7 +2123,7 @@
                             ${isLocal ? `<button class="chat-btn absolute -left-4 -bottom-3 z-30 w-7 h-7 rounded-full bg-indigo-600 border-2 border-white text-xs shadow">💬</button>` : ''}
                             ${p.team ? `<div class="absolute -top-1 -left-1 z-20 text-[9px] font-black px-1.5 rounded-full border border-white text-white ${p.team % 2 ? 'bg-blue-600' : 'bg-pink-600'}">T${p.team}</div>` : ''}
                             ${gameState.shouts[p.id] ? `<div class="absolute -top-3 -right-3 z-30 text-xl animate-bounce">📣</div>` : ''}
-                            ${isLocal && p.hand.length <= 2 && !gameState.shouts[p.id] ? `<button class="mic-btn absolute -top-3 -right-3 z-30 w-7 h-7 rounded-full bg-red-500 border-2 border-white text-sm shadow animate-pulse">🎤</button>` : ''}
+                            ${isLocal && p.hand.length <= 2 && !gameState.shouts[p.id] ? `<button class="mic-btn absolute -top-3 -right-3 z-30 w-7 h-7 rounded-full bg-red-500 border-2 border-white text-sm shadow animate-pulse" title="Shout UNO!">📣</button>` : ''}
                         </div>
 `;
                 const bubbleHTML = bubbleText ? `
@@ -2302,9 +2592,7 @@ ${avatarWrap}
 
             // Mute / Unmute Toggle
             document.getElementById('menuSoundToggle').onclick = () => {
-                soundEnabled = !soundEnabled;
-                document.getElementById('menuSoundIcon').className = soundEnabled ? "fa-solid fa-volume-high w-5 text-center text-yellow-400" : "fa-solid fa-volume-xmark w-5 text-center text-slate-500";
-                document.getElementById('menuSoundText').innerText = soundEnabled ? "Mute Audio" : "Unmute Audio";
+                setSound(!soundEnabled);
                 dropdown.classList.add('hidden');
                 playSound('click');
             };
@@ -2378,6 +2666,7 @@ ${avatarWrap}
                     b.addEventListener('paste', e => { e.preventDefault(); const t = (e.clipboardData || window.clipboardData).getData('text').replace(/\D/g, ''); if (t) fill(i, t); });
                 });
             })();
+            wireVoiceUI();
             document.getElementById('createRoomBtn').onclick = createRoom;
             document.getElementById('joinRoomBtn').onclick = joinRoom;
             document.getElementById('addBotBtn').onclick = addBotPlayer;
@@ -2399,12 +2688,14 @@ ${avatarWrap}
             });
 
             const leaveGame = () => {
-                netStop(); clearInterval(gameState.matchTick); stopMusic(); hideCountdown(); gameState.counting = false;
+                stopVoice(); netStop(); clearInterval(gameState.matchTick); stopMusic(); hideCountdown(); gameState.counting = false;
                 document.getElementById('chatRoot').classList.add('hidden');
                 clearInterval(gameState.timerInterval); clearInterval(winFxTimer);
                 Object.keys(avatarCache).forEach(k => delete avatarCache[k]);
                 gameState.book = {}; gameState.rounds = 0; gameState.round = 0; gameState.winRound = null;
+                document.body.classList.remove('in-room');
                 document.getElementById('bookModal').classList.add('hidden');
+                document.getElementById('chatPanel').classList.add('hidden'); document.getElementById('voiceModal').classList.add('hidden');
                 gameState.gameStarted = false;
                 document.body.classList.remove('in-game');
                 document.getElementById('homeView').classList.remove('hidden');
@@ -2431,7 +2722,7 @@ ${avatarWrap}
                 setupLobbyView();
                 playSound('click');
             };
-            ['bookBtnWin', 'bookBtnGame', 'bookBtnLobby'].forEach(id => document.getElementById(id).onclick = openBook);
+            ['bookBtnWin', 'bookBtnTop'].forEach(id => document.getElementById(id).onclick = openBook);
             document.getElementById('closeBookBtn').onclick = () => document.getElementById('bookModal').classList.add('hidden');
             document.getElementById('resetBookBtn').onclick = () => { if (net.role === 'client') return; gameState.book = {}; gameState.rounds = 0; renderBook(); broadcastState(); };
         });
