@@ -203,11 +203,18 @@
         ::-webkit-scrollbar-track { background: rgba(0,0,0,0.1); border-radius: 4px; }
         ::-webkit-scrollbar-thumb { background: rgba(150,150,150,0.4); border-radius: 4px; }
     
-        /* In-game: hide title + room badge, keep only the 3-dot menu floating at the right */
-        body.in-game .header-bar { position: fixed; top: 0.5rem; right: 0.5rem; left: auto; width: auto; background: transparent !important; border: none !important; padding: 0; backdrop-filter: none; box-shadow: none; }
-        body.in-game .header-bar > div:first-child, body.in-game #roomBadge { display: none !important; }
-        body.in-game #threeDotsMenuBtn { background: rgba(0,0,0,0.55); }
-        body.light-theme.in-game #threeDotsMenuBtn { background: rgba(255,255,255,0.8); }
+        /* Only the 3-dot menu stays at the top, floating on the right; no bar, no logo, no badge */
+        .header-bar { position: fixed !important; top: 0.5rem; right: 0.5rem; left: auto; width: auto; background: transparent !important; border: none !important; padding: 0 !important; backdrop-filter: none !important; box-shadow: none !important; }
+        .header-bar > div:first-child, #roomBadge { display: none !important; }
+        #threeDotsMenuBtn { background: rgba(0,0,0,0.55); }
+        body.light-theme #threeDotsMenuBtn { background: rgba(255,255,255,0.85); }
+        #homeView, #lobbyView { padding-top: 3.5rem !important; }
+
+        /* four-box room id */
+        .room-box { width: 3.3rem; height: 4rem; text-align: center; font-family: ui-monospace, Menlo, monospace; font-size: 1.9rem; font-weight: 800; color: inherit; background: rgba(0,0,0,.3); border: 2px solid rgba(255,255,255,.28); border-radius: .9rem; outline: none; caret-color: #facc15; transition: border-color .15s, transform .15s; }
+        .room-box:focus { border-color: #facc15; transform: translateY(-2px); box-shadow: 0 0 0 3px rgba(250,204,21,.25); }
+        .room-box.filled { border-color: rgba(250,204,21,.7); }
+        .room-digit { display: inline-flex; align-items: center; justify-content: center; width: 2.9rem; height: 3.6rem; border-radius: .8rem; border: 2px solid rgba(250,204,21,.65); background: rgba(250,204,21,.1); color: #fde047; font-family: ui-monospace, Menlo, monospace; font-size: 1.9rem; font-weight: 900; }
 
         /* ---------- Landscape phone layout (class set by JS, sizes scale with screen height via --u) ---------- */
         body.is-landscape #gameView { position: fixed !important; inset: 0; width: 100vw; height: var(--vh, 360px); min-height: 0 !important; padding: 4px !important; max-width: none !important; overflow: hidden; z-index: 5; }
@@ -246,6 +253,7 @@
         body.is-landscape #winnerCard, body.is-landscape #colorPickerModal > div, body.is-landscape #rulesModal > div { max-height: 94vh; overflow-y: auto; }
         body.is-landscape #colorPickerModal > div { padding: 1rem !important; }
         body.is-landscape #colorPickerModal .wild-color-opt { height: 3rem; }
+        body.is-landscape #chatPanel { width: 15rem; }
 
         /* ---------- Winner screen graphics ---------- */
         .win-rays { position: absolute; left: 50%; top: -60px; width: 440px; height: 440px; margin-left: -220px; border-radius: 50%; pointer-events: none;
@@ -258,96 +266,6 @@
         @keyframes winGlow { 0%,100% { box-shadow: 0 0 14px rgba(255,204,0,.6); } 50% { box-shadow: 0 0 32px rgba(255,204,0,1); } }
         .win-spark { position: absolute; pointer-events: none; animation: twinkle 1.8s ease-in-out infinite; }
         @keyframes twinkle { 0%,100% { opacity: .15; transform: scale(.7); } 50% { opacity: 1; transform: scale(1.25); } }
-
-        /* ---------- Header room buttons (chat + scorebook next to the 3-dot menu) ---------- */
-        .hdr-btn{position:relative;width:2.5rem;height:2.5rem;border-radius:.75rem;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);display:flex;align-items:center;justify-content:center;font-size:1.05rem;transition:background .15s,transform .15s;box-shadow:0 1px 3px rgba(0,0,0,.3);cursor:pointer}
-        .hdr-btn:hover{background:rgba(255,255,255,.2)}
-        .hdr-btn:active{transform:scale(.94)}
-        body.light-theme .hdr-btn{background:rgba(0,0,0,.06);border-color:rgba(0,0,0,.15)}
-        body.in-game .hdr-btn{background:rgba(0,0,0,.55)}
-        body.light-theme.in-game .hdr-btn{background:rgba(255,255,255,.85)}
-        .chat-badge{position:absolute;top:-6px;right:-6px;min-width:18px;height:18px;padding:0 4px;border-radius:9999px;background:#ef4444;color:#fff;font-size:10px;font-weight:800;display:flex;align-items:center;justify-content:center;border:2px solid #0f172a;animation:badgePulse 1.2s ease-in-out infinite}
-        .chat-badge.hidden{display:none}
-        @keyframes badgePulse{0%,100%{transform:scale(1)}50%{transform:scale(1.18)}}
-
-        /* ---------- Chat panel ---------- */
-        .chat-panel{position:fixed;z-index:70;top:4.3rem;right:.5rem;width:min(27rem,calc(100vw - 1rem));height:min(38rem,calc(100dvh - 5rem));display:flex;flex-direction:column;background:rgba(15,23,42,.97);color:#fff;border:1px solid rgba(255,255,255,.16);border-radius:1.25rem;box-shadow:0 24px 60px rgba(0,0,0,.65);backdrop-filter:blur(14px);overflow:hidden;animation:chatIn .22s cubic-bezier(.2,.9,.3,1.2)}
-        .chat-panel.hidden{display:none}
-        body.in-game .chat-panel{top:3.4rem;height:min(38rem,calc(100dvh - 4rem))}
-        body.is-landscape .chat-panel{top:3rem;width:min(24rem,52vw);height:calc(var(--vh,360px) - 3.5rem)}
-        @keyframes chatIn{from{opacity:0;transform:translateY(-8px) scale(.97)}to{opacity:1;transform:none}}
-        .chat-head{display:flex;align-items:center;justify-content:space-between;padding:.6rem .85rem;background:linear-gradient(90deg,#4f46e5,#7c3aed);font-weight:800;font-size:.9rem}
-        .chat-head button{width:1.9rem;height:1.9rem;border-radius:9999px;background:rgba(255,255,255,.18);font-size:.8rem}
-        .chat-head button:hover{background:rgba(255,255,255,.3)}
-        .chat-log{flex:1;min-height:0;overflow-y:auto;padding:.7rem;display:flex;flex-direction:column;gap:.5rem;background:rgba(2,6,23,.55)}
-        .chat-empty{margin:auto;text-align:center;font-size:.8rem;color:#94a3b8;line-height:1.6}
-        .chat-msg{max-width:84%;display:flex;flex-direction:column;gap:2px;animation:msgIn .2s ease-out}
-        .chat-msg.mine{align-self:flex-end;align-items:flex-end}
-        .chat-msg.theirs{align-self:flex-start;align-items:flex-start}
-        @keyframes msgIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
-        .chat-meta{font-size:10px;font-weight:800;padding:0 .35rem;opacity:.95}
-        .chat-body{padding:.4rem .7rem;border-radius:1rem;font-size:.85rem;line-height:1.35;word-break:break-word;font-weight:600}
-        .chat-msg.theirs .chat-body{background:#1e293b;border:1px solid rgba(255,255,255,.1);border-top-left-radius:.3rem}
-        .chat-msg.mine .chat-body{background:linear-gradient(135deg,#facc15,#f59e0b);color:#0f172a;border-top-right-radius:.3rem}
-        .chat-body.emoji-only{background:transparent!important;border:none!important;font-size:2.2rem;padding:0 .2rem;line-height:1.1}
-        .chat-body.has-img{padding:.25rem}
-        .chat-body img{display:block;max-width:14rem;max-height:13rem;border-radius:.75rem;background:#0f172a;min-width:5rem;min-height:3rem}
-        .chat-cap{font-size:10px;opacity:.75;padding:2px 4px 0;max-width:14rem}
-        .chat-tabs{display:flex;gap:.25rem;padding:.4rem .5rem 0;background:#0f172a;border-top:1px solid rgba(255,255,255,.1)}
-        .chat-tab{flex:1;padding:.35rem 0;border-radius:.6rem .6rem 0 0;font-size:.72rem;font-weight:800;color:#94a3b8;background:transparent}
-        .chat-tab.active{background:#1e293b;color:#fff}
-        .chat-tray{height:9.5rem;overflow-y:auto;background:#1e293b;padding:.5rem;flex-shrink:0}
-        body.is-landscape .chat-tray{height:6rem}
-        .chat-pane.hidden{display:none}
-        .emoji-grid{display:grid;grid-template-columns:repeat(8,1fr);gap:2px}
-        .emoji-grid button{font-size:1.45rem;padding:.2rem 0;border-radius:.5rem;transition:transform .12s,background .12s}
-        .emoji-grid button:hover{background:rgba(255,255,255,.12);transform:scale(1.2)}
-        .phrase-wrap{display:flex;flex-wrap:wrap;gap:.35rem}
-        .phrase-wrap button{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.12);border-radius:9999px;padding:.3rem .65rem;font-size:.75rem;font-weight:700;color:#fff}
-        .phrase-wrap button:hover{background:rgba(250,204,21,.25)}
-        .phrase-wrap button.rnd{background:#facc15;color:#0f172a}
-        .meme-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:.4rem}
-        .meme-thumb{position:relative;aspect-ratio:1/1;border-radius:.6rem;overflow:hidden;background:#0f172a;border:2px solid transparent;padding:0;cursor:pointer}
-        .meme-thumb:hover{border-color:#facc15}
-        .meme-thumb img{width:100%;height:100%;object-fit:cover;display:block}
-        .meme-thumb.skel{animation:skel 1.1s ease-in-out infinite;cursor:default}
-        @keyframes skel{0%,100%{opacity:.35}50%{opacity:.8}}
-        .meme-more{grid-column:1/-1;background:#facc15;color:#0f172a;border-radius:.6rem;font-weight:800;font-size:.75rem;padding:.4rem}
-        .meme-note{grid-column:1/-1;font-size:.7rem;color:#fca5a5;text-align:center}
-        .chat-input-row{display:flex;gap:.4rem;padding:.5rem;background:#0f172a;border-top:1px solid rgba(255,255,255,.1)}
-        .chat-input-row input{flex:1;min-width:0;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.12);border-radius:.8rem;padding:.55rem .8rem;font-size:.85rem;color:#fff;outline:none}
-        .chat-input-row input:focus{border-color:#facc15}
-        .chat-input-row button{background:linear-gradient(135deg,#facc15,#f59e0b);color:#0f172a;font-weight:800;border-radius:.8rem;padding:0 1rem;font-size:.85rem}
-
-        /* ---------- Speech bubbles above players ---------- */
-        .chat-bubble-wrap{position:absolute;bottom:100%;left:50%;transform:translateX(-50%);margin-bottom:10px;z-index:80;pointer-events:none;width:max-content;max-width:11rem}
-        .chat-bubble{--pc:#6366f1;position:relative;background:#fff;color:#0f172a;border:2.5px solid var(--pc);border-radius:1rem;padding:.3rem .65rem;font-weight:800;font-size:12px;line-height:1.25;text-align:center;word-break:break-word;box-shadow:0 8px 22px rgba(0,0,0,.5)}
-        .chat-bubble::after{content:'';position:absolute;left:50%;bottom:-8px;width:12px;height:12px;background:#fff;border-right:2.5px solid var(--pc);border-bottom:2.5px solid var(--pc);transform:translateX(-50%) rotate(45deg);border-bottom-right-radius:3px}
-        .chat-bubble.big{background:transparent;border:none;box-shadow:none;font-size:2.4rem;padding:0;line-height:1;filter:drop-shadow(0 4px 6px rgba(0,0,0,.55))}
-        .chat-bubble.big::after{display:none}
-        .chat-bubble.meme{padding:3px}
-        .chat-bubble.meme img{display:block;max-width:9.5rem;max-height:8.5rem;border-radius:.65rem;min-width:3.5rem;min-height:2.5rem;background:#e2e8f0}
-        .chat-bubble.pop{animation:bubbleBounce .45s cubic-bezier(.175,.885,.32,1.4) both}
-        @keyframes bubbleBounce{0%{opacity:0;transform:scale(.3) translateY(14px)}100%{opacity:1;transform:none}}
-        body.is-landscape .chat-bubble{font-size:10px;padding:.2rem .5rem}
-        body.is-landscape .chat-bubble.big{font-size:1.7rem}
-        body.is-landscape .chat-bubble.meme img{max-width:6.5rem;max-height:5.5rem}
-        .seat-chat{width:1.45rem;height:1.45rem;border-radius:9999px;background:#4f46e5;border:2px solid #fff;font-size:.68rem;display:inline-flex;align-items:center;justify-content:center;box-shadow:0 2px 6px rgba(0,0,0,.5);line-height:1;transition:transform .15s,background .15s}
-        .seat-chat.other{opacity:.7;pointer-events:none;background:#334155}
-        .seat-chat.talking{opacity:1;background:#facc15;animation:badgePulse .9s ease-in-out infinite}
-        button.seat-chat:hover{transform:scale(1.15)}
-        body.is-landscape .seat-chat{width:1.1rem;height:1.1rem;font-size:.55rem}
-        .hdr-btn.on{background:rgba(34,197,94,.4)!important;border-color:#22c55e;color:#bbf7d0}
-        .hdr-btn.off{color:#f87171}
-        body.in-game .hdr-btn{width:2.25rem;height:2.25rem;font-size:.95rem}
-        body.in-game #roomActions{gap:.4rem}
-        @keyframes speakPulse{0%,100%{outline-color:#22c55e;outline-offset:3px}50%{outline-color:#86efac;outline-offset:6px}}
-        .speaking .seat-avatar{outline:4px solid #22c55e;outline-offset:3px;animation:speakPulse .7s ease-in-out infinite}
-        .speaking.lobby-row{border-color:#22c55e!important;box-shadow:0 0 0 2px #22c55e,0 0 16px rgba(34,197,94,.55)}
-        .lobby-bubble-slot{position:absolute;left:1.6rem;bottom:100%;z-index:20;pointer-events:none}
-        .lobby-bubble-slot .chat-bubble-wrap{position:relative;left:0;bottom:auto;transform:none;margin-bottom:8px}
-        .lobby-bubble-slot .chat-bubble::after{left:1.2rem}
-        .lobby-bubble-slot .chat-bubble.meme img{max-height:5.5rem;max-width:7rem}
     </style>
 </head>
 <body class="dark-theme min-h-screen overflow-y-auto flex flex-col">
@@ -372,14 +290,6 @@
                 <div id="roomBadge" class="hidden bg-emerald-500/20 border border-emerald-500/40 px-3 py-1.5 rounded-xl text-xs font-semibold text-emerald-400 flex items-center space-x-2">
                     <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
                     <span>Room: <strong id="badgeRoomCode" class="font-mono uppercase tracking-widest"></strong></span>
-                </div>
-
-                <!-- ROOM BUTTONS: chat + scorebook, right next to the 3-dot menu -->
-                <div id="roomActions" class="hidden flex items-center gap-2">
-                    <button id="micBtn" class="hdr-btn off" title="Microphone (talk to the room)" aria-label="Toggle microphone"><i class="fa-solid fa-microphone-slash"></i></button>
-                    <button id="spkBtn" class="hdr-btn" title="Speaker (hear the room)" aria-label="Toggle speaker"><i class="fa-solid fa-volume-high"></i></button>
-                    <button id="chatBtn" class="hdr-btn" title="Chat" aria-label="Open chat">💬<span class="chat-badge hidden"></span></button>
-                    <button id="bookBtn" class="hdr-btn" title="Scorebook" aria-label="Open scorebook">📒</button>
                 </div>
 
                 <!-- 3-DOT OPTIONS BUTTON -->
@@ -426,7 +336,7 @@
                     <p class="opacity-80 text-base md:text-lg max-w-md mx-auto">Play UNO with friends online or against smart bots!</p>
                 </div>
 
-                <div class="bg-white/10 backdrop-blur-xl border border-white/15 p-6 md:p-8 rounded-3xl shadow-2xl w-full max-w-md space-y-5">
+                <div class="w-full max-w-md space-y-5 px-1">
                     <div class="flex flex-col items-center gap-1.5">
                         <label for="avatarFileInput" class="relative cursor-pointer group">
                             <div id="avatarPreview" class="w-20 h-20 rounded-full border-4 border-white/40 overflow-hidden flex items-center justify-center text-3xl font-fun font-black text-white shadow-xl transition group-hover:border-yellow-400" style="background-color:#FF3B30">P</div>
@@ -467,28 +377,32 @@
                             <div class="flex-grow border-t border-white/10"></div>
                         </div>
 
-                        <div class="flex space-x-2">
-                            <input type="text" id="roomCodeInput" inputmode="numeric" pattern="[0-9]*" maxlength="4" placeholder="ROOM ID" class="flex-1 bg-black/30 border border-white/20 rounded-xl px-4 py-3 text-current placeholder-slate-400 font-mono tracking-widest text-center focus:outline-none focus:border-blue-400 font-bold">
-                            <button id="joinRoomBtn" class="bg-blue-600 hover:bg-blue-700 text-white font-fun font-bold px-5 py-3 rounded-xl shadow-lg transition">
-                                Join
-                            </button>
+                        <div id="roomBoxes" class="flex justify-center gap-2.5">
+                            <input class="room-box" type="text" inputmode="numeric" pattern="[0-9]*" maxlength="1" autocomplete="off" aria-label="Room digit 1">
+                            <input class="room-box" type="text" inputmode="numeric" pattern="[0-9]*" maxlength="1" autocomplete="off" aria-label="Room digit 2">
+                            <input class="room-box" type="text" inputmode="numeric" pattern="[0-9]*" maxlength="1" autocomplete="off" aria-label="Room digit 3">
+                            <input class="room-box" type="text" inputmode="numeric" pattern="[0-9]*" maxlength="1" autocomplete="off" aria-label="Room digit 4">
                         </div>
+                        <button id="joinRoomBtn" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-fun font-bold text-lg px-5 py-3 rounded-xl shadow-lg transition">
+                            Join Room
+                        </button>
                     </div>
                 </div>
             </section>
 
             <!-- SCREEN 2: LOBBY WAITING -->
             <section id="lobbyView" class="hidden flex-1 flex flex-col items-center justify-center p-4 md:p-6 max-w-4xl mx-auto w-full">
-                <div class="bg-white/10 backdrop-blur-xl border border-white/15 p-6 md:p-8 rounded-3xl shadow-2xl w-full max-w-2xl space-y-6">
-                    <div class="flex flex-col sm:flex-row justify-between items-center border-b border-white/10 pb-5 gap-3">
+                <div class="w-full max-w-2xl space-y-6 px-1">
+                    <div class="flex flex-col sm:flex-row justify-between items-center pb-2 gap-3">
                         <div>
                             <span class="text-xs uppercase tracking-wider opacity-70 font-semibold">Room ID</span>
                             <div class="flex items-center space-x-3 mt-1">
-                                <h2 id="displayRoomCode" class="font-mono font-black text-3xl text-yellow-400 tracking-widest"></h2>
+                                <div id="displayRoomCode" class="flex gap-2"></div>
                                 <button id="copyRoomBtn" class="bg-white/10 hover:bg-white/20 px-3 py-1.5 rounded-lg text-xs font-semibold transition flex items-center space-x-1.5">
                                     <i class="fa-regular fa-copy"></i>
                                     <span>Copy</span>
                                 </button>
+                                <button id="bookBtnLobby" class="bg-white/10 hover:bg-white/20 w-9 h-8 rounded-lg text-base transition" title="Scorebook">📒</button>
                             </div>
                         </div>
                         <div class="flex items-center space-x-2 bg-black/30 px-4 py-2 rounded-xl border border-white/10">
@@ -500,7 +414,7 @@
                     <!-- Room Players Grid -->
                     <div>
                         <h3 class="text-xs uppercase tracking-wider opacity-80 font-bold mb-3">Players</h3>
-                        <div id="lobbyPlayersList" class="grid grid-cols-1 sm:grid-cols-2 gap-x-3 gap-y-4 pt-8">
+                        <div id="lobbyPlayersList" class="grid grid-cols-1 sm:grid-cols-2 gap-3 max-h-60 overflow-y-auto pr-1">
                             <!-- Injected dynamically -->
                         </div>
                     </div>
@@ -544,6 +458,7 @@
             <section id="gameView" class="hidden flex-1 flex flex-col relative p-2 md:p-4 max-w-7xl mx-auto w-full justify-between select-none min-h-[85vh]">
                 <div id="matchClock" class="fixed left-2 top-2 z-50 bg-black/70 border border-white/15 rounded-full px-3 py-1 text-xs font-bold text-yellow-300">⏱ 3:00</div>
                 <div id="infoBox" class="fixed left-2 top-11 z-40 w-40 bg-black/70 border border-white/15 rounded-xl p-2 text-[10px] text-slate-200 space-y-0.5"></div>
+                <button id="bookBtnGame" style="left:5.8rem" class="fixed top-2 z-50 w-8 h-8 rounded-full bg-black/70 border border-white/15 text-base flex items-center justify-center" title="Scorebook">📒</button>
                 <button onclick="rotateScreen()" class="fixed right-2 bottom-3 z-50 w-9 h-9 rounded-full bg-slate-700 border-2 border-white text-base shadow-xl">🔄</button>
                 
                 <!-- (direction/status banner removed; hidden stubs keep the render code safe) -->
@@ -640,27 +555,18 @@
 
     <div id="countdownOverlay" class="hidden fixed inset-0 z-[90] flex items-center justify-center bg-black/70"><span id="countdownNum" class="font-fun font-black text-9xl text-yellow-400 drop-shadow-2xl animate-bounce"></span></div>
 
-    <!-- ROOM CHAT PANEL (opened from the 💬 button next to the scorebook) -->
-    <div id="chatPanel" class="chat-panel hidden" role="dialog" aria-label="Room chat">
-        <div class="chat-head">
-            <span>💬 Room Chat</span>
-            <button id="chatCloseBtn" aria-label="Close chat"><i class="fa-solid fa-xmark"></i></button>
+    <div id="chatRoot" class="hidden fixed left-2 bottom-3 z-50 flex flex-col items-start gap-2">
+        <button id="chatFab" onclick="document.getElementById('chatPanel').classList.toggle('hidden')" class="w-10 h-10 rounded-full bg-indigo-600 border-2 border-white shadow-xl text-lg">💬</button>
+        <div id="chatPanel" class="hidden fixed left-2 bottom-16 z-50 w-60 max-w-[75vw] bg-black/85 border border-white/15 rounded-2xl p-2 backdrop-blur">
+            <div class="flex justify-between items-center mb-1"><span class="text-xs font-bold text-white">💬 Chat</span><button onclick="document.getElementById('chatPanel').classList.add('hidden')" class="text-white text-sm px-2">✕</button></div>
+            
+            <div class="flex flex-wrap gap-1 mb-2 max-h-24 overflow-y-auto"><button onclick="sendChat('😂',1)" class="text-lg">😂</button><button onclick="sendChat('😎',1)" class="text-lg">😎</button><button onclick="sendChat('😡',1)" class="text-lg">😡</button><button onclick="sendChat('👏',1)" class="text-lg">👏</button><button onclick="sendChat('🔥',1)" class="text-lg">🔥</button><button onclick="sendChat('😭',1)" class="text-lg">😭</button><button onclick="sendChat('❤️',1)" class="text-lg">❤️</button><button onclick="sendChat('👍',1)" class="text-lg">👍</button><button onclick="sendChat('Oh sorry 😅',1)" class="bg-white/10 rounded-full px-2 py-0.5 text-[10px] text-white">Oh sorry 😅</button><button onclick="sendChat('Thank you! 🙏',1)" class="bg-white/10 rounded-full px-2 py-0.5 text-[10px] text-white">Thank you! 🙏</button><button onclick="sendChat('Nice card! 👏',1)" class="bg-white/10 rounded-full px-2 py-0.5 text-[10px] text-white">Nice card! 👏</button><button onclick="sendChat('Put +4 😈',1)" class="bg-white/10 rounded-full px-2 py-0.5 text-[10px] text-white">Put +4 😈</button><button onclick="sendChat('Put +2 😏',1)" class="bg-white/10 rounded-full px-2 py-0.5 text-[10px] text-white">Put +2 😏</button><button onclick="sendChat('Play a skip ⛔',1)" class="bg-white/10 rounded-full px-2 py-0.5 text-[10px] text-white">Play a skip ⛔</button><button onclick="sendChat('Hurry up ⏰',1)" class="bg-white/10 rounded-full px-2 py-0.5 text-[10px] text-white">Hurry up ⏰</button><button onclick="sendChat('Oh no! 😱',1)" class="bg-white/10 rounded-full px-2 py-0.5 text-[10px] text-white">Oh no! 😱</button><button onclick="sendChat('Good game 🤝',1)" class="bg-white/10 rounded-full px-2 py-0.5 text-[10px] text-white">Good game 🤝</button><button onclick="sendChat('Change colour 🌈',1)" class="bg-white/10 rounded-full px-2 py-0.5 text-[10px] text-white">Change colour 🌈</button><button onclick="randomChat()" class="bg-yellow-400 text-slate-900 rounded-full px-2 py-0.5 text-[10px] font-bold">🎲 Random</button></div>
+            <div class="flex gap-1">
+                <input onkeydown="if(event.key==='Enter')sendChatInput()" id="chatInput" maxlength="60" placeholder="Message..." class="flex-1 min-w-0 bg-white/10 rounded-lg px-2 py-1 text-xs text-white outline-none">
+                <button onclick="sendChatInput()" class="bg-yellow-400 text-slate-900 font-bold rounded-lg px-2 text-xs">Send</button>
+            </div>
         </div>
-        <div id="chatLog" class="chat-log"><div class="chat-empty" id="chatEmpty">No messages yet.<br>Say hi 👋 or drop a meme 😂</div></div>
-        <div class="chat-tabs">
-            <button class="chat-tab active" data-tab="emoji">😀 Emoji</button>
-            <button class="chat-tab" data-tab="phrase">⚡ Quick</button>
-            <button class="chat-tab" data-tab="meme">🖼️ Memes</button>
-        </div>
-        <div class="chat-tray">
-            <div class="chat-pane" data-pane="emoji"><div class="emoji-grid" id="emojiGrid"></div></div>
-            <div class="chat-pane hidden" data-pane="phrase"><div class="phrase-wrap" id="phraseWrap"></div></div>
-            <div class="chat-pane hidden" data-pane="meme"><div class="meme-grid" id="memeGrid"></div></div>
-        </div>
-        <div class="chat-input-row">
-            <input id="chatInput" maxlength="80" autocomplete="off" placeholder="Type a message…">
-            <button id="chatSendBtn">Send</button>
-        </div>
+    </div>
     </div>
 
     <!-- COLOR SELECTION MODAL FOR WILD CARDS -->
@@ -742,7 +648,6 @@
             <div class="sticky bottom-0 z-30 p-3 bg-slate-900 border-t border-white/10">
                 <div class="flex gap-2">
                     <button id="bookBtnWin" class="shrink-0 w-12 rounded-xl bg-white/10 border border-white/20 text-xl" title="Scorebook">📒</button>
-                    <button id="chatBtnWin" class="relative shrink-0 w-12 rounded-xl bg-white/10 border border-white/20 text-xl" title="Chat">💬<span class="chat-badge hidden"></span></button>
                     <button id="returnLobbyBtn" class="flex-1 bg-gradient-to-r from-emerald-500 to-green-600 hover:from-emerald-600 hover:to-green-700 text-white font-fun font-bold text-lg py-3 rounded-xl shadow-lg transition">
                         ▶ Play Again · Same Room
                     </button>
@@ -1072,7 +977,7 @@
             document.body.classList.remove('in-game');
             document.getElementById('roomBadge').classList.remove('hidden');
             document.getElementById('badgeRoomCode').innerText = gameState.roomCode;
-            document.getElementById('displayRoomCode').innerText = gameState.roomCode;
+            document.getElementById('displayRoomCode').innerHTML = String(gameState.roomCode).split('').map(d => `<span class="room-digit">${d}</span>`).join('');
             renderLobbyPlayers();
         }
 
@@ -1121,333 +1026,50 @@
             }
             updateLobbySettings(); broadcastState();
         }
-        // ================= CHAT + MEMES =================
-        const esc = v => String(v == null ? '' : v).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
-        const MEME_URL_RE = /^https:\/\/(i\.redd\.it|preview\.redd\.it|external-preview\.redd\.it|i\.imgur\.com)\/[A-Za-z0-9_\-.\/]+(\?[A-Za-z0-9_\-.=&%]*)?$/;
-        const safeImg = u => (typeof u === 'string' && u.length < 500 && MEME_URL_RE.test(u)) ? u : null;
-        const EMOJIS = ['😂','🤣','😎','😡','👏','🔥','😭','❤️','👍','👎','😏','😈','🤔','😱','🥳','😴','🙏','💀','🤝','👀','🫡','😅','🤯','🙈'];
-        const PHRASES = ['Oh sorry 😅','Thank you! 🙏','Nice card! 👏','Put +4 😈','Put +2 😏','Play a skip ⛔','Hurry up ⏰','Oh no! 😱','Good game 🤝','Change colour 🌈','Special card! 🔥','Your turn? 👀','UNO! 📣','Rematch? 😤'];
-        const MEME_FALLBACK = [{
-            title: 'So how does it feel to have a girlfriend?',
-            url: 'https://i.redd.it/q2oi21c1olvh1.png',
-            preview: [
-                'https://preview.redd.it/q2oi21c1olvh1.png?width=108&crop=smart&auto=webp&s=f02c74a49387c15518723346c9ec01e8a781c66d',
-                'https://preview.redd.it/q2oi21c1olvh1.png?width=216&crop=smart&auto=webp&s=147f3945bc6e87265e5c78d9e72a21235cc891b8',
-                'https://preview.redd.it/q2oi21c1olvh1.png?width=320&crop=smart&auto=webp&s=cec79915aa38935f18de227c35607433250e1b7a',
-                'https://preview.redd.it/q2oi21c1olvh1.png?width=640&crop=smart&auto=webp&s=cd68684feda618fddee35da810c342ff636fa5cb'
-            ]
-        }];
-        let memePool = MEME_FALLBACK.slice(), memeLoading = false, memeError = '', memesLoadedOnce = false;
-        const chatState = { unread: 0, seen: {}, lastAt: {}, seq: 0, hasMsgs: false };
-
-        function memeThumb(m) { const pv = m.preview || []; return safeImg(pv[2]) || safeImg(pv[1]) || safeImg(m.url); }
-        function memeShow(m) { const pv = m.preview || []; return safeImg(pv[3]) || safeImg(pv[pv.length - 1]) || safeImg(m.url); }
-        function memeErr(img) {
-            const alt = img.dataset.alt;
-            if (alt && !img.dataset.tried) { img.dataset.tried = '1'; img.src = alt; return; }
-            const s = document.createElement('span'); s.textContent = '🖼️'; s.style.fontSize = '1.6rem';
-            img.replaceWith(s);
-        }
-        function imgTag(src, alt) {
-            return `<img src="${esc(src)}" ${alt ? `data-alt="${esc(alt)}"` : ''} referrerpolicy="no-referrer" loading="lazy" alt="meme" onerror="memeErr(this)">`;
-        }
-        function isEmojiOnly(t) { return !!t && t.length <= 12 && /^(?:\p{Extended_Pictographic}|\p{Emoji_Modifier}|\u200d|\ufe0f|\s)+$/u.test(t) && !/^\d+$/.test(t); }
-
-        async function loadMemes(force) {
-            if (memeLoading || (memesLoadedOnce && !force)) return;
-            memeLoading = true; memeError = ''; renderMemeGrid();
-            try {
-                const ctl = new AbortController(); const to = setTimeout(() => ctl.abort(), 8000);
-                const r = await fetch('https://meme-api.com/gimme/memes/12', { signal: ctl.signal });
-                clearTimeout(to);
-                const d = await r.json();
-                const list = (d.memes || (d.url ? [d] : [])).filter(m => m && !m.nsfw && !m.spoiler && memeThumb(m) && memeShow(m));
-                if (!list.length) throw new Error('empty');
-                memePool = [MEME_FALLBACK[0]].concat(list.map(m => ({ title: String(m.title || '').slice(0, 60), url: m.url, preview: m.preview || [] })));
-                memesLoadedOnce = true;
-            } catch (e) {
-                memeError = 'Could not load new memes (check internet). Showing saved ones.';
-            }
-            memeLoading = false; renderMemeGrid();
-        }
-        function renderMemeGrid() {
-            const g = document.getElementById('memeGrid'); if (!g) return;
-            let h = '';
-            memePool.forEach((m, i) => {
-                const t = memeThumb(m); if (!t) return;
-                h += `<button class="meme-thumb" data-i="${i}" title="${esc(m.title)}">${imgTag(t, safeImg(m.url))}</button>`;
-            });
-            if (memeLoading) for (let k = 0; k < 6; k++) h += '<div class="meme-thumb skel"></div>';
-            if (memeError) h += `<div class="meme-note">${esc(memeError)}</div>`;
-            h += `<button class="meme-more" id="memeMoreBtn">${memeLoading ? 'Loading…' : '🔄 Load more memes'}</button>`;
-            g.innerHTML = h;
-            g.querySelectorAll('.meme-thumb[data-i]').forEach(b => b.onclick = () => sendMeme(memePool[+b.dataset.i]));
-            const mb = document.getElementById('memeMoreBtn'); if (mb) mb.onclick = () => loadMemes(true);
-        }
-        function sendMeme(m) {
-            const img = memeShow(m); if (!img) return;
-            sendChat({ m: String(m.title || '').slice(0, 60), img, alt: safeImg(m.url) || '' });
-        }
-
-        function chatOpen() { return !document.getElementById('chatPanel').classList.contains('hidden'); }
-        function setChatBadge() {
-            document.querySelectorAll('.chat-badge').forEach(b => { b.textContent = chatState.unread > 9 ? '9+' : chatState.unread; b.classList.toggle('hidden', !chatState.unread); });
-        }
-        function openChat() {
-            const p = document.getElementById('chatPanel');
-            p.classList.remove('hidden'); chatState.unread = 0; setChatBadge();
-            const log = document.getElementById('chatLog'); log.scrollTop = log.scrollHeight;
-            if (!memesLoadedOnce) loadMemes(false); else renderMemeGrid();
-            if (window.innerWidth > 700) setTimeout(() => document.getElementById('chatInput').focus(), 50);
-        }
-        function closeChat() { document.getElementById('chatPanel').classList.add('hidden'); }
-        function toggleChat() { if (chatOpen()) closeChat(); else openChat(); playSound('click'); }
-        function showRoomActions(on) { document.getElementById('roomActions').classList.toggle('hidden', !on); }
-        function resetChat() {
-            closeChat(); chatState.unread = 0; chatState.hasMsgs = false; chatState.seen = {}; chatState.lastAt = {}; setChatBadge();
-            document.getElementById('chatLog').innerHTML = '<div class="chat-empty" id="chatEmpty">No messages yet.<br>Say hi 👋 or drop a meme 😂</div>';
-        }
-
-        // add a line to the chat history panel
-        function chatAdd(pid, name, color, text, img, alt) {
-            const log = document.getElementById('chatLog'); if (!log) return;
-            const emp = document.getElementById('chatEmpty'); if (emp) emp.remove();
-            const mine = pid && pid === gameState.localPlayerId;
-            const col = /^#[0-9a-f]{6}$/i.test(color) ? color : '#94a3b8';
+        function chatAdd(name, color, text) {
+            const log = document.getElementById('chatLog');
+            if (!log) return;
             const d = document.createElement('div');
-            d.className = 'chat-msg ' + (mine ? 'mine' : 'theirs');
-            const si = safeImg(img);
-            let body;
-            if (si) body = `<div class="chat-body has-img">${imgTag(si, safeImg(alt))}</div>${text ? `<div class="chat-cap">${esc(text)}</div>` : ''}`;
-            else body = `<div class="chat-body ${isEmojiOnly(text) ? 'emoji-only' : ''}">${esc(text)}</div>`;
-            d.innerHTML = `<div class="chat-meta" style="color:${col}">${mine ? 'You' : esc(name)}</div>${body}`;
-            log.appendChild(d);
-            while (log.children.length > 120) log.removeChild(log.firstChild);
-            log.scrollTop = log.scrollHeight;
-            if (!mine && !chatOpen()) { chatState.unread++; setChatBadge(); }
+            d.innerHTML = `<b style="color:${color}">${name}:</b> ${text}`;
+            log.appendChild(d); log.scrollTop = log.scrollHeight;
         }
-
-        // HTML of the speech bubble shown above a player (game seat or lobby row)
-        function chatBubbleHTML(pid, color, lobby) {
-            const c = gameState.chats[pid]; if (!c) return '';
-            const col = /^#[0-9a-f]{6}$/i.test(color) ? color : '#6366f1';
-            const fresh = chatState.seen[pid] !== c.id;
-            chatState.seen[pid] = c.id;
-            const si = safeImg(c.img);
-            if (si) return `<div class="chat-bubble-wrap"><div class="chat-bubble meme ${fresh ? 'pop' : ''}" style="--pc:${col}">${imgTag(si, safeImg(c.alt))}</div></div>`;
-            const t = String(c.m || '');
-            return `<div class="chat-bubble-wrap"><div class="chat-bubble ${isEmojiOnly(t) ? 'big' : ''} ${fresh ? 'pop' : ''}" style="--pc:${col}">${esc(t)}</div></div>`;
-        }
-        function paintLobbyBubbles() {
-            document.querySelectorAll('#lobbyPlayersList .lobby-bubble-slot').forEach(el => {
-                const p = gameState.players.find(x => x.id === el.dataset.pid);
-                el.innerHTML = p ? chatBubbleHTML(p.id, p.color, true) : '';
-            });
-        }
-        function refreshChatBubbles() {
-            if (gameState.gameStarted) renderGame(); else paintLobbyBubbles();
-        }
-
-        // host: validate, store, broadcast
-        function hostChat(pid, msg) {
+        function hostChat(pid, text, emoji) {
             const p = gameState.players.find(x => x.id === pid);
-            if (!p || !msg) return;
-            const now = Date.now();
-            if (now - (chatState.lastAt[pid] || 0) < 500) return;       // flood guard
-            chatState.lastAt[pid] = now;
-            const text = String(msg.m == null ? '' : msg.m).replace(/[\u0000-\u001f]/g, ' ').trim().slice(0, 80);
-            const img = safeImg(msg.img), alt = safeImg(msg.alt);
-            if (!text && !img) return;
-            const id = ++chatState.seq + '-' + now;
-            chatAdd(p.id, p.name, p.color, text, img, alt);
-            Object.values(net.conns).forEach(c => netSend(c, { t: 'chat', pid: p.id, n: p.name, c: p.color, m: text, img, alt }));
-            gameState.chats[pid] = { m: text, img: img || '', alt: alt || '', id };
-            const life = img ? 7500 : isEmojiOnly(text) ? 4500 : Math.min(8000, 4200 + text.length * 70);
-            setTimeout(() => {
-                if (gameState.chats[pid] && gameState.chats[pid].id === id) { delete gameState.chats[pid]; refreshChatBubbles(); broadcastState(); }
-            }, life);
-            refreshChatBubbles(); broadcastState();
+            text = cleanName(String(text || '')).slice(0, 60);
+            if (!p || !text) return;
+            chatAdd(p.name, p.color, text);
+            Object.values(net.conns).forEach(c => netSend(c, { t: 'chat', n: p.name, c: p.color, m: text }));
+            if (gameState.gameStarted) {
+                gameState.chats[pid] = text;
+                setTimeout(() => { if (gameState.chats[pid] === text) { delete gameState.chats[pid]; renderGame(); } }, 3500);
+                renderGame();
+            }
         }
-        // msg: string or { m, img, alt }
-        function sendChat(msg) {
-            if (typeof msg === 'string') msg = { m: msg };
-            if (!msg || (!String(msg.m || '').trim() && !msg.img)) return false;
-            if (Date.now() - (chatState.mineAt || 0) < 600) { showToast('Slow down 😅'); return false; }
-            chatState.mineAt = Date.now();
-            if (net.role === 'client') netSend(net.hostConn, { t: 'chat', m: msg.m, img: msg.img, alt: msg.alt });
-            else hostChat(gameState.localPlayerId, msg);
-            if (window.innerWidth <= 700) closeChat();   // small screens: close so the bubble is visible on the table
-            return true;
+        function sendChat(text, emoji) {
+            document.getElementById('chatPanel').classList.add('hidden');
+            if (net.role === 'client') netSend(net.hostConn, { t: 'chat', m: text, e: emoji });
+            else hostChat(gameState.localPlayerId, text, emoji);
+        }
+        function randomChat() {
+            const L = ["Oh sorry 😅", "Thank you! 🙏", "Nice card! 👏", "Put +4 😈", "Put +2 😏", "Play a skip ⛔", "Hurry up ⏰", "Oh no! 😱", "Good game 🤝", "Change colour 🌈", "Special card! 🔥", "Your turn? 👀"];
+            sendChat(L[Math.floor(Math.random() * L.length)], 1);
         }
         function sendChatInput() {
             const i = document.getElementById('chatInput');
-            const v = i.value.trim(); if (!v) return;
-            if (sendChat(v)) i.value = '';
-        }
-        function initChatUI() {
-            const eg = document.getElementById('emojiGrid');
-            eg.innerHTML = EMOJIS.map(e => `<button data-e="${e}">${e}</button>`).join('');
-            eg.querySelectorAll('button').forEach(b => b.onclick = () => sendChat(b.dataset.e));
-            const pw = document.getElementById('phraseWrap');
-            pw.innerHTML = PHRASES.map(t => `<button data-t="${esc(t)}">${esc(t)}</button>`).join('') + '<button class="rnd" id="rndPhraseBtn">🎲 Random</button>';
-            pw.querySelectorAll('button[data-t]').forEach(b => b.onclick = () => sendChat(b.dataset.t));
-            document.getElementById('rndPhraseBtn').onclick = () => sendChat(PHRASES[Math.floor(Math.random() * PHRASES.length)]);
-            document.querySelectorAll('.chat-tab').forEach(tb => tb.onclick = () => {
-                document.querySelectorAll('.chat-tab').forEach(x => x.classList.toggle('active', x === tb));
-                document.querySelectorAll('.chat-pane').forEach(x => x.classList.toggle('hidden', x.dataset.pane !== tb.dataset.tab));
-                if (tb.dataset.tab === 'meme') { loadMemes(false); renderMemeGrid(); }
-            });
-            document.getElementById('chatSendBtn').onclick = sendChatInput;
-            document.getElementById('chatInput').addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); sendChatInput(); } e.stopPropagation(); });
-            document.getElementById('chatCloseBtn').onclick = closeChat;
-            document.getElementById('micBtn').onclick = e => { e.stopPropagation(); toggleMic(); };
-            document.getElementById('spkBtn').onclick = e => { e.stopPropagation(); toggleSpeaker(); };
-            // click anywhere outside closes the chat panel / scorebook
-            document.addEventListener('pointerdown', e => {
-                if (chatOpen() && !e.target.closest('#chatPanel, #chatBtn, #chatBtnWin, .seat-chat')) closeChat();
-            });
-            const bm = document.getElementById('bookModal');
-            bm.addEventListener('pointerdown', e => { if (e.target === bm) bm.classList.add('hidden'); });
-            document.addEventListener('keydown', e => { if (e.key === 'Escape') bm.classList.add('hidden'); });
-            document.addEventListener('keydown', e => { if (e.key === 'Escape') closeChat(); });
-            ['chatBtn', 'chatBtnWin'].forEach(id => { const b = document.getElementById(id); if (b) b.onclick = e => { e.stopPropagation(); toggleChat(); }; });
-        }
-
-        // ================= VOICE CHAT (WebRTC mesh over PeerJS) =================
-        const voice = { stream: null, micOn: false, spkOn: true, calls: {}, audios: {}, analysers: {}, speaking: {}, ctx: null, timer: null, pending: false, warned: false };
-        const myPeerId = () => (net.peer && net.peer.id) || null;
-        const peerIdOf = p => p.isHost ? PEER_PREFIX + gameState.roomCode : p.id;
-        function playerIdOfPeer(pid) {
-            if (pid === PEER_PREFIX + gameState.roomCode) { const h = gameState.players.find(x => x.isHost); return h ? h.id : pid; }
-            return pid;
-        }
-        function voiceMembers() {
-            return gameState.players.filter(p => !p.isBot && !p.left).map(peerIdOf);
-        }
-        function updateVoiceButtons() {
-            const m = document.getElementById('micBtn'), sp = document.getElementById('spkBtn');
-            if (m) { m.classList.toggle('on', voice.micOn); m.classList.toggle('off', !voice.micOn); m.innerHTML = `<i class="fa-solid ${voice.micOn ? 'fa-microphone' : 'fa-microphone-slash'}"></i>`; m.title = voice.micOn ? 'Mic ON – tap to mute' : 'Mic OFF – tap to talk'; }
-            if (sp) { sp.classList.toggle('off', !voice.spkOn); sp.innerHTML = `<i class="fa-solid ${voice.spkOn ? 'fa-volume-high' : 'fa-volume-xmark'}"></i>`; sp.title = voice.spkOn ? 'Speaker ON – tap to mute everyone' : 'Speaker OFF – tap to hear everyone'; }
-        }
-        function getVoiceCtx() {
-            if (!voice.ctx) { try { voice.ctx = new (window.AudioContext || window.webkitAudioContext)(); } catch (e) {} }
-            if (voice.ctx && voice.ctx.state === 'suspended') voice.ctx.resume().catch(() => {});
-            return voice.ctx;
-        }
-        function watchLevel(key, stream) {
-            const ctx = getVoiceCtx(); if (!ctx) return;
-            try {
-                const src = ctx.createMediaStreamSource(stream), an = ctx.createAnalyser();
-                an.fftSize = 512; src.connect(an);
-                voice.analysers[key] = { an, src, buf: new Uint8Array(an.fftSize), hold: 0 };
-                if (!voice.timer) voice.timer = setInterval(voiceTick, 140);
-            } catch (e) {}
-        }
-        function voiceTick() {
-            let changed = false;
-            Object.keys(voice.analysers).forEach(k => {
-                const o = voice.analysers[k]; o.an.getByteTimeDomainData(o.buf);
-                let sum = 0; for (let i = 0; i < o.buf.length; i++) { const v = (o.buf[i] - 128) / 128; sum += v * v; }
-                const loud = Math.sqrt(sum / o.buf.length) > 0.03 && (k !== '__me' || voice.micOn);
-                if (loud) o.hold = 3; else if (o.hold > 0) o.hold--;
-                const on = o.hold > 0;
-                const pid = k === '__me' ? gameState.localPlayerId : playerIdOfPeer(k);
-                if (!!voice.speaking[pid] !== on) { voice.speaking[pid] = on; changed = true; }
-            });
-            if (changed) applySpeaking();
-        }
-        function applySpeaking() {
-            document.querySelectorAll('#tableSeatsContainer [data-pid]').forEach(el => el.classList.toggle('speaking', !!voice.speaking[el.dataset.pid]));
-            document.querySelectorAll('#lobbyPlayersList .lobby-bubble-slot').forEach(sl => sl.parentElement.classList.toggle('speaking', !!voice.speaking[sl.dataset.pid]));
-        }
-        function attachRemote(peerId, stream) {
-            detachRemote(peerId);
-            const a = document.createElement('audio');
-            a.autoplay = true; a.playsInline = true; a.srcObject = stream; a.muted = !voice.spkOn; a.style.display = 'none';
-            document.body.appendChild(a);
-            const pr = a.play(); if (pr && pr.catch) pr.catch(() => showToast('Tap 🔊 to hear the voice chat'));
-            voice.audios[peerId] = a;
-            watchLevel(peerId, stream);
-        }
-        function detachRemote(peerId) {
-            const a = voice.audios[peerId];
-            if (a) { try { a.pause(); a.srcObject = null; a.remove(); } catch (e) {} delete voice.audios[peerId]; }
-            const o = voice.analysers[peerId];
-            if (o) { try { o.src.disconnect(); } catch (e) {} delete voice.analysers[peerId]; }
-            const pid = playerIdOfPeer(peerId);
-            if (voice.speaking[pid]) { voice.speaking[pid] = false; applySpeaking(); }
-        }
-        function bindVoicePeer(peer) {
-            peer.on('call', call => {
-                if (!voiceMembers().includes(call.peer)) { try { call.close(); } catch (e) {} return; }   // only people in this room
-                try { call.answer(); } catch (e) { return; }
-                call.on('stream', st => attachRemote(call.peer, st));
-                call.on('close', () => detachRemote(call.peer));
-                call.on('error', () => detachRemote(call.peer));
-            });
-        }
-        // call everybody in the room that we are not yet connected to; drop people who left
-        function syncVoicePeers() {
-            if (!net.peer) return;
-            const me = myPeerId(), want = new Set(voiceMembers());
-            Object.keys(voice.calls).forEach(id => { if (!want.has(id)) { try { voice.calls[id].close(); } catch (e) {} delete voice.calls[id]; } });
-            Object.keys(voice.audios).forEach(id => { if (!want.has(id)) detachRemote(id); });
-            if (!voice.stream || !me) return;
-            want.forEach(id => {
-                if (id === me || voice.calls[id]) return;
-                try {
-                    const c = net.peer.call(id, voice.stream);
-                    if (!c) return;
-                    voice.calls[id] = c;
-                    const drop = () => { if (voice.calls[id] === c) delete voice.calls[id]; };
-                    c.on('close', drop); c.on('error', drop);
-                    const pc = c.peerConnection;
-                    if (pc) pc.addEventListener('iceconnectionstatechange', () => { if (pc.iceConnectionState === 'failed') { try { c.close(); } catch (e) {} drop(); } });
-                } catch (e) {}
-            });
-        }
-        async function toggleMic() {
-            if (!net.peer || voice.pending) return;
-            getVoiceCtx();
-            if (!voice.stream) {
-                if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) { showToast('Microphone needs HTTPS (or localhost) and a modern browser'); return; }
-                voice.pending = true;
-                try {
-                    voice.stream = await navigator.mediaDevices.getUserMedia({ audio: { echoCancellation: true, noiseSuppression: true, autoGainControl: true } });
-                } catch (e) {
-                    voice.pending = false;
-                    showToast(e && e.name === 'NotAllowedError' ? 'Microphone permission was blocked' : 'No microphone found');
-                    return;
-                }
-                voice.pending = false;
-                if (!net.peer) { voice.stream.getTracks().forEach(t => t.stop()); voice.stream = null; return; }   // left the room while the prompt was open
-                voice.micOn = true;
-                watchLevel('__me', voice.stream);
-                if (!voice.warned) { voice.warned = true; showToast('🎧 Mic is on – use headphones to avoid echo'); }
-            } else voice.micOn = !voice.micOn;
-            voice.stream.getAudioTracks().forEach(t => { t.enabled = voice.micOn; });
-            if (!voice.micOn && voice.speaking[gameState.localPlayerId]) { voice.speaking[gameState.localPlayerId] = false; applySpeaking(); }
-            updateVoiceButtons(); syncVoicePeers(); playSound('click');
-        }
-        function toggleSpeaker() {
-            voice.spkOn = !voice.spkOn; getVoiceCtx();
-            Object.values(voice.audios).forEach(a => { a.muted = !voice.spkOn; if (voice.spkOn) { const pr = a.play(); if (pr && pr.catch) pr.catch(() => {}); } });
-            updateVoiceButtons(); playSound('click');
-        }
-        function stopVoice() {
-            Object.values(voice.calls).forEach(c => { try { c.close(); } catch (e) {} });
-            voice.calls = {};
-            Object.keys(voice.audios).forEach(detachRemote);
-            Object.keys(voice.analysers).forEach(k => { try { voice.analysers[k].src.disconnect(); } catch (e) {} });
-            voice.analysers = {}; voice.speaking = {};
-            if (voice.stream) voice.stream.getTracks().forEach(t => t.stop());
-            voice.stream = null; voice.micOn = false; voice.pending = false;
-            clearInterval(voice.timer); voice.timer = null;
-            updateVoiceButtons(); applySpeaking();
+            sendChat(i.value); i.value = '';
         }
 
         const net = { role: null, peer: null, conns: {}, hostConn: null, joined: false };
         const PEER_PREFIX = 'unoarena-';
+        // several STUN servers plus public relay (TURN) servers so two phones on different networks / mobile data can still connect
+        const PEER_OPTS = { debug: 1, config: { iceTransportPolicy: 'all', iceCandidatePoolSize: 4, iceServers: [
+            { urls: ['stun:stun.l.google.com:19302', 'stun:stun1.l.google.com:19302', 'stun:stun2.l.google.com:19302', 'stun:stun.cloudflare.com:3478'] },
+            { urls: ['turn:openrelay.metered.ca:80', 'turn:openrelay.metered.ca:443', 'turn:openrelay.metered.ca:443?transport=tcp', 'turns:openrelay.metered.ca:443?transport=tcp'], username: 'openrelayproject', credential: 'openrelayproject' }
+        ] } };
+        function keepAlive(peer) {
+            peer.on('disconnected', () => { try { if (!peer.destroyed) peer.reconnect(); } catch (e) {} });   // broker link drops when the phone sleeps
+            document.addEventListener('visibilitychange', () => { try { if (!document.hidden && peer.disconnected && !peer.destroyed) peer.reconnect(); } catch (e) {} });
+        }
         function netSend(c, m) { try { if (c && c.open) c.send(m); } catch (e) {} }
         function broadcastAvatars() {
             if (net.role !== 'host') return;
@@ -1456,6 +1078,7 @@
             Object.values(net.conns).forEach(c => netSend(c, { t: 'avatars', a }));
         }
         function netStop() {
+            clearTimeout(net._gu);
             try { if (net.peer) net.peer.destroy(); } catch (e) {}
             net.role = null; net.peer = null; net.conns = {}; net.hostConn = null; net.joined = false;
         }
@@ -1512,8 +1135,9 @@
             const name = cleanName(document.getElementById('playerNameInput').value) || 'Player 1';
             const code = generateRoomCode();
             net.role = 'host';
-            const peer = new Peer(PEER_PREFIX + code);
-            net.peer = peer; bindVoicePeer(peer);
+            const peer = new Peer(PEER_PREFIX + code, PEER_OPTS);
+            net.peer = peer;
+            keepAlive(peer);
             peer.on('open', () => {
                 gameState.roomCode = code;
                 gameState.localPlayerId = 'host_' + Math.random().toString(36).substring(2, 7);
@@ -1541,7 +1165,7 @@
                         });
                         renderLobbyPlayers();
                     } else if (m.t === 'act') doAction(conn.peer, m.a, m.v);
-                    else if (m.t === 'chat') hostChat(conn.peer, m);
+                    else if (m.t === 'chat') hostChat(conn.peer, m.m, m.e);
                 });
                 conn.on('close', () => {
                     if (!net.conns[conn.peer]) return;
@@ -1560,40 +1184,57 @@
 
         function joinRoom() {
             startMusic();
-            const code = document.getElementById('roomCodeInput').value.replace(/\D/g, '');
-            if (!/^\d{4}$/.test(code)) { showToast("Enter the 4-digit room ID."); return; }
+            const code = [...document.querySelectorAll('#roomBoxes .room-box')].map(b => b.value.replace(/\D/g, '')).join('');
+            if (!/^\d{4}$/.test(code)) { showToast("Enter all 4 digits of the room ID."); return; }
             if (typeof Peer === 'undefined') { showToast("Online rooms need an internet connection."); return; }
-            if (net.role) return;
+            if (net.role === 'host') return;
+            if (net.role === 'client') { if (net.joined) return; netStop(); }     // a stuck attempt never blocks the next tap
             const name = cleanName(document.getElementById('playerNameInput').value) || 'Player';
-            net.role = 'client';
-            const peer = new Peer();
-            net.peer = peer; bindVoicePeer(peer);
-            peer.on('open', () => {
-                const conn = peer.connect(PEER_PREFIX + code, { reliable: true });
-                net.hostConn = conn;
-                conn.on('open', () => netSend(conn, { t: 'join', name, color: selectedAvatarColor, img: selectedAvatarImg }));
-                conn.on('data', m => {
-                    if (m.t === 'state') applySnap(m.s, peer.id);
-                    else if (m.t === 'win') {
-                        gameState.gameStarted = false; gameState.winRound = m.r.round; gameState.book = m.book || gameState.book; gameState.rounds = m.r.roundNo || gameState.rounds;
-                        clearInterval(gameState.timerInterval); showWinner(m.r);
-                    }
-                    else if (m.t === 'avatars') Object.assign(avatarCache, m.a || {});
-                    else if (m.t === 'err') showToast(m.m);
-                    else if (m.t === 'chat') chatAdd(m.pid, m.n, m.c, m.m, m.img, m.alt);
-                    else if (m.t === 'cd') { if (m.n > 0) showCountdown(m.n); else hideCountdown(); }
+            const btn = document.getElementById('joinRoomBtn');
+            const attempt = n => {
+                net.role = 'client'; net.joined = false;
+                const myNet = net;
+                const fail = msg => { if (net.role !== 'client' || net.joined || myNet !== net) return; netStop(); btn.disabled = false; btn.textContent = 'Join Room'; showToast(msg); };
+                const retryOrFail = msg => { if (net.joined || net.role !== 'client') return; if (n < 2) { netStop(); setTimeout(() => attempt(n + 1), 600); } else fail(msg); };
+                btn.disabled = true; btn.textContent = n ? 'Trying again…' : 'Connecting…';
+                const peer = new Peer(undefined, PEER_OPTS);
+                net.peer = peer;
+                keepAlive(peer);
+                clearTimeout(net._gu);
+                const giveUp = net._gu = setTimeout(() => retryOrFail("Couldn't reach the room. Check the 4 digits and that both phones are online."), 14000);
+                peer.on('open', () => {
+                    const conn = peer.connect(PEER_PREFIX + code, { reliable: true, serialization: 'json' });
+                    net.hostConn = conn;
+                    conn.on('open', () => netSend(conn, { t: 'join', name, color: selectedAvatarColor, img: selectedAvatarImg }));
+                    conn.on('data', m => {
+                        if (m.t === 'state') { clearTimeout(giveUp); btn.disabled = false; btn.textContent = 'Join Room'; applySnap(m.s, peer.id); }
+                        else if (m.t === 'win') {
+                            gameState.gameStarted = false; gameState.winRound = m.r.round; gameState.book = m.book || gameState.book; gameState.rounds = m.r.roundNo || gameState.rounds;
+                            clearInterval(gameState.timerInterval); showWinner(m.r);
+                        }
+                        else if (m.t === 'avatars') Object.assign(avatarCache, m.a || {});
+                        else if (m.t === 'err') { clearTimeout(giveUp); fail(m.m); }
+                        else if (m.t === 'chat') chatAdd(m.n, m.c, m.m);
+                        else if (m.t === 'cd') { if (m.n > 0) showCountdown(m.n); else hideCountdown(); }
+                    });
+                    conn.on('close', () => { if (net.role === 'client' && net.joined) { showToast("Disconnected from room"); document.getElementById('menuLeaveGame').click(); } });
+                    conn.on('error', () => retryOrFail("Connection failed. Try again."));
                 });
-                conn.on('close', () => { if (net.role === 'client') { showToast("Disconnected from room"); document.getElementById('menuLeaveGame').click(); } });
-                setTimeout(() => { if (!net.joined && net.role === 'client') { showToast("Room not found"); netStop(); } }, 9000);
-            });
-            peer.on('error', e => { if (!net.joined) { showToast(e.type === 'peer-unavailable' ? "Room not found" : "Network error"); netStop(); } });
+                peer.on('error', e => {
+                    clearTimeout(giveUp);
+                    if (net.joined) return;
+                    if (e.type === 'peer-unavailable') { if (n < 1) { netStop(); setTimeout(() => attempt(n + 1), 900); } else fail("Room not found. Check the 4 digits."); }
+                    else retryOrFail("Network error (" + e.type + "). Check your internet and try again.");
+                });
+            };
+            attempt(0);
         }
 
         function applySnap(s, myId) {
             const g = gameState;
             if (s.started && g.winRound != null && s.round <= g.winRound) return;   // stale snapshot from the finished match
             if (!s.started && g.gameStarted) return;                              // wait for the result message first
-            net.joined = true;
+            net.joined = true; { const jb = document.getElementById('joinRoomBtn'); if (jb) { jb.disabled = false; jb.textContent = 'Join Room'; } }
             g.round = s.round; g.rounds = s.rounds; g.book = s.book || {};
             g.roomCode = s.roomCode; g.localPlayerId = myId; g.isBotOnlyMatch = false;
             g.players = s.players; g.currentTurnIndex = s.turn; g.direction = s.dir; g.currentColor = s.color;
@@ -1663,16 +1304,16 @@
             const list = document.getElementById('lobbyPlayersList');
             list.innerHTML = '';
             updateLobbySettings();
-            showRoomActions(true);
+            document.getElementById('chatRoot').classList.remove('hidden');
+            document.getElementById('chatFab').classList.remove('hidden');
             setTimeout(broadcastState, 0);
             if (net.role === 'host') broadcastAvatars();
             document.getElementById('playerCount').innerText = gameState.players.length;
 
             gameState.players.forEach(p => {
                 const item = document.createElement('div');
-                item.className = "lobby-row relative bg-black/20 border border-white/10 p-3 rounded-2xl flex items-center justify-between";
+                item.className = "bg-black/20 border border-white/10 p-3 rounded-2xl flex items-center justify-between";
                 item.innerHTML = `
-                    <div class="lobby-bubble-slot" data-pid="${p.id}"></div>
                     <div class="flex items-center space-x-3">
                         <div class="relative overflow-hidden w-9 h-9 rounded-xl flex items-center justify-center font-bold text-white shadow-md text-sm" style="background-color: ${p.color};">${avatarInner(p)}
                             ${p.name.charAt(0).toUpperCase()}
@@ -1680,7 +1321,6 @@
                         <div>
                             <h4 class="font-bold text-xs flex items-center space-x-2">
                                 <span>${p.name}</span>
-                                ${p.id === gameState.localPlayerId ? '<button class="seat-chat" onclick="toggleChat()" title="Chat">💬</button>' : `<span class="seat-chat other ${gameState.chats[p.id] ? 'talking' : ''}">💬</span>`}
                                 ${p.isHost ? '<span class="bg-yellow-500/20 text-yellow-400 text-[9px] px-2 py-0.5 rounded-full border border-yellow-500/30">Host</span>' : ''}
                                 ${p.isBot ? '<span class="bg-purple-500/20 text-purple-400 text-[9px] px-2 py-0.5 rounded-full border border-purple-500/30">Bot</span>' : ''}
                             </h4>
@@ -1695,7 +1335,6 @@
                 `;
                 list.appendChild(item);
             });
-            paintLobbyBubbles(); syncVoicePeers(); applySpeaking();
         }
 
         // --- START GAME & CARD DEALING ---
@@ -2088,7 +1727,8 @@
 
             renderRoundTableSeats();
             renderLocalPlayerHand();
-            animateDraws(); syncVoicePeers(); applySpeaking();
+            animateDraws();
+            document.getElementById('chatFab').classList.add('hidden');
             broadcastState();
         }
 
@@ -2177,7 +1817,7 @@
 
                 const avatarWrap = `
                         <div class="relative shrink-0">
-                            ${chatBubbleHTML(p.id, p.color)}
+                            ${gameState.chats[p.id] ? `<div class="move-bubble absolute bottom-full left-1/2 -translate-x-1/2 mb-3 z-50 bg-white text-slate-900 font-bold text-xs px-2.5 py-1 rounded-2xl shadow-2xl border-2 border-indigo-500 whitespace-nowrap">${gameState.chats[p.id]}</div>` : ''}
                             ${isCurrent ? `
                             <svg class="absolute -inset-2 w-[calc(100%+16px)] h-[calc(100%+16px)] -rotate-90 pointer-events-none z-10" viewBox="0 0 44 44">
                                 <circle cx="22" cy="22" r="20" stroke="rgba(255,255,255,0.18)" stroke-width="3" fill="none"></circle>
@@ -2190,7 +1830,7 @@
                                 <i class="fa-solid fa-layer-group text-[9px]"></i>
                                 <span>${p.hand.length}</span>
                             </div>
-                            ${isLocal ? `<button class="seat-chat seat-chat-btn absolute -left-3 -bottom-2 z-30" title="Chat" aria-label="Open chat">💬</button>` : `<div class="seat-chat other ${gameState.chats[p.id] ? 'talking' : ''} absolute -left-3 -bottom-2 z-20">💬</div>`}
+                            ${isLocal ? `<button class="chat-btn absolute -left-4 -bottom-3 z-30 w-7 h-7 rounded-full bg-indigo-600 border-2 border-white text-xs shadow">💬</button>` : ''}
                             ${p.team ? `<div class="absolute -top-1 -left-1 z-20 text-[9px] font-black px-1.5 rounded-full border border-white text-white ${p.team % 2 ? 'bg-blue-600' : 'bg-pink-600'}">T${p.team}</div>` : ''}
                             ${gameState.shouts[p.id] ? `<div class="absolute -top-3 -right-3 z-30 text-xl animate-bounce">📣</div>` : ''}
                             ${isLocal && p.hand.length <= 2 && !gameState.shouts[p.id] ? `<button class="mic-btn absolute -top-3 -right-3 z-30 w-7 h-7 rounded-full bg-red-500 border-2 border-white text-sm shadow animate-pulse">🎤</button>` : ''}
@@ -2229,8 +1869,7 @@ ${avatarWrap}
                 if (isMate) wrap.classList.add('mate');
                 if (isLocal) wrap.classList.add('mine');
                 if (cardsOnLeft && !isLocal) wrap.classList.add('rev');
-                if (gameState.chats[p.id]) seat.style.zIndex = 60;
-                const scb = seat.querySelector('.seat-chat-btn'); if (scb) scb.onclick = e => { e.stopPropagation(); toggleChat(); };
+                const cb = seat.querySelector('.chat-btn'); if (cb) cb.onclick = () => document.getElementById('chatPanel').classList.toggle('hidden');
                 const mic = seat.querySelector('.mic-btn'); if (mic) mic.onclick = () => doLocal('uno');
                 if (isLocal) {
                     p.hand.forEach((card, i) => {
@@ -2711,7 +2350,6 @@ ${avatarWrap}
                 };
             });
 
-            initChatUI();
             loadProfile();
             setAvatarColor(selectedAvatarColor);
             document.getElementById('avatarFileInput').onchange = e => { loadAvatarFile(e.target.files[0]); e.target.value = ''; };
@@ -2719,7 +2357,27 @@ ${avatarWrap}
             document.getElementById('playerNameInput').addEventListener('input', () => { updateAvatarPreview(); saveProfile(); });
             applyOrientation();
 
-            document.getElementById('roomCodeInput').addEventListener('input', e => { e.target.value = e.target.value.replace(/\D/g, '').slice(0, 4); });
+            (() => {
+                const boxes = [...document.querySelectorAll('#roomBoxes .room-box')];
+                const mark = () => boxes.forEach(b => b.classList.toggle('filled', !!b.value));
+                const fill = (from, digits) => { digits.slice(0, 4 - from).split('').forEach((d, k) => { boxes[from + k].value = d; }); mark(); boxes[Math.min(from + digits.length, 3)].focus(); };
+                boxes.forEach((b, i) => {
+                    b.addEventListener('focus', () => b.select());
+                    b.addEventListener('input', () => {
+                        const d = b.value.replace(/\D/g, '');
+                        if (d.length > 1) { b.value = ''; fill(i, d); return; }          // autofill / fast typing
+                        b.value = d; mark();
+                        if (d && i < 3) boxes[i + 1].focus();
+                    });
+                    b.addEventListener('keydown', e => {
+                        if (e.key === 'Backspace' && !b.value && i > 0) { boxes[i - 1].value = ''; boxes[i - 1].focus(); mark(); e.preventDefault(); }
+                        else if (e.key === 'ArrowLeft' && i > 0) boxes[i - 1].focus();
+                        else if (e.key === 'ArrowRight' && i < 3) boxes[i + 1].focus();
+                        else if (e.key === 'Enter') document.getElementById('joinRoomBtn').click();
+                    });
+                    b.addEventListener('paste', e => { e.preventDefault(); const t = (e.clipboardData || window.clipboardData).getData('text').replace(/\D/g, ''); if (t) fill(i, t); });
+                });
+            })();
             document.getElementById('createRoomBtn').onclick = createRoom;
             document.getElementById('joinRoomBtn').onclick = joinRoom;
             document.getElementById('addBotBtn').onclick = addBotPlayer;
@@ -2742,7 +2400,7 @@ ${avatarWrap}
 
             const leaveGame = () => {
                 netStop(); clearInterval(gameState.matchTick); stopMusic(); hideCountdown(); gameState.counting = false;
-                showRoomActions(false); resetChat(); gameState.chats = {}; stopVoice();
+                document.getElementById('chatRoot').classList.add('hidden');
                 clearInterval(gameState.timerInterval); clearInterval(winFxTimer);
                 Object.keys(avatarCache).forEach(k => delete avatarCache[k]);
                 gameState.book = {}; gameState.rounds = 0; gameState.round = 0; gameState.winRound = null;
@@ -2773,7 +2431,7 @@ ${avatarWrap}
                 setupLobbyView();
                 playSound('click');
             };
-            ['bookBtnWin', 'bookBtn'].forEach(id => document.getElementById(id).onclick = openBook);
+            ['bookBtnWin', 'bookBtnGame', 'bookBtnLobby'].forEach(id => document.getElementById(id).onclick = openBook);
             document.getElementById('closeBookBtn').onclick = () => document.getElementById('bookModal').classList.add('hidden');
             document.getElementById('resetBookBtn').onclick = () => { if (net.role === 'client') return; gameState.book = {}; gameState.rounds = 0; renderBook(); broadcastState(); };
         });
