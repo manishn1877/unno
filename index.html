@@ -1615,7 +1615,7 @@
         }
 
         const net = { role: null, peer: null, conns: {}, pend: {}, hostConn: null, joined: false };
-        const AFK_LIMIT = 3;   // missed turns in a row before a bot takes the seat
+        const AFK_LIMIT = 3, DC_GRACE = 20000;   // DC_GRACE: ms a dropped player has to come back before a bot sits in   // missed turns in a row before a bot takes the seat
         const PEER_PREFIX = 'unoarena-';
         // several STUN servers plus public relay (TURN) servers so two phones on different networks / mobile data can still connect
         const PEER_OPTS = { debug: 1, config: { iceTransportPolicy: 'all', iceCandidatePoolSize: 4, iceServers: [
@@ -1634,9 +1634,9 @@
             Object.values(net.conns).forEach(c => netSend(c, { t: 'avatars', a }));
         }
         function netStop() {
-            clearTimeout(net._gu);
+            clearTimeout(net._gu); net.stopping = true;
             try { if (net.peer) net.peer.destroy(); } catch (e) {}
-            net.role = null; net.peer = null; net.conns = {}; net.pend = {}; net.hostConn = null; net.joined = false;
+            net.role = null; net.peer = null; net.conns = {}; net.pend = {}; net.hostConn = null; net.joined = false; net.stopping = false;
         }
         function doLocal(a, v) {
             if (a === 'play') { const el = document.querySelectorAll('#tableSeatsContainer .seat-cards.mine .uno-card')[v]; const r = rectOf(el); if (r) anim.localFrom = { r, t: Date.now() }; }
@@ -1713,6 +1713,7 @@
             peer.on('connection', conn => {
                 conn.on('data', m => {
                     if (!m || typeof m !== 'object') return;
+                    conn._seen = Date.now(); if (m.t === 'hb') return;
                     if (m.t === 'join' || m.t === 'spec') handleJoin(conn, m);
                     else if (m.t === 'act') doAction(conn.peer, m.a, m.v);
                     else if (m.t === 'chat') hostChat(conn.peer, m.m, m.e, m.stk);
@@ -1727,27 +1728,36 @@
             return {
                 name: cleanName(String(m.name || '')).slice(0, 12) || 'Player',
                 color: /^#[0-9a-f]{6}$/i.test(m.color) ? m.color : '#007AFF',
+                tok: (typeof m.tok === 'string' && /^[a-z0-9]{8,24}$/.test(m.tok)) ? m.tok : null,
                 img: (typeof m.img === 'string' && m.img.length < 60000 && /^data:image\/(jpeg|png|webp);base64,[A-Za-z0-9+\/=]+$/.test(m.img)) ? m.img : null
             };
         }
         function handleJoin(conn, m) {
-            const g = gameState, d = sanitizeJoin(m);
+            const g = gameState, d = sanitizeJoin(m); conn._seen = Date.now();
+            // a spectator whose connection dropped and is coming back (same secret token)
+            const sp = d.tok && g.spectators.find(x => x.tok === d.tok);
+            if (sp) { clearTimeout(sp.dcTimer); sp.dc = false; const oc = net.conns[sp.id]; delete net.conns[sp.id]; try { if (oc && oc !== conn) oc.close(); } catch (e) {} sp.id = conn.peer; net.conns[conn.peer] = conn; delete net.pend[conn.peer]; renderGame(); return; }
             if (g.gameStarted) {
-                // same name as a player who left / went AFK -> that person takes the seat (and cards) back from the bot
-                const p = g.players.find(x => x.left && !x.isHost && String(x.baseName || '').toLowerCase() === d.name.toLowerCase());
+                // 1) same secret token = same phone reconnecting   2) same name as a player who dropped / was replaced by a bot
+                let p = d.tok && g.players.find(x => !x.isHost && x.tok === d.tok);
+                if (!p) p = g.players.find(x => (x.left || x.dc) && !x.isHost && String(x.baseName || '').toLowerCase() === d.name.toLowerCase());
                 if (p) return rejoinPlayer(conn, p, d);
                 if (m.t !== 'spec') { net.pend[conn.peer] = conn; return netSend(conn, { t: 'inprog' }); }
                 return addSpectator(conn, d);
             }
+            const dup = d.tok && g.players.find(x => x.tok === d.tok);
+            if (dup) { const oc = net.conns[dup.id]; delete net.conns[dup.id]; try { if (oc && oc !== conn) oc.close(); } catch (e) {} g.players = g.players.filter(x => x !== dup); }
             if (g.players.length >= 16) { netSend(conn, { t: 'err', m: 'Room is full (16)' }); return setTimeout(() => conn.close(), 300); }
             g.players = g.players.filter(x => !(x.left && String(x.baseName || '').toLowerCase() === d.name.toLowerCase()));
             net.conns[conn.peer] = conn; delete net.pend[conn.peer]; sendRoomStickers(conn);
             if (d.img) avatarCache[conn.peer] = d.img;
-            g.players.push({ id: conn.peer, name: d.name, baseName: d.name, color: d.color, isHost: false, isBot: false, hand: [] });
+            g.players.push({ id: conn.peer, name: d.name, baseName: d.name, color: d.color, tok: d.tok, isHost: false, isBot: false, hand: [] });
             renderLobbyPlayers();
         }
         function rejoinPlayer(conn, p, d) {
             const g = gameState, oldId = p.id, newId = conn.peer;
+            const oc = net.conns[oldId]; if (oc && oc !== conn) { delete net.conns[oldId]; try { oc.close(); } catch (e) {} }
+            clearTimeout(p.dcTimer); p.dc = false; if (d.tok) p.tok = d.tok; conn._seen = Date.now();
             p.id = newId; p.isBot = false; p.left = false; p.missed = 0; p.name = p.baseName;
             net.conns[newId] = conn; delete net.pend[newId]; sendRoomStickers(conn);
             if (d.img) avatarCache[newId] = d.img; else if (avatarCache[oldId]) avatarCache[newId] = avatarCache[oldId];
@@ -1762,7 +1772,7 @@
             if (g.spectators.length >= 20) { netSend(conn, { t: 'err', m: 'Too many spectators' }); return setTimeout(() => conn.close(), 300); }
             net.conns[conn.peer] = conn; delete net.pend[conn.peer]; sendRoomStickers(conn);
             if (d.img) avatarCache[conn.peer] = d.img;
-            g.spectators.push({ id: conn.peer, name: d.name, color: d.color });
+            g.spectators.push({ id: conn.peer, name: d.name, color: d.color, tok: d.tok });
             broadcastAvatars();
             showToast('👁 ' + d.name + ' is watching');
             renderGame();
@@ -1789,17 +1799,29 @@
             const g = gameState;
             delete net.pend[conn.peer];
             const si = g.spectators.findIndex(x => x.id === conn.peer);
-            if (si > -1) { g.spectators.splice(si, 1); delete net.conns[conn.peer]; renderGame(); return; }
+            if (si > -1) {          // give a dropped spectator 15 s to reconnect before removing them
+                const sp = g.spectators[si]; delete net.conns[conn.peer]; sp.dc = true; clearTimeout(sp.dcTimer);
+                sp.dcTimer = setTimeout(() => { if (sp.dc) { g.spectators = g.spectators.filter(x => x !== sp); renderGame(); } }, 15000);
+                return;
+            }
             if (!net.conns[conn.peer]) return;
             delete net.conns[conn.peer];
             const p = g.players.find(x => x.id === conn.peer);
             if (!p) return;
             if (!g.gameStarted) { g.players = g.players.filter(x => x !== p); renderLobbyPlayers(); }
             else {
-                p.baseName = p.baseName || p.name; p.isBot = true; p.left = true; p.name = p.baseName + ' 🤖';
-                if (g.drawnCardPendingChoice && g.players[g.currentTurnIndex] === p) g.drawnCardPendingChoice = null;
-                renderGame(); processTurnAI();
+                // don't hand the seat to a bot straight away: phones drop for a few seconds all the time
+                p.baseName = p.baseName || p.name; p.dc = true;
+                showToast('📶 ' + p.baseName + ' lost connection - waiting for them to come back…');
+                clearTimeout(p.dcTimer); p.dcTimer = setTimeout(() => { if (p.dc && !p.isBot) becomeBot(p); }, DC_GRACE);
+                renderGame();
             }
+        }
+        function becomeBot(p) {
+            clearTimeout(p.dcTimer); p.dc = false; p.baseName = p.baseName || p.name; p.isBot = true; p.left = true; p.name = p.baseName + ' 🤖';
+            if (gameState.drawnCardPendingChoice && gameState.players[gameState.currentTurnIndex] === p) gameState.drawnCardPendingChoice = null;
+            showToast(p.baseName + ' is gone - a bot took the seat (they can rejoin with the same name)');
+            renderGame(); processTurnAI();
         }
 
         // ---- spectator eye icon + list ----
@@ -1826,38 +1848,42 @@
             m.classList.remove('hidden');
             document.getElementById('specWatchBtn').onclick = () => {
                 m.classList.add('hidden');
-                netSend(conn, { t: 'spec', name, color: selectedAvatarColor, img: selectedAvatarImg });
+                netSend(conn, { t: 'spec', name, color: selectedAvatarColor, img: selectedAvatarImg, tok: net.tok });
                 b.disabled = true; b.textContent = 'Connecting…';
                 net._gu = setTimeout(() => { if (!net.joined) { netStop(); b.disabled = false; b.textContent = 'Join Room'; showToast('Could not start spectating'); } }, 10000);
             };
             document.getElementById('specCancelBtn').onclick = () => { m.classList.add('hidden'); netStop(); b.disabled = false; b.textContent = 'Join Room'; };
         }
 
-        function joinRoom() {
+        function joinRoom(rc) {
+            rc = rc === true;   // true = automatic reconnect (a button click passes an Event instead)
             startMusic();
-            const code = [...document.querySelectorAll('#roomBoxes .room-box')].map(b => b.value.replace(/\D/g, '')).join('');
-            if (!/^\d{4}$/.test(code)) { showToast("Enter all 4 digits of the room ID."); return; }
+            const code = rc ? net.rcCode : [...document.querySelectorAll('#roomBoxes .room-box')].map(b => b.value.replace(/\D/g, '')).join('');
+            if (!rc && !/^\d{4}$/.test(code)) { showToast("Enter all 4 digits of the room ID."); return; }
             if (typeof Peer === 'undefined') { showToast("Online rooms need an internet connection."); return; }
             if (net.role === 'host') return;
             if (net.role === 'client') { if (net.joined) return; netStop(); }     // a stuck attempt never blocks the next tap
-            const name = cleanName(document.getElementById('playerNameInput').value) || 'Player';
+            const name = rc ? net.rcName : (cleanName(document.getElementById('playerNameInput').value) || 'Player');
             const btn = document.getElementById('joinRoomBtn');
+            if (!rc) net.tok = newTok();
+            net.rcCode = code; net.rcName = name; const tok = net.tok;
             const attempt = n => {
                 net.role = 'client'; net.joined = false;
                 const myNet = net;
-                const fail = msg => { if (net.role !== 'client' || net.joined || myNet !== net) return; netStop(); btn.disabled = false; btn.textContent = 'Join Room'; showToast(msg); };
-                const retryOrFail = msg => { if (net.joined || net.role !== 'client') return; if (n < 2) { netStop(); setTimeout(() => attempt(n + 1), 600); } else fail(msg); };
+                const fail = msg => { if (rc) return rcRetry(); if (net.role !== 'client' || net.joined || myNet !== net) return; netStop(); btn.disabled = false; btn.textContent = 'Join Room'; showToast(msg); };
+                const retryOrFail = msg => { if (net.joined || net.role !== 'client') return; if (rc) return rcRetry(); if (n < 2) { netStop(); setTimeout(() => attempt(n + 1), 600); } else fail(msg); };
                 btn.disabled = true; btn.textContent = n ? 'Trying again…' : 'Connecting…';
                 const peer = new Peer(undefined, PEER_OPTS);
                 net.peer = peer;
                 keepAlive(peer); voiceAttach(peer);
                 clearTimeout(net._gu);
-                const giveUp = net._gu = setTimeout(() => retryOrFail("Couldn't reach the room. Check the 4 digits and that both phones are online."), 14000);
+                const giveUp = net._gu = setTimeout(() => retryOrFail("Couldn't reach the room. Check the 4 digits and that both phones are online."), rc ? 6000 : 14000);
                 peer.on('open', () => {
                     const conn = peer.connect(PEER_PREFIX + code, { reliable: true, serialization: 'json' });
                     net.hostConn = conn;
-                    conn.on('open', () => netSend(conn, { t: 'join', name, color: selectedAvatarColor, img: selectedAvatarImg }));
+                    conn.on('open', () => netSend(conn, { t: 'join', name, color: selectedAvatarColor, img: selectedAvatarImg, tok }));
                     conn.on('data', m => {
+                        net._seen = Date.now(); if (m.t === 'hb') { netSend(conn, { t: 'hb' }); return; }
                         if (m.t === 'state') { clearTimeout(giveUp); btn.disabled = false; btn.textContent = 'Join Room'; applySnap(m.s, peer.id); }
                         else if (m.t === 'win') {
                             gameState.gameStarted = false; gameState.winRound = m.r.round; gameState.book = m.book || gameState.book; gameState.rounds = m.r.roundNo || gameState.rounds;
@@ -1869,15 +1895,16 @@
                         else if (m.t === 'stk') { addRoomSticker(m.id, m.d); }
                         else if (m.t === 'sbulk') { (Array.isArray(m.list) ? m.list : []).slice(0, 40).forEach(x => x && addRoomSticker(x.id, x.d)); }
                         else if (m.t === 'kick') { showToast(m.m || 'Removed from the room'); document.getElementById('menuLeaveGame').click(); }
-                        else if (m.t === 'inprog') { clearTimeout(giveUp); btn.disabled = false; btn.textContent = 'Join Room'; showSpectatePrompt(conn, name); }
+                        else if (m.t === 'inprog') { if (rc) { net.reconnecting = false; hideRcBanner(); showToast('The match changed while you were away - could not rejoin'); document.getElementById('menuLeaveGame').click(); return; } clearTimeout(giveUp); btn.disabled = false; btn.textContent = 'Join Room'; showSpectatePrompt(conn, name); }
                         else if (m.t === 'cd') { if (m.n > 0) showCountdown(m.n); else hideCountdown(); }
                     });
-                    conn.on('close', () => { if (net.role === 'client' && net.joined) { showToast("Disconnected from room"); document.getElementById('menuLeaveGame').click(); } });
+                    conn.on('close', () => { if (net.role === 'client' && net.joined && !net.reconnecting && !net.stopping && net.peer === peer) softReconnect(); });
                     conn.on('error', () => retryOrFail("Connection failed. Try again."));
                 });
                 peer.on('error', e => {
                     clearTimeout(giveUp);
                     if (net.joined) return;
+                    if (rc) return rcRetry();
                     if (e.type === 'peer-unavailable') { if (n < 1) { netStop(); setTimeout(() => attempt(n + 1), 900); } else fail("Room not found. Check the 4 digits."); }
                     else retryOrFail("Network error (" + e.type + "). Check your internet and try again.");
                 });
@@ -1889,7 +1916,7 @@
             const g = gameState;
             if (s.started && g.winRound != null && s.round <= g.winRound) return;   // stale snapshot from the finished match
             if (!s.started && g.gameStarted) return;                              // wait for the result message first
-            net.joined = true; { const jb = document.getElementById('joinRoomBtn'); if (jb) { jb.disabled = false; jb.textContent = 'Join Room'; } }
+            net.joined = true; net._seen = Date.now(); if (net.reconnecting) { net.reconnecting = false; net._rcN = 0; hideRcBanner(); showToast('✅ Reconnected!'); } { const jb = document.getElementById('joinRoomBtn'); if (jb) { jb.disabled = false; jb.textContent = 'Join Room'; } }
             g.round = s.round; g.rounds = s.rounds; g.book = s.book || {};
             if (voice.stream) setTimeout(voiceSync, 0);
             g.roomCode = s.roomCode; g.localPlayerId = myId; g.isBotOnlyMatch = false;
@@ -3060,7 +3087,7 @@ ${avatarWrap}
             });
 
             const leaveGame = () => {
-                stopVoice(); netStop(); gameState.spectators = []; document.body.classList.remove('spectating'); ['specPop', 'specEye', 'specTag', 'spectateModal'].forEach(i => document.getElementById(i).classList.add('hidden')); clearInterval(gameState.matchTick); stopMusic(); hideCountdown(); gameState.counting = false;
+                net.reconnecting = false; hideRcBanner(); stopVoice(); netStop(); gameState.spectators = []; document.body.classList.remove('spectating'); ['specPop', 'specEye', 'specTag', 'spectateModal'].forEach(i => document.getElementById(i).classList.add('hidden')); clearInterval(gameState.matchTick); stopMusic(); hideCountdown(); gameState.counting = false;
                 document.getElementById('chatRoot').classList.add('hidden');
                 clearInterval(gameState.timerInterval); clearInterval(winFxTimer);
                 Object.keys(avatarCache).forEach(k => delete avatarCache[k]);
@@ -3090,7 +3117,7 @@ ${avatarWrap}
                 g.gameStarted = false; g.counting = false; clearInterval(g.timerInterval); clearInterval(g.matchTick);
                 ['colorPickerModal', 'drawnCardChoiceBar'].forEach(id => document.getElementById(id).classList.add('hidden'));
                 g.pendingWildCard = null; g.drawnCardPendingChoice = null;
-                if (net.role !== 'client') g.players = g.players.filter(p => !p.left);
+                if (net.role !== 'client') g.players = g.players.filter(p => !p.left && !p.dc);
                 if (net.role === 'host') promoteSpectators();
                 setupLobbyView();
                 playSound('click');
@@ -3401,6 +3428,44 @@ ${avatarWrap}
     });
     window.UNO_X = { checkAch, openProfile, ensureCh, POOL, challengeEvent, award };
 })();
+</script>
+<script>
+    // ===== connection resilience: heartbeat, auto-reconnect, grace period =====
+    const newTok = () => Array.from({ length: 16 }, () => 'abcdefghijklmnopqrstuvwxyz0123456789'[Math.floor(Math.random() * 36)]).join('');
+    function showRcBanner() {
+        let b = document.getElementById('rcBanner');
+        if (!b) { b = document.createElement('div'); b.id = 'rcBanner'; b.style.cssText = 'position:fixed;top:0;left:50%;transform:translateX(-50%);z-index:120;background:#f59e0b;color:#111;font:800 12px Fredoka,sans-serif;padding:6px 14px;border-radius:0 0 14px 14px;box-shadow:0 4px 14px rgba(0,0,0,.4)'; document.body.appendChild(b); }
+        b.textContent = '🔄 Connection lost - reconnecting…'; b.style.display = 'block';
+    }
+    function hideRcBanner() { const b = document.getElementById('rcBanner'); if (b) b.style.display = 'none'; }
+    function softReconnect() {
+        if (net.reconnecting || net.role !== 'client') return;
+        net.reconnecting = true; net._rcN = 0; showRcBanner();
+        net.joined = false; netStop(); joinRoom(true);
+    }
+    function rcRetry() {
+        if (!net.reconnecting) return;
+        net._rcN = (net._rcN || 0) + 1;
+        if (net._rcN > 14) { net.reconnecting = false; hideRcBanner(); showToast('Could not reconnect to the room'); document.getElementById('menuLeaveGame').click(); return; }
+        netStop(); setTimeout(() => { if (net.reconnecting) joinRoom(true); }, 1500);
+    }
+    setInterval(() => {                                    // host: ping everybody, drop phones that went silent
+        if (net.role !== 'host') return;
+        const now = Date.now();
+        Object.values(net.conns).forEach(c => {
+            netSend(c, { t: 'hb' });
+            const seen = c._seen || (c._seen = now);
+            if (now - seen > 25000) { try { c.close(); } catch (e) {} onConnClose(c); }
+        });
+    }, 4000);
+    setInterval(() => {                                    // client: no word from the host for 20 s = dead link
+        if (net.role === 'client' && net.joined && !net.reconnecting && net._seen && Date.now() - net._seen > 20000) softReconnect();
+    }, 3000);
+    document.addEventListener('visibilitychange', () => {  // coming back from a locked screen / another app
+        if (document.hidden || net.role !== 'client' || !net.joined || net.reconnecting) return;
+        if (!net.hostConn || !net.hostConn.open || (net._seen && Date.now() - net._seen > 12000)) softReconnect();
+    });
+    window.addEventListener('online', () => { if (net.role === 'client' && net.joined && !net.reconnecting) softReconnect(); });
 </script>
 </body>
 </html>
