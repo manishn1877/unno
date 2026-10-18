@@ -390,6 +390,39 @@
         .ach-front .ach-mid { height: 42%; margin-top: -16cqw; }
         .ach-front .ach-mid span { font-size: 30cqw; transform: rotate(14deg); }
         .ach-cap { position: absolute; left: 4%; right: 4%; bottom: 20cqw; text-align: center; font-family: Impact,'Arial Black',Fredoka,sans-serif; font-weight: 900; color: #fff; text-transform: uppercase; font-size: 11cqw; line-height: 1.05; text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000; }
+        .rule-tile { position: relative; display: flex; flex-direction: column; align-items: center; gap: 2px; padding: .5rem .3rem; border-radius: .8rem; border: 2px solid rgba(255,255,255,.15); background: rgba(255,255,255,.06); color: #fff; text-align: center; }
+        .rule-tile .ri { font-size: 1.35rem; line-height: 1.2; } .rule-tile b { font-size: .7rem; } .rule-tile i { font-style: normal; font-size: .55rem; color: #94a3b8; line-height: 1.15; }
+        .rule-tile.on { border-color: #facc15; background: rgba(250,204,21,.14); } .rule-tile.on::after { content: '✔'; position: absolute; top: -.35rem; right: -.35rem; width: 1.15rem; height: 1.15rem; border-radius: 50%; background: #22c55e; color: #fff; font-size: .65rem; display: flex; align-items: center; justify-content: center; border: 1.5px solid #fff; }
+        .rule-tile.ro { pointer-events: none; opacity: .85; }
+        #ruleBadge { position: fixed; top: 3.3rem; left: 50%; transform: translateX(-50%); z-index: 52; background: rgba(220,38,38,.95); color: #fff; font: 800 .75rem Fredoka, sans-serif; padding: .3rem .8rem; border-radius: 9999px; border: 2px solid #fff; box-shadow: 0 4px 14px rgba(0,0,0,.5); pointer-events: none; white-space: nowrap; }
+        #swapPicker { position: fixed; inset: 0; z-index: 66; background: rgba(0,0,0,.7); backdrop-filter: blur(4px); display: flex; align-items: center; justify-content: center; padding: 1rem; }
+        #swapPicker .box { background: #0f172a; border: 2px solid #facc15; border-radius: 1.2rem; padding: 1rem; max-width: 22rem; width: 100%; color: #fff; text-align: center; max-height: 80vh; overflow-y: auto; }
+        #swapPicker button { display: flex; width: 100%; align-items: center; justify-content: space-between; margin-top: .4rem; padding: .55rem .8rem; border-radius: .8rem; background: rgba(255,255,255,.1); border: 1px solid rgba(255,255,255,.2); font-weight: 800; font-size: .85rem; color: #fff; }
+
+        /* ===== PATCH 8: classic UNO card faces, richer backs, spread-out fan ===== */
+        .uno-card, #topDiscardCard, #discardHistory > div { container-type: inline-size; overflow: hidden; }
+        .ucf { position: absolute; inset: 0; border-radius: inherit; overflow: hidden; pointer-events: none; background: linear-gradient(150deg, color-mix(in srgb, var(--c) 78%, #fff) 0%, var(--c) 42%, color-mix(in srgb, var(--c) 70%, #000) 100%); }
+        .ucf::before { content: ''; position: absolute; inset: 3.5cqw; border: .9cqw solid rgba(255,255,255,.5); border-radius: 7cqw; }
+        .ucf::after { content: ''; position: absolute; inset: 0; background: linear-gradient(115deg, rgba(255,255,255,.3) 0%, rgba(255,255,255,0) 40%); }
+        .ucf-wild { background: radial-gradient(circle at 50% 38%, #3d3d3d, #0b0b0b 72%); }
+        .ucf-oval { position: absolute; left: 50%; top: 50%; width: 74%; height: 64%; transform: translate(-50%, -50%) rotate(24deg); border-radius: 50%; background: #fff; box-shadow: inset 0 0 0 .8cqw rgba(0,0,0,.08), 0 1.2cqw 3cqw rgba(0,0,0,.35); display: flex; align-items: center; justify-content: center; z-index: 1; }
+        .ucf-wild .ucf-oval { background: conic-gradient(#ef4444 0 25%, #3b82f6 0 50%, #22c55e 0 75%, #facc15 0 100%); }
+        .ucf-sym { transform: rotate(-24deg); font-family: Fredoka, sans-serif; font-weight: 900; font-size: 40cqw; line-height: 1; -webkit-text-stroke: .7cqw rgba(0,0,0,.22); text-shadow: .8cqw 1.2cqw 0 rgba(0,0,0,.18); }
+        .ucf-sym.ic { display: flex; } .ucf-sym.ic svg { width: 42cqw; height: 42cqw; }
+        .ucf-sym.wl { color: #fff !important; -webkit-text-stroke: 1.3cqw #000; paint-order: stroke fill; font-size: 34cqw; }
+        .ucf-sym.wd { font-size: 17cqw; letter-spacing: .02em; }
+        .ucf-sym.ucf-ul { text-decoration: underline; text-decoration-thickness: 3cqw; text-underline-offset: 1.2cqw; }
+        .ucf-c { position: absolute; z-index: 2; font-family: Fredoka, sans-serif; font-weight: 900; color: #fff; font-size: 15cqw; line-height: 1; text-shadow: .6cqw .8cqw 0 rgba(0,0,0,.45); display: flex; }
+        .ucf-c svg { width: 15cqw; height: 15cqw; }
+        .ucf-c.tl { top: 5.5cqw; left: 7cqw; } .ucf-c.br { bottom: 5.5cqw; right: 7cqw; transform: rotate(180deg); }
+        body.is-landscape .seat-cards.mate .uno-card .ucf-sym { font-size: 40cqw !important; } body.is-landscape .seat-cards.mate .uno-card .ucf-sym.wd { font-size: 17cqw !important; } body.is-landscape .seat-cards.mate .uno-card .ucf-c { font-size: 15cqw !important; }
+        .uno-card { border-radius: 12px; }
+        #drawDeckBtn > div:first-child { background: radial-gradient(circle at 28% 18%, #f87171, #b91c1c 38%, #450a0a 100%) !important; }
+        #drawDeckBtn > div:first-child > div { transform: rotate(-24deg); border-radius: 50% !important; width: 78% !important; height: 62% !important; background: linear-gradient(135deg, #ef4444, #991b1b) !important; border: 2px solid #fde047 !important; box-shadow: 0 3px 8px rgba(0,0,0,.45), inset 0 0 0 2px rgba(0,0,0,.18); }
+        #drawDeckBtn > div:first-child > div span { transform: rotate(24deg) rotate(-8deg) !important; text-shadow: 2px 2px 0 rgba(0,0,0,.5); }
+        .seat-cards > div:not(.uno-card):not(.more) { background: radial-gradient(circle at 30% 20%, #ef4444, #7f1d1d 60%, #2a0707) !important; }
+        body.is-landscape .seat-cards > div:not(.uno-card):not(.more):not(:first-child) { margin-left: calc(var(--u) * -3) !important; }
+        #rotateHint { position: fixed; left: 50%; bottom: 1rem; transform: translateX(-50%); z-index: 130; background: #facc15; color: #111; font: 800 .8rem Fredoka, sans-serif; padding: .55rem 1rem; border-radius: 9999px; border: 2px solid #fff; box-shadow: 0 6px 18px rgba(0,0,0,.5); }
     </style>
 </head>
 <body class="dark-theme min-h-screen overflow-y-auto flex flex-col">
@@ -574,6 +607,7 @@
                             <div class="flex gap-2">
                                 <button data-opt="min" data-v="3" onclick="setLobbyOpt('min',3)">3 min</button>
                                 <button data-opt="min" data-v="5" onclick="setLobbyOpt('min',5)">5 min</button>
+                                <button data-opt="min" data-v="0" onclick="setLobbyOpt('min',0)">∞ Unlimited</button>
                             </div>
                         </div>
                         <div class="bg-white/5 border border-white/10 rounded-xl p-3">
@@ -582,6 +616,18 @@
                                 <button data-opt="team" data-v="0" onclick="setLobbyOpt('team',0)">Solo</button>
                                 <button data-opt="team" data-v="1" onclick="setLobbyOpt('team',1)">Teams of 2</button>
                             </div>
+                        </div>
+                    </div>
+
+                    <div id="lobbyRules" class="text-xs bg-white/5 border border-white/10 rounded-xl p-3">
+                        <div class="flex items-center justify-between mb-2">
+                            <p class="font-bold text-slate-300">📜 Rules</p>
+                        </div>
+                        <div class="grid grid-cols-2 sm:grid-cols-4 gap-2">
+                            <button class="rule-tile" data-rule="stack" onclick="toggleRule('stack')"><span class="ri">📚</span><b>Stack</b><i>Answer +2/+4 with another +2/+4 to pass it on</i></button>
+                            <button class="rule-tile" data-rule="zeroSeven" onclick="toggleRule('zeroSeven')"><span class="ri">0️⃣7️⃣</span><b>0-7</b><i>0 passes every hand around, 7 swaps with anyone</i></button>
+                            <button class="rule-tile" data-rule="swap7" onclick="toggleRule('swap7')"><span class="ri">🔁</span><b>Swap 7's</b><i>Only 7 swaps hands (0 does nothing)</i></button>
+                            <button class="rule-tile" data-rule="doubleSkip" onclick="toggleRule('doubleSkip')"><span class="ri">⛔⛔</span><b>Double Skip</b><i>Skip skips the next two players</i></button>
                         </div>
                     </div>
 
@@ -1073,6 +1119,7 @@
 
         function canPlay(card) {
             const top = gameState.discardPile[gameState.discardPile.length - 1];
+            if (gameState.pendingDraw > 0) return card.type === 'draw2' || card.type === 'draw4';   // Stack rule: only a draw card can answer a draw card
             return card.color === 'wild' || card.color === gameState.currentColor || (top && card.value === top.value);
         }
         function cleanName(v) { return v.replace(/[<>&"'`]/g, '').trim(); }
@@ -1104,7 +1151,7 @@
             isBotOnlyMatch: false,
             autoPlayPaused: false,
             drawnCardPendingChoice: null,
-            activePlays: {}, shouts: {}, chats: {}, log: [], round: 0, rounds: 0, book: {}, winRound: null, mins: 3, teamMode: false, matchEndAt: 0, selIdx: null,
+            activePlays: {}, shouts: {}, chats: {}, log: [], round: 0, rounds: 0, book: {}, winRound: null, mins: 3, teamMode: false, rules: { stack: false, zeroSeven: false, swap7: false, doubleSkip: false }, maxP: 16, pendingDraw: 0, pendingSwap: false, matchEndAt: 0, selIdx: null,
             spectators: [], activeBubbles: {} // Stores temporary speech popup text per player
         };
 
@@ -1230,6 +1277,7 @@
 
         function updateMatchClock() {
             const el = document.getElementById('matchClock');
+            if (!isFinite(gameState.matchEndAt)) { el.textContent = '⏱ ∞'; return; }
             const left = Math.max(0, gameState.matchEndAt - Date.now());
             el.textContent = '⏱ ' + Math.floor(left / 60000) + ':' + String(Math.floor(left % 60000 / 1000)).padStart(2, '0');
             el.classList.toggle('text-red-400', left < 30000);
@@ -1256,12 +1304,24 @@
             setTimeout(() => { delete gameState.shouts[pid]; renderGame(); }, 3500);
         }
         function updateLobbySettings() {
+            updateRuleTiles();
             const g = gameState, n = g.players.length;
             if (g.teamMode && !(n >= 4 && n % 2 === 0)) g.teamMode = false;
             document.querySelectorAll('[data-opt]').forEach(b => {
                 const on = b.dataset.opt === 'min' ? g.mins == b.dataset.v : (g.teamMode ? '1' : '0') === b.dataset.v;
                 b.className = 'flex-1 rounded-lg py-2 font-bold border ' + (on ? 'bg-yellow-400 text-slate-900 border-yellow-300' : 'bg-white/10 text-white border-white/15');
             });
+        }
+        function updateRuleTiles() {
+            const g = gameState, host = net.role !== 'client';
+            document.querySelectorAll('[data-rule]').forEach(b => { b.classList.toggle('on', !!g.rules[b.dataset.rule]); b.classList.toggle('ro', !host); });
+        }
+        function toggleRule(k) {
+            if (net.role === 'client') return;
+            const r = gameState.rules; r[k] = !r[k];
+            if (r[k] && k === 'zeroSeven') r.swap7 = false;
+            if (r[k] && k === 'swap7') r.zeroSeven = false;
+            updateLobbySettings(); broadcastState();
         }
         function setLobbyOpt(k, v) {
             if (net.role === 'client') return;
@@ -1462,7 +1522,7 @@
         }
 
         // ===================== VOICE CHAT (WebRTC audio between the phones in the room) =====================
-        const voice = { stream: null, on: false, vol: 1, deaf: false, audios: {}, sent: {}, an: null, raf: 0, level: 0, hearing: 0 };
+        const voice = { cs: {}, cur: {}, pulling: {}, stream: null, on: false, vol: 1, deaf: false, audios: {}, sent: {}, an: null, raf: 0, level: 0, hearing: 0 };
         function voiceTargets() {
             const g = gameState, out = [];
             g.players.forEach(p => { if (p.isBot || p.id === g.localPlayerId) return; out.push(p.isHost ? PEER_PREFIX + g.roomCode : p.id); });
@@ -1473,18 +1533,27 @@
             if (!a) { a = document.createElement('audio'); a.autoplay = true; a.setAttribute('playsinline', ''); a.style.display = 'none'; document.body.appendChild(a); voice.audios[id] = a; }
             if (a.srcObject !== stream) a.srcObject = stream;
             a.volume = voice.vol; a.muted = voice.deaf;
-            const p = a.play && a.play(); if (p && p.catch) p.catch(() => {});
+            const p = a.play && a.play(); if (p && p.catch) p.catch(() => { if (!voice.tapHint) { voice.tapHint = true; showToast('🔊 Tap anywhere on the screen to start hearing voices'); } });
             updateVoiceUI();
         }
         function dropRemote(id) { const a = voice.audios[id]; if (a) { try { a.srcObject = null; a.remove(); } catch (e) {} delete voice.audios[id]; } updateVoiceUI(); }
+        const peerIdOf = p => p.isHost ? PEER_PREFIX + gameState.roomCode : p.id;
+        function wireCall(id, call) {                       // several calls to the same person can exist: keep hearing them until the LAST one closes
+            const book = () => (voice.cs[id] = voice.cs[id] || new Map());
+            call.on('stream', rs => { book().set(call, rs); voice.cur[id] = call; attachRemote(id, rs); });
+            call.on('close', () => {
+                const m = voice.cs[id]; if (m) m.delete(call);
+                if (m && m.size) { const last = [...m].pop(); voice.cur[id] = last[0]; attachRemote(id, last[1]); }
+                else { delete voice.cur[id]; delete voice.sent[id]; dropRemote(id); }
+            });
+            call.on('error', () => { const m = voice.cs[id]; if (m) m.delete(call); });
+        }
         function voiceAttach(peer) {
             peer.on('call', call => {                       // every phone answers; it sends its own voice back only if its mic is on
                 const mic = !!voice.stream;
                 try { call.answer(voice.stream || undefined); } catch (e) { return; }
                 if (mic) voice.sent[call.peer] = true;
-                call.on('stream', rs => attachRemote(call.peer, rs));
-                call.on('close', () => dropRemote(call.peer));
-                call.on('error', () => {});
+                wireCall(call.peer, call);
             });
         }
         function voiceSync() {
@@ -1494,14 +1563,37 @@
                 try {
                     const call = net.peer.call(id, voice.stream);
                     if (!call) return;
-                    voice.sent[id] = true;
-                    call.on('stream', rs => attachRemote(id, rs));
-                    call.on('close', () => { delete voice.sent[id]; dropRemote(id); });
-                    call.on('error', () => { delete voice.sent[id]; });
-                    setTimeout(() => { if (!call.open) delete voice.sent[id]; }, 8000);   // never answered: try again on the next sync
+                    voice.sent[id] = true; wireCall(id, call);
+                    setTimeout(() => { if (!call.open && voice.cur[id] !== call) delete voice.sent[id]; }, 8000);   // never answered: try again on the next sync
                 } catch (e) { delete voice.sent[id]; }
             });
         }
+        // Fallback so nobody stays silent: if a player says their mic is on but I'm not receiving them, I call them myself.
+        function silentStream() { if (!voice.silent) { const ctx = ensureAudio(); voice.silent = ctx.createMediaStreamDestination().stream; } return voice.silent; }
+        function pullCall(id) {
+            try { const call = net.peer.call(id, voice.stream || silentStream()); if (call) wireCall(id, call); } catch (e) {}
+        }
+        function announceMic() {
+            const g = gameState, me = g.players.find(p => p.id === g.localPlayerId);
+            if (net.role === 'host') { if (me) me.mic = voice.on; }
+            else if (net.role === 'client' && net.hostConn) netSend(net.hostConn, { t: 'mic', on: !!voice.on });
+        }
+        setInterval(() => {
+            if (!net.role || !net.peer || net.peer.destroyed || !net.peer.open || !gameState.players.length) return;
+            announceMic();
+            Object.values(voice.audios).forEach(a => { if (a.srcObject && a.paused) { const p = a.play(); if (p && p.catch) p.catch(() => {}); } });
+            if (voice.stream) voiceSync();
+            gameState.players.forEach(p => {
+                if (p.isBot || p.id === gameState.localPlayerId || !p.mic) return;
+                const id = peerIdOf(p), a = voice.audios[id];
+                const live = a && a.srcObject && a.srcObject.getAudioTracks().some(t => t.readyState === 'live');
+                if (!live && !(voice.pulling[id] > Date.now())) { voice.pulling[id] = Date.now() + 7000; pullCall(id); }
+            });
+        }, 3000);
+        ['pointerdown', 'touchstart', 'keydown'].forEach(ev => document.addEventListener(ev, () => {   // phones block audio until the first tap
+            Object.values(voice.audios).forEach(a => { if (a.srcObject && a.paused) { const p = a.play(); if (p && p.catch) p.catch(() => {}); } });
+            try { ensureAudio().resume(); } catch (e) {}
+        }, { passive: true }));
         function startMeter() {
             if (voice.an || !voice.stream) return;
             try {
@@ -1538,14 +1630,14 @@
                 voice.on = !voice.on;
                 voice.stream.getAudioTracks().forEach(t => t.enabled = voice.on);
             }
-            playSound('click'); updateVoiceUI();
+            playSound('click'); updateVoiceUI(); announceMic();
         }
         function stopVoice() {
             cancelAnimationFrame(voice.raf); voice.an = null;
             try { if (voice.src) voice.src.disconnect(); } catch (e) {}
             if (voice.stream) voice.stream.getTracks().forEach(t => t.stop());
             Object.keys(voice.audios).forEach(dropRemote);
-            voice.stream = null; voice.on = false; voice.sent = {}; voice.level = 0;
+            voice.stream = null; voice.on = false; voice.sent = {}; voice.cur = {}; voice.cs = {}; voice.pulling = {}; voice.level = 0;
             updateVoiceUI();
         }
         function updateVoiceUI(msg) {
@@ -1656,6 +1748,10 @@
             const cur = g.players[g.currentTurnIndex];
             if (!cur || cur.id !== pid) return;
             cur.missed = 0;
+            if (g.pendingSwap) {                     // 0-7 / Swap 7's: this player must choose who to swap with
+                if (t === 'swap') { const tg = g.players.find(p => p.id === v && p.id !== cur.id); if (tg) { swapHands(cur, tg); g.pendingSwap = false; advanceTurn(1); } }
+                return;
+            }
             if (t === 'play' && !g.drawnCardPendingChoice) playHumanCard(v, pid);
             else if (t === 'draw' && !g.drawnCardPendingChoice && !g.pendingWildCard) handleDrawFromStack(cur);
             else if (t === 'color' && g.pendingWildCard && COLORS.includes(v)) {
@@ -1676,8 +1772,8 @@
                 roomCode: g.roomCode, round: g.round, rounds: g.rounds, book: g.book, started: g.gameStarted, turn: g.currentTurnIndex, dir: g.direction,
                 color: g.currentColor, t: g.turnTimer, deckN: g.deck.length, discard: g.discardPile.slice(-5),
                 called: g.hasCalledUno, wild: !!g.pendingWildCard && mine, drawn: mine ? g.drawnCardPendingChoice : null,
-                specs: (g.spectators || []).map(x => ({ id: x.id, name: x.name })), bubbles: g.activeBubbles, plays: g.activePlays, shouts: g.shouts, chats: g.chats, log: g.log, mins: g.mins, teamMode: g.teamMode, left: Math.max(0, g.matchEndAt - Date.now()),
-                players: g.players.map(p => ({ id: p.id, name: p.name, color: p.color, isHost: p.isHost, isBot: p.isBot, team: p.team, hand: (p.id === pid || (g.teamMode && p.team && p.team === (g.players.find(x => x.id === pid) || {}).team)) ? p.hand : p.hand.map(() => 0) }))
+                specs: (g.spectators || []).map(x => ({ id: x.id, name: x.name })), bubbles: g.activeBubbles, plays: g.activePlays, shouts: g.shouts, chats: g.chats, log: g.log, mins: g.mins, teamMode: g.teamMode, left: g.mins ? Math.max(0, g.matchEndAt - Date.now()) : 0, rules: g.rules, maxP: g.maxP, pend: g.pendingDraw || 0, swap: !!g.pendingSwap,
+                players: g.players.map(p => ({ id: p.id, name: p.name, color: p.color, isHost: p.isHost, isBot: p.isBot, team: p.team, mic: !!p.mic, hand: (p.id === pid || (g.teamMode && p.team && p.team === (g.players.find(x => x.id === pid) || {}).team)) ? p.hand : p.hand.map(() => 0) }))
             };
         }
         function broadcastState() {
@@ -1718,6 +1814,7 @@
                     else if (m.t === 'act') doAction(conn.peer, m.a, m.v);
                     else if (m.t === 'chat') hostChat(conn.peer, m.m, m.e, m.stk);
                     else if (m.t === 'sshare') hostShare(conn.peer, m);
+                    else if (m.t === 'mic') { const mp = gameState.players.find(x => x.id === conn.peer); if (mp) mp.mic = !!m.on; }
                 });
                 conn.on('close', () => onConnClose(conn));
             });
@@ -1747,7 +1844,7 @@
             }
             const dup = d.tok && g.players.find(x => x.tok === d.tok);
             if (dup) { const oc = net.conns[dup.id]; delete net.conns[dup.id]; try { if (oc && oc !== conn) oc.close(); } catch (e) {} g.players = g.players.filter(x => x !== dup); }
-            if (g.players.length >= 16) { netSend(conn, { t: 'err', m: 'Room is full (16)' }); return setTimeout(() => conn.close(), 300); }
+            if (g.players.length >= (g.maxP || 16)) { netSend(conn, { t: 'err', m: 'Room is full (' + (g.maxP || 16) + ')' }); return setTimeout(() => conn.close(), 300); }
             g.players = g.players.filter(x => !(x.left && String(x.baseName || '').toLowerCase() === d.name.toLowerCase()));
             net.conns[conn.peer] = conn; delete net.pend[conn.peer]; sendRoomStickers(conn);
             if (d.img) avatarCache[conn.peer] = d.img;
@@ -1925,7 +2022,7 @@
             g.pendingWildCard = s.wild ? {} : null; g.drawnCardPendingChoice = s.drawn;
             Object.keys(s.plays || {}).forEach(k => { const o = g.activePlays[k], n = s.plays[k]; if (!o || o.id !== n.id) { cardSfx(n); g.discardPile = s.discard; animatePlay(k, n); } });
             Object.keys(s.shouts || {}).forEach(k => { if (!g.shouts[k]) playSound('uno'); });
-            g.activeBubbles = s.bubbles; g.activePlays = s.plays; g.log = s.log || []; g.shouts = s.shouts; g.chats = s.chats || {}; g.mins = s.mins; g.teamMode = s.teamMode; g.matchEndAt = Date.now() + s.left;
+            g.activeBubbles = s.bubbles; g.activePlays = s.plays; g.log = s.log || []; g.shouts = s.shouts; g.chats = s.chats || {}; g.mins = s.mins; g.rules = s.rules || g.rules; g.maxP = s.maxP || g.maxP; g.pendingDraw = s.pend || 0; g.pendingSwap = !!s.swap; g.teamMode = s.teamMode; g.matchEndAt = s.mins ? Date.now() + s.left : Infinity;
             setHostControls(false);
             if (!s.started) {
                 g.gameStarted = false; clearInterval(g.timerInterval);
@@ -1934,6 +2031,7 @@
             }
             if (!g.gameStarted) {
                 g.gameStarted = true; g.winRound = null; anim.prev = null; anim.prevLocal = null;
+                window.autoLandscape && window.autoLandscape();
                 document.getElementById('homeView').classList.add('hidden'); document.body.classList.add('in-room');
                 document.getElementById('roomBadge').classList.remove('hidden'); document.getElementById('badgeRoomCode').innerText = g.roomCode;
                 document.getElementById('chatRoot').classList.remove('hidden');
@@ -1953,8 +2051,8 @@
         }
 
         function addBotPlayer() {
-            if (gameState.players.length >= 16) {
-                showToast("Maximum 16 seats allowed!");
+            if (gameState.players.length >= (gameState.maxP || 16)) {
+                showToast("Room is full (" + (gameState.maxP || 16) + " players max)");
                 return;
             }
             const botNames = ['Bot Alpha', 'Bot Beta', 'CyberUno', 'RoboPro', 'MegaBot', 'AI Master', 'FastBot', 'SmartyBot', 'NovaBot', 'ApexAI'];
@@ -2031,6 +2129,7 @@
                 return;
             }
 
+            window.autoLandscape && window.autoLandscape();
             const g0 = gameState;
             if (g0.teamMode && !(g0.players.length >= 4 && g0.players.length % 2 === 0)) g0.teamMode = false;
             g0.players.forEach(p => p.team = null);
@@ -2040,9 +2139,9 @@
                 for (let k = 0; k < h; k++) { arr[k] = sh[2 * k]; arr[k + h] = sh[2 * k + 1]; }
                 g0.players = arr;
             }
-            g0.round++; g0.winRound = null; g0.pendingWildCard = null; anim.prev = null; anim.prevLocal = null; anim.hold = null; anim.hide.clear();
+            g0.round++; g0.winRound = null; g0.pendingWildCard = null; g0.pendingDraw = 0; g0.pendingSwap = false; anim.prev = null; anim.prevLocal = null; anim.hold = null; anim.hide.clear();
             g0.shouts = {}; g0.chats = {}; g0.log = []; g0.selIdx = null;
-            g0.matchEndAt = Date.now() + g0.mins * 60000;
+            g0.matchEndAt = g0.mins ? Date.now() + g0.mins * 60000 : Infinity;
             clearInterval(g0.matchTick);
             g0.matchTick = setInterval(() => {
                 if (!g0.gameStarted) return clearInterval(g0.matchTick);
@@ -2134,6 +2233,8 @@
             const player = gameState.players[gameState.currentTurnIndex];
             if (!player.isBot && !player.isHost) { player.missed = (player.missed || 0) + 1; if (player.missed >= AFK_LIMIT) afkKick(player); }
             
+            if (gameState.pendingSwap) { gameState.pendingSwap = false; botSwap(player); advanceTurn(1); return; }
+            if (gameState.pendingDraw > 0 && !player.hand.some(canPlay)) { handleDrawFromStack(player, true); return; }
             if (gameState.pendingWildCard) { player.hand.push(gameState.pendingWildCard); gameState.pendingWildCard = null; }
             // Close any pending color picker modal or drawn card choice bar
             document.getElementById('colorPickerModal').classList.add('hidden');
@@ -2421,25 +2522,17 @@
         }
 
         function getCardContentHTML(card) {
-            let symbol = card.value;
-            if (card.type === 'skip') symbol = '<i class="fa-solid fa-ban"></i>';
-            if (card.type === 'reverse') symbol = '<i class="fa-solid fa-rotate"></i>';
-            if (card.type === 'draw2') symbol = '+2';
-            if (card.type === 'wild') symbol = 'WILD';
-            if (card.type === 'draw4') symbol = '+4';
-
-            return `
-                <div class="flex justify-between items-start font-fun font-black text-xs text-white drop-shadow">
-                    <span>${symbol}</span>
-                    <span class="text-[8px] opacity-80 uppercase">${card.color !== 'wild' ? card.color : ''}</span>
-                </div>
-                <div class="flex items-center justify-center font-fun font-black text-xl md:text-2xl text-white drop-shadow-md">
-                    ${symbol}
-                </div>
-                <div class="flex justify-between items-end font-fun font-black text-xs text-white transform rotate-180 drop-shadow">
-                    <span>${symbol}</span>
-                </div>
-            `;
+            const wild = card.color === 'wild', hex = COLOR_HEX[card.color] || '#333', v = String(card.value);
+            const SK = '<svg viewBox="0 0 24 24" class="ucf-ic"><circle cx="12" cy="12" r="8.5" fill="none" stroke="currentColor" stroke-width="3.2"/><path d="M6 18L18 6" stroke="currentColor" stroke-width="3.2" stroke-linecap="round"/></svg>';
+            const RV = '<svg viewBox="0 0 24 24" class="ucf-ic"><path d="M4 8.5h12l-3-3.2M20 15.5H8l3 3.2" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+            let big = v, small = v, cls = '';
+            if (card.type === 'skip') { big = small = SK; cls = 'ic'; }
+            else if (card.type === 'reverse') { big = small = RV; cls = 'ic'; }
+            else if (card.type === 'draw2') { big = small = '+2'; }
+            else if (card.type === 'wild') { big = 'WILD'; small = '✦'; cls = 'wl wd'; }
+            else if (card.type === 'draw4') { big = small = '+4'; cls = 'wl'; }
+            else if (v === '6' || v === '9') cls = 'ucf-ul';
+            return `<div class="ucf${wild ? ' ucf-wild' : ''}" style="--c:${hex}"><div class="ucf-oval"><span class="ucf-sym ${cls}" style="color:${wild ? '#fff' : hex}">${big}</span></div><span class="ucf-c tl">${small}</span><span class="ucf-c br">${small}</span></div>`;
         }
 
         // RENDER ROUND TABLE SEATS: big cards beside each logo, timer ring around it
@@ -2566,12 +2659,14 @@ ${avatarWrap}
                         el.className = `uno-card ${ok ? 'playable border-2 border-yellow-300' : 'opacity-80 border border-white/20'} w-16 h-28 md:w-20 md:h-32 rounded-xl flex flex-col justify-between p-1.5 relative shrink-0 ${i ? '-ml-10 md:-ml-12' : ''}`;
                         el.style.backgroundColor = COLOR_HEX[card.color] || '#111';
                         el.style.zIndex = i + 1; el.dataset.cid = card.id;
+                        const hn = p.hand.length, fmid = (hn - 1) / 2, fd = i - fmid, fang = hn > 1 ? (fd * Math.min(4.5, 26 / hn)).toFixed(2) : 0, fdrop = hn > 1 ? (fd * fd * (land ? .35 : .7)).toFixed(1) : 0;
+                        el.style.transformOrigin = '50% 140%';
                         if (anim.hide.has(card.id)) el.style.visibility = 'hidden';
                         el.innerHTML = getCardContentHTML(card);
                         if (ok) {
-                            el.style.transform = land ? 'translateY(-' + Math.round(window.innerHeight * 0.05) + 'px)' : 'translateY(-30px)'; el.style.boxShadow = '0 0 14px #FFCC00';
+                            el.style.transform = (land ? 'translateY(-' + Math.round(window.innerHeight * 0.05) + 'px)' : 'translateY(-30px)') + ' rotate(' + fang + 'deg)'; el.style.boxShadow = '0 0 14px #FFCC00';
                             el.onclick = () => doLocal('play', i);
-                        }
+                        } else el.style.transform = 'rotate(' + fang + 'deg) translateY(' + fdrop + 'px)';
                         wrap.appendChild(el);
                     });
                 } else if (isMate) {
@@ -2586,13 +2681,24 @@ ${avatarWrap}
                 } else {
                     for (let i = 0; i < Math.min(p.hand.length, land ? 4 : (n > 10 ? 4 : 8)); i++) {
                         const el = document.createElement('div');
-                        el.className = `${n > 10 ? 'w-5 h-8 md:w-8 md:h-12' : 'w-7 h-10 md:w-11 md:h-16'} rounded-md border-2 border-white bg-gradient-to-br from-red-600 to-rose-900 shadow-lg shrink-0 flex items-center justify-center ${i ? (cardsOnLeft ? '-mr-4 md:-mr-7' : '-ml-4 md:-ml-7') : ''}`;
+                        el.className = `${n > 10 ? 'w-5 h-8 md:w-8 md:h-12' : 'w-7 h-10 md:w-11 md:h-16'} rounded-md border-2 border-white bg-gradient-to-br from-red-600 to-rose-900 shadow-lg shrink-0 flex items-center justify-center ${i ? (cardsOnLeft ? '-mr-3 md:-mr-5' : '-ml-3 md:-ml-5') : ''}`;
                         el.innerHTML = '<span class="font-fun font-black text-[7px] md:text-[10px] text-yellow-400 -rotate-12">UNO</span>';
                         wrap.appendChild(el);
                     }
                 }
                 container.appendChild(seat);
             });
+            {   // spread the hand out as wide as the screen allows (more space between cards, scrolls only when really crowded)
+                const mine = container.querySelector('.seat-cards.mine');
+                if (mine) {
+                    const cs = [...mine.querySelectorAll('.uno-card')];
+                    if (cs.length > 1) {
+                        const cw = cs[0].offsetWidth || 64, mw = parseFloat(getComputedStyle(mine).maxWidth), avail = isFinite(mw) ? mw : window.innerWidth * 0.9;
+                        const step = Math.max(cw * 0.34, Math.min(cw * 0.82, (avail - cw - 8) / (cs.length - 1)));
+                        cs.forEach((c, i) => { if (i) c.style.setProperty('margin-left', (-(cw - step)) + 'px', 'important'); });
+                    }
+                }
+            }
             // hand cards glide to their new spot when a card leaves / arrives (FLIP)
             container.querySelectorAll('.seat-cards.mine [data-cid]').forEach(e => {
                 const o = oldPos[e.dataset.cid]; if (o === undefined || !e.animate) return;
@@ -2640,6 +2746,11 @@ ${avatarWrap}
         }
 
         function handleDrawFromStack(player, forcePass = false) {
+            if (gameState.pendingDraw > 0) {         // Stack rule: nobody could pass the penalty on, so take every stacked card
+                const n = gameState.pendingDraw; gameState.pendingDraw = 0; playSound('draw');
+                drawCardsFromDeck(player, n); showMoveBubble(player.id, '📥 Drew +' + n);
+                advanceTurn(1); return;
+            }
             playSound('draw');
             if (gameState.deck.length === 0) reshuffleDiscardPile();
             if (gameState.deck.length === 0) return;
@@ -2687,13 +2798,23 @@ ${avatarWrap}
             }
 
             let skipSteps = 1;
+            const R = gameState.rules;
+            if (R.stack && (card.type === 'draw2' || card.type === 'draw4')) {     // pass the penalty on instead of drawing right away
+                gameState.pendingDraw = (gameState.pendingDraw || 0) + (card.type === 'draw2' ? 2 : 4);
+                showMoveBubble(player.id, '📚 Stack! Next draws ' + gameState.pendingDraw + ' unless they stack');
+                advanceTurn(1); return;
+            }
+            if (R.zeroSeven && card.type === 'number' && String(card.value) === '0') { rotateHands(); showMoveBubble(player.id, '🔄 Everyone passes their hand!'); }
+            if ((R.zeroSeven || R.swap7) && card.type === 'number' && String(card.value) === '7') {
+                if (player.isBot) botSwap(player);
+                else { gameState.pendingSwap = true; showMoveBubble(player.id, '🔁 Choosing who to swap with…'); renderGame(); return; }
+            }
             if (card.type === 'reverse') {
                 gameState.direction *= -1;
                 if (gameState.players.length === 2) skipSteps = 2;
             } else if (card.type === 'skip') {
-                skipSteps = 2;
-                const skippedPlayer = gameState.players[getNextIndex(1)];
-                showMoveBubble(skippedPlayer.id, "🚫 Skipped!");
+                skipSteps = (R.doubleSkip && gameState.players.length > 2) ? 3 : 2;
+                for (let k = 1; k < skipSteps; k++) showMoveBubble(gameState.players[getNextIndex(k)].id, "🚫 Skipped!");
             } else if (card.type === 'draw2') {
                 skipSteps = 2;
                 const targetPlayer = gameState.players[getNextIndex(1)];
@@ -2709,6 +2830,28 @@ ${avatarWrap}
             advanceTurn(skipSteps);
         }
 
+        function swapHands(a, b) {
+            const t = a.hand; a.hand = b.hand; b.hand = t; playSound('card');
+            showMoveBubble(a.id, '🔁 Swapped hands with ' + b.name); showMoveBubble(b.id, '🔁 Hands swapped!');
+        }
+        function botSwap(bot) {
+            const others = gameState.players.filter(p => p.id !== bot.id); if (!others.length) return;
+            others.sort((x, y) => x.hand.length - y.hand.length); swapHands(bot, others[0]);   // grab the smallest hand
+        }
+        function rotateHands() {
+            const g = gameState, n = g.players.length, hands = g.players.map(p => p.hand);
+            g.players.forEach((p, i) => { g.players[(i + g.direction + n) % n].hand = hands[i]; });
+            playSound('card');
+        }
+        function botPlay(bot, idx) {
+            const card = bot.hand.splice(idx, 1)[0]; playSound('card');
+            if (card.color === 'wild') {
+                const counts = { red: 0, blue: 0, green: 0, yellow: 0 };
+                bot.hand.forEach(c => { if (counts[c.color] !== undefined) counts[c.color]++; });
+                gameState.currentColor = COLORS.slice().sort((a, b) => counts[b] - counts[a])[0];
+            }
+            executePlayedCard(bot, card);
+        }
         function drawCardsFromDeck(player, count) {
             for (let i = 0; i < count; i++) {
                 if (gameState.deck.length === 0) reshuffleDiscardPile();
@@ -3087,7 +3230,7 @@ ${avatarWrap}
             });
 
             const leaveGame = () => {
-                net.reconnecting = false; hideRcBanner(); stopVoice(); netStop(); gameState.spectators = []; document.body.classList.remove('spectating'); ['specPop', 'specEye', 'specTag', 'spectateModal'].forEach(i => document.getElementById(i).classList.add('hidden')); clearInterval(gameState.matchTick); stopMusic(); hideCountdown(); gameState.counting = false;
+                net.reconnecting = false; hideRcBanner(); window.releaseLandscape && window.releaseLandscape(); stopVoice(); netStop(); gameState.spectators = []; document.body.classList.remove('spectating'); ['specPop', 'specEye', 'specTag', 'spectateModal'].forEach(i => document.getElementById(i).classList.add('hidden')); clearInterval(gameState.matchTick); stopMusic(); hideCountdown(); gameState.counting = false;
                 document.getElementById('chatRoot').classList.add('hidden');
                 clearInterval(gameState.timerInterval); clearInterval(winFxTimer);
                 Object.keys(avatarCache).forEach(k => delete avatarCache[k]);
@@ -3441,7 +3584,7 @@ ${avatarWrap}
     function softReconnect() {
         if (net.reconnecting || net.role !== 'client') return;
         net.reconnecting = true; net._rcN = 0; showRcBanner();
-        net.joined = false; netStop(); joinRoom(true);
+        net.joined = false; voice.sent = {}; voice.cur = {}; voice.cs = {}; voice.pulling = {}; netStop(); joinRoom(true);
     }
     function rcRetry() {
         if (!net.reconnecting) return;
@@ -3466,6 +3609,57 @@ ${avatarWrap}
         if (!net.hostConn || !net.hostConn.open || (net._seen && Date.now() - net._seen > 12000)) softReconnect();
     });
     window.addEventListener('online', () => { if (net.role === 'client' && net.joined && !net.reconnecting) softReconnect(); });
+</script>
+<script>
+(() => {
+    const _rg3 = renderGame;
+    renderGame = function () {
+        _rg3.apply(this, arguments);
+        try {
+            const g = gameState, cur = g.players[g.currentTurnIndex], mine = cur && cur.id === g.localPlayerId;
+            let b = document.getElementById('ruleBadge');
+            if (!b) { b = document.createElement('div'); b.id = 'ruleBadge'; document.body.appendChild(b); }
+            const on = g.gameStarted && g.pendingDraw > 0;
+            b.style.display = on ? 'block' : 'none';
+            if (on) b.textContent = '📚 STACK +' + g.pendingDraw + (mine ? ' - play a +2/+4 or draw' : '');
+            let sp = document.getElementById('swapPicker');
+            const need = g.gameStarted && g.pendingSwap && mine;
+            if (!need) { if (sp) sp.remove(); return; }
+            if (sp) return;
+            sp = document.createElement('div'); sp.id = 'swapPicker';
+            sp.innerHTML = '<div class="box"><div style="font:900 1.1rem Fredoka,sans-serif;color:#facc15">🔁 Swap hands with…</div>' + g.players.filter(p => p.id !== g.localPlayerId).map(p => `<button data-id="${p.id}"><span>${p.name}</span><span>🎴 ${p.hand.length}</span></button>`).join('') + '</div>';
+            document.body.appendChild(sp);
+            sp.querySelectorAll('button').forEach(x => x.onclick = () => { sp.remove(); doLocal('swap', x.dataset.id); });
+        } catch (e) {}
+    };
+})();
+</script>
+<script>
+(() => {
+    let auto = false;
+    const isPhone = () => matchMedia('(pointer: coarse)').matches && Math.min(screen.width, screen.height) < 700;
+    const hide = () => { const h = document.getElementById('rotateHint'); if (h) h.remove(); };
+    function hint() {
+        hide(); const can = !!(screen.orientation && screen.orientation.lock);
+        const h = document.createElement('div'); h.id = 'rotateHint';
+        h.textContent = can ? '🔄 Tap to rotate to landscape' : '🔄 Turn your phone sideways for the best view';
+        if (can) { h.style.cursor = 'pointer'; h.onclick = async () => { await rotateScreen(); hide(); }; }
+        document.body.appendChild(h); setTimeout(hide, 14000);
+    }
+    window.autoLandscape = async function () {          // called when a match starts
+        if (!isPhone() || innerWidth > innerHeight) return;
+        const o = screen.orientation;
+        try { if (o && o.lock) { await o.lock('landscape'); auto = true; return; } } catch (e) {}
+        try { if (!document.fullscreenElement && document.documentElement.requestFullscreen) await document.documentElement.requestFullscreen(); if (o && o.lock) { await o.lock('landscape'); auto = true; return; } } catch (e) {}
+        hint();                                            // browser needs a tap (or can't lock, e.g. iPhone)
+    };
+    window.releaseLandscape = function () {
+        try { screen.orientation && screen.orientation.unlock && screen.orientation.unlock(); } catch (e) {}
+        try { if (auto && document.fullscreenElement) document.exitFullscreen(); } catch (e) {}
+        auto = false; hide();
+    };
+    window.addEventListener('resize', () => { if (innerWidth > innerHeight) hide(); });
+})();
 </script>
 </body>
 </html>
