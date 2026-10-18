@@ -233,12 +233,8 @@
         body.is-landscape #drawDeckBtn > div:first-child, body.is-landscape #topDiscardCard { width: calc(var(--u) * 11) !important; height: calc(var(--u) * 16.5) !important; }
         body.is-landscape .seat-avatar { width: calc(var(--u) * 10.5) !important; height: calc(var(--u) * 10.5) !important; font-size: calc(var(--u) * 4.5) !important; border-width: 3px !important; }
         body.is-landscape .seat-cards .uno-card { width: calc(var(--u) * 13) !important; height: calc(var(--u) * 20) !important; }
-        body.is-landscape .seat-cards .uno-card:not(:first-child) { margin-left: calc(var(--u) * -7.5) !important; }
-        body.is-landscape .seat-cards.mine { max-width: calc(100vw - 230px) !important; padding-top: calc(var(--u) * 6) !important; }
-        body.is-landscape .seat-cards.mate .uno-card { width: calc(var(--u) * 7) !important; height: calc(var(--u) * 10.5) !important; padding: 2px !important; border-radius: 5px !important; }
-        body.is-landscape .seat-cards.mate .uno-card:not(:first-child) { margin-left: calc(var(--u) * -3.4) !important; }
-        body.is-landscape .seat-cards.mate .uno-card * { font-size: 8px !important; line-height: 1 !important; }
-        body.is-landscape .seat-cards.mate .uno-card .uppercase { display: none; }
+        body.is-landscape .seat-cards .uno-card:not(:first-child) { margin-left: calc(var(--u) * -6.3) !important; }
+        body.is-landscape .seat-cards.mine { max-width: calc(var(--vw, 100vw) - 230px) !important; padding-top: calc(var(--u) * 6) !important; }
         body.is-landscape .seat-cards > div:not(.uno-card):not(.more) { width: calc(var(--u) * 6.5) !important; height: calc(var(--u) * 9.5) !important; }
         body.is-landscape .seat-cards > div:not(.uno-card):not(.more):not(:first-child) { margin-left: calc(var(--u) * -3.8) !important; margin-right: 0 !important; }
         #infoBox:empty { display: none; }
@@ -423,6 +419,62 @@
         .seat-cards > div:not(.uno-card):not(.more) { background: radial-gradient(circle at 30% 20%, #ef4444, #7f1d1d 60%, #2a0707) !important; }
         body.is-landscape .seat-cards > div:not(.uno-card):not(.more):not(:first-child) { margin-left: calc(var(--u) * -3) !important; }
         #rotateHint { position: fixed; left: 50%; bottom: 1rem; transform: translateX(-50%); z-index: 130; background: #facc15; color: #111; font: 800 .8rem Fredoka, sans-serif; padding: .55rem 1rem; border-radius: 9999px; border: 2px solid #fff; box-shadow: 0 6px 18px rgba(0,0,0,.5); }
+
+        /* ===== PATCH 9: turn-sideways mode, prettier cards, 4 colour piles ===== */
+        body.force-land { position: fixed !important; left: 0; top: 0; width: var(--sh) !important; height: var(--sw) !important; min-height: 0 !important; overflow: hidden !important; transform-origin: 0 0; transform: translateX(var(--sw)) rotate(90deg); }
+        body.force-land #app { height: 100% !important; min-height: 0 !important; }
+        body.force-land #gameView { width: 100% !important; height: 100% !important; }
+        body.is-landscape #winnerCard, body.is-landscape #colorPickerModal > div, body.is-landscape #rulesModal > div { max-height: calc(var(--vh, 360px) * .94); }
+
+        /* card faces: glossy, embossed, classic white edge */
+        .uno-card { border-width: 3px !important; border-color: #fff !important; border-radius: 14px !important; box-shadow: 0 6px 14px rgba(0,0,0,.5), 0 0 0 1px rgba(0,0,0,.3); }
+        .uno-card.playable { border-color: #fde047 !important; box-shadow: 0 0 0 2px #facc15, 0 0 16px rgba(250,204,21,.95) !important; }
+        .ucf { background: radial-gradient(120% 90% at 18% 8%, color-mix(in srgb, var(--c) 68%, #fff) 0%, var(--c) 46%, color-mix(in srgb, var(--c) 60%, #000) 100%); }
+        .ucf::before { inset: 3cqw; border: 1cqw solid rgba(255,255,255,.6); border-radius: 9cqw; box-shadow: inset 0 0 0 1.6cqw rgba(0,0,0,.12), 0 0 0 .7cqw rgba(0,0,0,.18); }
+        .ucf::after { background: linear-gradient(115deg, rgba(255,255,255,.45) 0%, rgba(255,255,255,0) 36%), repeating-linear-gradient(45deg, rgba(255,255,255,.08) 0 2cqw, transparent 2cqw 4cqw); }
+        .ucf-oval { background: radial-gradient(circle at 34% 28%, #fff, #f1f5f9 58%, #dbe3ec); box-shadow: inset 0 0 0 1.2cqw rgba(0,0,0,.07), 0 0 0 1.7cqw rgba(255,255,255,.32), 0 1.8cqw 3.6cqw rgba(0,0,0,.42); }
+        .ucf-wild .ucf-oval { background: conic-gradient(#ef4444 0 25%, #3b82f6 0 50%, #22c55e 0 75%, #facc15 0 100%); }
+        .ucf-sym { text-shadow: .6cqw .6cqw 0 #fff, 1.4cqw 1.9cqw 0 rgba(0,0,0,.24); -webkit-text-stroke: .9cqw rgba(0,0,0,.3); }
+        .ucf-c { text-shadow: .5cqw .7cqw 0 rgba(0,0,0,.55), 0 0 2cqw rgba(0,0,0,.35); }
+        /* card backs (opponent hands + draw pile) */
+        .seat-cards > div:not(.uno-card):not(.more) { background: #0d0d0d !important; border: 2px solid #fff !important; position: relative; overflow: hidden; box-shadow: 0 3px 7px rgba(0,0,0,.5); }
+        .seat-cards > div:not(.uno-card):not(.more)::before { content: ''; position: absolute; left: 50%; top: 50%; width: 86%; height: 62%; transform: translate(-50%, -50%) rotate(-24deg); border-radius: 50%; background: linear-gradient(135deg, #ef4444, #991b1b); border: 1px solid #fde047; }
+        .seat-cards > div:not(.uno-card):not(.more) span { position: relative; z-index: 1; text-shadow: 1px 1px 0 #000; }
+        #drawDeckBtn > div:first-child { background: radial-gradient(circle at 30% 20%, #2b2b2b, #0a0a0a 70%) !important; box-shadow: 3px 3px 0 #262626, 6px 6px 0 #171717, 9px 11px 16px rgba(0,0,0,.6) !important; }
+
+        /* no scrolling in hands, nothing see-through */
+        .seat-cards.mine, .seat-cards.mate { overflow: visible !important; }
+        body.is-landscape .seat-cards.mate { max-width: none !important; }
+        .uno-card { opacity: 1 !important; }
+        body.is-landscape #centerPlayArea { transform: translateY(calc(var(--u) * 5)); }
+        body.is-landscape #directionRingOrbit { margin-top: calc(var(--u) * 10); }
+
+        /* flat colours - no gradients on cards */
+        .ucf, .ucf-wild { background: var(--c) !important; }
+        .ucf-wild { background: #111 !important; }
+        .ucf::after { background: none !important; }
+        .ucf-oval { background: #fff !important; box-shadow: inset 0 0 0 1.2cqw rgba(0,0,0,.1), 0 0 0 1.5cqw rgba(255,255,255,.3) !important; }
+        .ucf-wild .ucf-oval { background: conic-gradient(#ef4444 0 25%, #3b82f6 0 50%, #22c55e 0 75%, #facc15 0 100%) !important; }   /* four hard-edged colour quarters */
+        .seat-cards > div:not(.uno-card):not(.more)::before { background: #dc2626 !important; }
+        #drawDeckBtn > div:first-child { background: #0d0d0d !important; }
+        #drawDeckBtn > div:first-child > div { background: #dc2626 !important; }
+        #unoCallBtn { background: #ef4444 !important; }
+        .ucf-sym.ic svg.wide { width: 54cqw; height: 35cqw; }
+        /* swap: each other player's hand grouped into one pile with its card count */
+        .seat-cards .swap-group { width: 3.4rem !important; height: 5rem !important; margin: 0 !important; display: flex; align-items: center; justify-content: center; border-radius: 10px; animation: swapPulse 1s ease-in-out infinite; }
+        body.is-landscape .seat-cards .swap-group { width: calc(var(--u) * 10) !important; height: calc(var(--u) * 15) !important; }
+        .swap-group b { position: relative; z-index: 2; color: #fde047; font: 900 1.5rem Fredoka, sans-serif; text-shadow: 1px 1px 0 #000, 0 0 6px #000; }
+        body.is-landscape .swap-group b { font-size: calc(var(--u) * 6.5); }
+        @keyframes swapPulse { 50% { box-shadow: 0 0 0 3px #facc15, 0 0 18px 4px #facc15; } }
+        .swap-pick { cursor: pointer; z-index: 45 !important; }
+        #chalPanel { position: fixed; left: 50%; top: 50%; transform: translate(-50%, -50%); z-index: 66; width: min(88vw, 17rem); background: #0f172a; border: 2px solid #facc15; border-radius: 1rem; padding: .7rem .8rem; color: #fff; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,.6); }
+        #chalPanel b { font: 900 1rem Fredoka, sans-serif; color: #facc15; }
+        #chalPanel p { margin: .35rem 0 .5rem; font-size: .85rem; font-weight: 700; }
+        #chalPanel span { font-weight: 900; }
+        #chalPanel div { display: flex; gap: .5rem; }
+        #chalPanel button { flex: 1; padding: .45rem; border-radius: .7rem; background: #1e293b; border: 1px solid rgba(255,255,255,.3); font-weight: 800; font-size: .85rem; color: #fff; }
+        #chalPanel button.take { width: 100%; margin-top: .5rem; background: #7f1d1d; font-size: .75rem; }
+        #ruleBadge { white-space: normal; text-align: center; max-width: 90vw; }
     </style>
 </head>
 <body class="dark-theme min-h-screen overflow-y-auto flex flex-col">
@@ -624,7 +676,6 @@
                             <p class="font-bold text-slate-300">📜 Rules</p>
                         </div>
                         <div class="grid grid-cols-2 sm:grid-cols-4 gap-2">
-                            <button class="rule-tile" data-rule="stack" onclick="toggleRule('stack')"><span class="ri">📚</span><b>Stack</b><i>Answer +2/+4 with another +2/+4 to pass it on</i></button>
                             <button class="rule-tile" data-rule="zeroSeven" onclick="toggleRule('zeroSeven')"><span class="ri">0️⃣7️⃣</span><b>0-7</b><i>0 passes every hand around, 7 swaps with anyone</i></button>
                             <button class="rule-tile" data-rule="swap7" onclick="toggleRule('swap7')"><span class="ri">🔁</span><b>Swap 7's</b><i>Only 7 swaps hands (0 does nothing)</i></button>
                             <button class="rule-tile" data-rule="doubleSkip" onclick="toggleRule('doubleSkip')"><span class="ri">⛔⛔</span><b>Double Skip</b><i>Skip skips the next two players</i></button>
@@ -1040,6 +1091,7 @@
             if (gameState.players.length < 2) { showToast("At least 2 players required!"); return; }
             if (gameState.counting) return;
             gameState.counting = true;
+            window.autoLandscape && window.autoLandscape();
             startMusic();
             let n = 5;
             const step = () => {
@@ -1061,15 +1113,20 @@
                 const want = o && o.type.startsWith('landscape') ? 'portrait' : 'landscape';
                 if (!document.fullscreenElement) await document.documentElement.requestFullscreen();
                 await o.lock(want);
-            } catch (e) { showToast("Turn on Auto-rotate in phone settings, then turn your phone"); }
+            } catch (e) { window.__keepPortrait = !window.__keepPortrait; applyOrientation(); }
         }
         function applyOrientation() {
-            const h = window.innerHeight, w = window.innerWidth;
-            document.body.classList.toggle('is-landscape', w > h && h <= 700);
-            const st = document.documentElement.style;
-            st.setProperty('--vh', h + 'px'); st.setProperty('--u', (h / 100) + 'px');
+            const iw = window.innerWidth, ih = window.innerHeight, bd = document.body;
+            const phone = matchMedia('(pointer: coarse)').matches && Math.min(iw, ih) < 700;
+            const force = phone && ih > iw && bd.classList.contains('in-game') && !window.__keepPortrait;
+            bd.classList.toggle('force-land', force); window.__forceLand = force;
+            const w = force ? ih : iw, h = force ? iw : ih, st = document.documentElement.style;
+            bd.classList.toggle('is-landscape', w > h && h <= 700);
+            st.setProperty('--vh', h + 'px'); st.setProperty('--vw', w + 'px'); st.setProperty('--sw', iw + 'px'); st.setProperty('--sh', ih + 'px'); st.setProperty('--u', (h / 100) + 'px');
             if (gameState.gameStarted && gameState.discardPile.length) renderGame();
         }
+        function vwF() { return window.__forceLand ? window.innerHeight : window.innerWidth; }
+        function vhF() { return window.__forceLand ? window.innerWidth : window.innerHeight; }
         window.addEventListener('resize', applyOrientation);
         window.addEventListener('orientationchange', () => setTimeout(applyOrientation, 250));
 
@@ -1119,7 +1176,7 @@
 
         function canPlay(card) {
             const top = gameState.discardPile[gameState.discardPile.length - 1];
-            if (gameState.pendingDraw > 0) return card.type === 'draw2' || card.type === 'draw4';   // Stack rule: only a draw card can answer a draw card
+            if (gameState.pendingDraw > 0) return gameState.pendType === 'draw4' ? card.type === 'draw4' : (card.type === 'draw2' || card.type === 'draw4');   // +2 can be answered by +2/+4, +4 only by +4 (or a challenge)
             return card.color === 'wild' || card.color === gameState.currentColor || (top && card.value === top.value);
         }
         function cleanName(v) { return v.replace(/[<>&"'`]/g, '').trim(); }
@@ -1268,7 +1325,7 @@
             document.getElementById('homeView').classList.add('hidden');
             document.getElementById('lobbyView').classList.remove('hidden');
             document.getElementById('gameView').classList.add('hidden');
-            document.body.classList.remove('in-game'); document.body.classList.add('in-room');
+            document.body.classList.remove('in-game'); applyOrientation(); document.body.classList.add('in-room');
             document.getElementById('roomBadge').classList.remove('hidden');
             document.getElementById('badgeRoomCode').innerText = gameState.roomCode;
             document.getElementById('displayRoomCode').innerHTML = String(gameState.roomCode).split('').map(d => `<span class="room-digit">${d}</span>`).join('');
@@ -1762,7 +1819,8 @@
                 const i = cur.hand.findIndex(c => c.id === g.drawnCardPendingChoice.id);
                 g.drawnCardPendingChoice = null;
                 if (i > -1) playHumanCard(i, pid);
-            } else if (t === 'keep' && g.drawnCardPendingChoice) advanceTurn(1);
+            } else if (t === 'challenge' && g.pendType === 'draw4' && g.pend4 && !g.pendingWildCard && !g.drawnCardPendingChoice && (v === 'yes' || v === 'no')) resolveChallenge(cur, v === 'yes');
+            else if (t === 'keep' && g.drawnCardPendingChoice) advanceTurn(1);
         }
 
         function snapFor(pid) {
@@ -1772,7 +1830,7 @@
                 roomCode: g.roomCode, round: g.round, rounds: g.rounds, book: g.book, started: g.gameStarted, turn: g.currentTurnIndex, dir: g.direction,
                 color: g.currentColor, t: g.turnTimer, deckN: g.deck.length, discard: g.discardPile.slice(-5),
                 called: g.hasCalledUno, wild: !!g.pendingWildCard && mine, drawn: mine ? g.drawnCardPendingChoice : null,
-                specs: (g.spectators || []).map(x => ({ id: x.id, name: x.name })), bubbles: g.activeBubbles, plays: g.activePlays, shouts: g.shouts, chats: g.chats, log: g.log, mins: g.mins, teamMode: g.teamMode, left: g.mins ? Math.max(0, g.matchEndAt - Date.now()) : 0, rules: g.rules, maxP: g.maxP, pend: g.pendingDraw || 0, swap: !!g.pendingSwap,
+                specs: (g.spectators || []).map(x => ({ id: x.id, name: x.name })), bubbles: g.activeBubbles, plays: g.activePlays, shouts: g.shouts, chats: g.chats, log: g.log, mins: g.mins, teamMode: g.teamMode, left: g.mins ? Math.max(0, g.matchEndAt - Date.now()) : 0, rules: g.rules, maxP: g.maxP, pend: g.pendingDraw || 0, pt: g.pendType || null, p4: g.pend4 || null, swap: !!g.pendingSwap,
                 players: g.players.map(p => ({ id: p.id, name: p.name, color: p.color, isHost: p.isHost, isBot: p.isBot, team: p.team, mic: !!p.mic, hand: (p.id === pid || (g.teamMode && p.team && p.team === (g.players.find(x => x.id === pid) || {}).team)) ? p.hand : p.hand.map(() => 0) }))
             };
         }
@@ -2022,7 +2080,7 @@
             g.pendingWildCard = s.wild ? {} : null; g.drawnCardPendingChoice = s.drawn;
             Object.keys(s.plays || {}).forEach(k => { const o = g.activePlays[k], n = s.plays[k]; if (!o || o.id !== n.id) { cardSfx(n); g.discardPile = s.discard; animatePlay(k, n); } });
             Object.keys(s.shouts || {}).forEach(k => { if (!g.shouts[k]) playSound('uno'); });
-            g.activeBubbles = s.bubbles; g.activePlays = s.plays; g.log = s.log || []; g.shouts = s.shouts; g.chats = s.chats || {}; g.mins = s.mins; g.rules = s.rules || g.rules; g.maxP = s.maxP || g.maxP; g.pendingDraw = s.pend || 0; g.pendingSwap = !!s.swap; g.teamMode = s.teamMode; g.matchEndAt = s.mins ? Date.now() + s.left : Infinity;
+            g.activeBubbles = s.bubbles; g.activePlays = s.plays; g.log = s.log || []; g.shouts = s.shouts; g.chats = s.chats || {}; g.mins = s.mins; g.rules = s.rules || g.rules; g.maxP = s.maxP || g.maxP; g.pendingDraw = s.pend || 0; g.pendType = s.pt || null; g.pend4 = s.p4 || null; g.pendingSwap = !!s.swap; g.teamMode = s.teamMode; g.matchEndAt = s.mins ? Date.now() + s.left : Infinity;
             setHostControls(false);
             if (!s.started) {
                 g.gameStarted = false; clearInterval(g.timerInterval);
@@ -2035,7 +2093,7 @@
                 document.getElementById('homeView').classList.add('hidden'); document.body.classList.add('in-room');
                 document.getElementById('roomBadge').classList.remove('hidden'); document.getElementById('badgeRoomCode').innerText = g.roomCode;
                 document.getElementById('chatRoot').classList.remove('hidden');
-                document.body.classList.add('in-game');
+                document.body.classList.add('in-game'); applyOrientation();
                 document.getElementById('lobbyView').classList.add('hidden');
                 document.getElementById('gameView').classList.remove('hidden');
                 document.getElementById('winnerModal').classList.add('hidden');
@@ -2139,7 +2197,7 @@
                 for (let k = 0; k < h; k++) { arr[k] = sh[2 * k]; arr[k + h] = sh[2 * k + 1]; }
                 g0.players = arr;
             }
-            g0.round++; g0.winRound = null; g0.pendingWildCard = null; g0.pendingDraw = 0; g0.pendingSwap = false; anim.prev = null; anim.prevLocal = null; anim.hold = null; anim.hide.clear();
+            g0.round++; g0.winRound = null; g0.pendingWildCard = null; g0.pendingDraw = 0; g0.pendType = null; g0.pend4 = null; g0.pendingSwap = false; anim.prev = null; anim.prevLocal = null; anim.hold = null; anim.hide.clear();
             g0.shouts = {}; g0.chats = {}; g0.log = []; g0.selIdx = null;
             g0.matchEndAt = g0.mins ? Date.now() + g0.mins * 60000 : Infinity;
             clearInterval(g0.matchTick);
@@ -2180,7 +2238,7 @@
 
             document.getElementById('lobbyView').classList.add('hidden');
             document.getElementById('gameView').classList.remove('hidden');
-            document.body.classList.add('in-game');
+            document.body.classList.add('in-game'); applyOrientation();
 
             renderGame();
             updateMatchClock();
@@ -2329,7 +2387,8 @@
 
         // ===================== CARD FLIGHT ANIMATIONS =====================
         const anim = { prev: null, prevLocal: null, hold: null, hide: new Set(), localFrom: null };
-        function rectOf(el) { if (!el) return null; const r = el.getBoundingClientRect(); return (r.width || r.height) ? { left: r.left, top: r.top, width: r.width, height: r.height } : null; }
+        function rectOf(el) { if (!el) return null; const r = el.getBoundingClientRect(); if (!(r.width || r.height)) return null; return window.__forceLand ? { left: r.top, top: window.innerWidth - r.left - r.width, width: r.height, height: r.width } : { left: r.left, top: r.top, width: r.width, height: r.height }; }
+        function lxOf(el) { const r = el.getBoundingClientRect(); return window.__forceLand ? r.top : r.left; }
         function seatOf(pid) { return document.querySelector(`#tableSeatsContainer [data-pid="${pid}"]`); }
         function seatPoint(pid, w, h) {
             const el = seatOf(pid), a = el && (el.querySelector('.seat-avatar') || el), r = rectOf(a);
@@ -2345,7 +2404,7 @@
             Object.assign(el.style, { position: 'fixed', left: from.left + 'px', top: from.top + 'px', width: from.width + 'px', height: from.height + 'px', zIndex: 9999, pointerEvents: 'none', opacity: '0',
                 borderRadius: '10px', border: '2px solid #fff', boxShadow: '0 12px 26px rgba(0,0,0,.55)', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', padding: '3px', overflow: 'hidden', willChange: 'transform' });
             if (card) { el.style.backgroundColor = COLOR_HEX[card.color] || '#333'; el.innerHTML = getCardContentHTML(card); }
-            else { el.style.background = 'linear-gradient(135deg,#dc2626,#881337)'; el.innerHTML = '<span class="m-auto font-fun font-black text-yellow-400" style="transform:rotate(-12deg);font-size:11px">UNO</span>'; }
+            else { el.style.background = '#b91c1c'; el.innerHTML = '<span class="m-auto font-fun font-black text-yellow-400" style="transform:rotate(-12deg);font-size:11px">UNO</span>'; }
             document.body.appendChild(el);
             const dx = (to.left + to.width / 2) - (from.left + from.width / 2), dy = (to.top + to.height / 2) - (from.top + from.height / 2);
             const sx = to.width / from.width, sy = to.height / from.height, mid = (1 + sx) / 2;
@@ -2525,9 +2584,15 @@
             const wild = card.color === 'wild', hex = COLOR_HEX[card.color] || '#333', v = String(card.value);
             const SK = '<svg viewBox="0 0 24 24" class="ucf-ic"><circle cx="12" cy="12" r="8.5" fill="none" stroke="currentColor" stroke-width="3.2"/><path d="M6 18L18 6" stroke="currentColor" stroke-width="3.2" stroke-linecap="round"/></svg>';
             const RV = '<svg viewBox="0 0 24 24" class="ucf-ic"><path d="M4 8.5h12l-3-3.2M20 15.5H8l3 3.2" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+            const R = gameState.rules || {};
+            const DSK = '<svg viewBox="0 0 28 18" class="ucf-ic wide"><circle cx="8" cy="9" r="6" fill="none" stroke="currentColor" stroke-width="2.6"/><path d="M3.8 13.2L12.2 4.8" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/><circle cx="20" cy="9" r="6" fill="none" stroke="currentColor" stroke-width="2.6"/><path d="M15.8 13.2L24.2 4.8" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/></svg>';
+            const ROT = '<svg viewBox="0 0 24 24" class="ucf-ic"><g fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 12a8 8 0 0 1-13.7 5.6"/><path d="M4 12a8 8 0 0 1 13.7-5.6"/><path d="M18 3v4.5h-4.5"/><path d="M6 21v-4.5h4.5"/></g></svg>';
+            const SWP = '<svg viewBox="0 0 24 24" class="ucf-ic"><g fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8h17m0 0-4-4m4 4-4 4"/><path d="M21 16H4m0 0 4-4m-4 4 4 4"/></g></svg>';
             let big = v, small = v, cls = '';
-            if (card.type === 'skip') { big = small = SK; cls = 'ic'; }
+            if (card.type === 'skip') { big = small = SK; cls = 'ic'; if (R.doubleSkip) big = DSK; }
             else if (card.type === 'reverse') { big = small = RV; cls = 'ic'; }
+            else if (card.type === 'number' && v === '0' && R.zeroSeven) { big = ROT; cls = 'ic'; }
+            else if (card.type === 'number' && v === '7' && (R.zeroSeven || R.swap7)) { big = SWP; cls = 'ic'; }
             else if (card.type === 'draw2') { big = small = '+2'; }
             else if (card.type === 'wild') { big = 'WILD'; small = '✦'; cls = 'wl wd'; }
             else if (card.type === 'draw4') { big = small = '+4'; cls = 'wl'; }
@@ -2539,7 +2604,7 @@
         function renderRoundTableSeats() {
             const container = document.getElementById('tableSeatsContainer');
             const oldPos = {};
-            container.querySelectorAll('.seat-cards.mine [data-cid]').forEach(e => { oldPos[e.dataset.cid] = e.getBoundingClientRect().left; });
+            container.querySelectorAll('.seat-cards.mine [data-cid]').forEach(e => { oldPos[e.dataset.cid] = lxOf(e); });
             document.getElementById('tableWrap').style.marginTop = gameState.teamMode ? '120px' : '';
             container.innerHTML = '';
 
@@ -2557,7 +2622,7 @@
                 const order = [];
                 for (let k = (localIdx >= 0 ? 1 : 0); k < n; k++) order.push((Math.max(localIdx, 0) + k) % n);
                 const m = order.length;
-                const wOf = i => (gameState.teamMode && gameState.players[i].team && localIdx >= 0 && gameState.players[i].team === gameState.players[localIdx].team ? 1.7 : 1);
+                const wOf = i => (gameState.teamMode && gameState.players[i].team && localIdx >= 0 && gameState.players[i].team === gameState.players[localIdx].team ? 3 : 1);
                 const tot = order.reduce((a, i) => a + wOf(i), 0);
                 const sc = m <= 4 ? 1 : m <= 6 ? 0.92 : m <= 8 ? 0.82 : 0.7;
                 let cum = 0;
@@ -2565,12 +2630,12 @@
                     const w = wOf(i), f = (cum + w / 2) / tot; cum += w;
                     const th = Math.PI + (0.06 + 0.88 * f) * Math.PI;
                     const t = -Math.sin(th);                       // 0 at the sides, 1 at the top centre
-                    const half = (w > 1 ? 60 : 38) * sc;
+                    const half = w > 1 ? 31 * (H / 100) : 38 * sc;
                     let x = W * (0.5 + 0.46 * Math.cos(th));
                     x = Math.max(half + 4, Math.min(W - half - 4, x));
                     let y = H * (0.35 - 0.26 * t);
                     if (m > 6 && k % 2) y += H * 0.14 * sc * (1 - 0.85 * t);   // stagger neighbours when crowded (not above the piles)
-                    lpos[i] = { x, y, s: sc };
+                    lpos[i] = { x, y, s: w > 1 ? 1 : sc };
                 });
             }
             gameState.players.forEach((p, idx) => {
@@ -2656,7 +2721,7 @@ ${avatarWrap}
                     p.hand.forEach((card, i) => {
                         const ok = isMyTurn && !gameState.drawnCardPendingChoice && !gameState.pendingWildCard && canPlay(card);
                         const el = document.createElement('div');
-                        el.className = `uno-card ${ok ? 'playable border-2 border-yellow-300' : 'opacity-80 border border-white/20'} w-16 h-28 md:w-20 md:h-32 rounded-xl flex flex-col justify-between p-1.5 relative shrink-0 ${i ? '-ml-10 md:-ml-12' : ''}`;
+                        el.className = `uno-card ${ok ? 'playable border-2 border-yellow-300' : 'border border-white/20'} w-16 h-28 md:w-20 md:h-32 rounded-xl flex flex-col justify-between p-1.5 relative shrink-0 ${i ? '-ml-10 md:-ml-12' : ''}`;
                         el.style.backgroundColor = COLOR_HEX[card.color] || '#111';
                         el.style.zIndex = i + 1; el.dataset.cid = card.id;
                         const hn = p.hand.length, fmid = (hn - 1) / 2, fd = i - fmid, fang = hn > 1 ? (fd * Math.min(4.5, 26 / hn)).toFixed(2) : 0, fdrop = hn > 1 ? (fd * fd * (land ? .35 : .7)).toFixed(1) : 0;
@@ -2664,20 +2729,20 @@ ${avatarWrap}
                         if (anim.hide.has(card.id)) el.style.visibility = 'hidden';
                         el.innerHTML = getCardContentHTML(card);
                         if (ok) {
-                            el.style.transform = (land ? 'translateY(-' + Math.round(window.innerHeight * 0.05) + 'px)' : 'translateY(-30px)') + ' rotate(' + fang + 'deg)'; el.style.boxShadow = '0 0 14px #FFCC00';
+                            el.style.transform = (land ? 'translateY(-' + Math.round(vhF() * 0.05) + 'px)' : 'translateY(-30px)') + ' rotate(' + fang + 'deg)'; el.style.boxShadow = '0 0 14px #FFCC00';
                             el.onclick = () => doLocal('play', i);
                         } else el.style.transform = 'rotate(' + fang + 'deg) translateY(' + fdrop + 'px)';
                         wrap.appendChild(el);
                     });
                 } else if (isMate) {
-                    p.hand.slice(0, land ? 8 : p.hand.length).forEach((card, i) => {
+                    p.hand.forEach((card, i) => {
                         const el = document.createElement('div');
                         el.className = `uno-card overflow-hidden border border-white/40 w-16 h-28 md:w-20 md:h-32 rounded-xl flex flex-col justify-between p-1.5 relative shrink-0 ${i ? '-ml-10 md:-ml-12' : ''}`;
                         el.style.backgroundColor = COLOR_HEX[card.color] || '#111';
                         el.innerHTML = getCardContentHTML(card);
                         wrap.appendChild(el);
                     });
-                    if (land && p.hand.length > 8) { const mo = document.createElement('div'); mo.className = 'more ml-1 text-[9px] font-bold text-yellow-300'; mo.textContent = '+' + (p.hand.length - 8); wrap.appendChild(mo); }
+                    if (false) { const mo = document.createElement('div'); mo.className = 'more ml-1 text-[9px] font-bold text-yellow-300'; mo.textContent = '+' + (p.hand.length - 8); wrap.appendChild(mo); }
                 } else {
                     for (let i = 0; i < Math.min(p.hand.length, land ? 4 : (n > 10 ? 4 : 8)); i++) {
                         const el = document.createElement('div');
@@ -2688,21 +2753,19 @@ ${avatarWrap}
                 }
                 container.appendChild(seat);
             });
-            {   // spread the hand out as wide as the screen allows (more space between cards, scrolls only when really crowded)
-                const mine = container.querySelector('.seat-cards.mine');
-                if (mine) {
-                    const cs = [...mine.querySelectorAll('.uno-card')];
-                    if (cs.length > 1) {
-                        const cw = cs[0].offsetWidth || 64, mw = parseFloat(getComputedStyle(mine).maxWidth), avail = isFinite(mw) ? mw : window.innerWidth * 0.9;
-                        const step = Math.max(cw * 0.34, Math.min(cw * 0.82, (avail - cw - 8) / (cs.length - 1)));
-                        cs.forEach((c, i) => { if (i) c.style.setProperty('margin-left', (-(cw - step)) + 'px', 'important'); });
-                    }
-                }
+            {   // every card always fits: the more cards, the tighter they overlap (no scrolling)
+                container.querySelectorAll('.seat-cards.mine, .seat-cards.mate').forEach(wr => {
+                    const cs = [...wr.querySelectorAll('.uno-card')]; if (cs.length < 2) return;
+                    const cw = cs[0].offsetWidth || 64, mate = wr.classList.contains('mate'), mw = parseFloat(getComputedStyle(wr).maxWidth);
+                    const avail = (land && mate) ? vhF() * 0.62 : (isFinite(mw) ? mw : vwF() * 0.9);
+                    const step = Math.max(cw * 0.08, Math.min(cw * 0.36, (avail - cw - 8) / (cs.length - 1)));
+                    cs.forEach((c, i) => { if (i) c.style.setProperty('margin-left', (-(cw - step)) + 'px', 'important'); });
+                });
             }
             // hand cards glide to their new spot when a card leaves / arrives (FLIP)
             container.querySelectorAll('.seat-cards.mine [data-cid]').forEach(e => {
                 const o = oldPos[e.dataset.cid]; if (o === undefined || !e.animate) return;
-                const dx = o - e.getBoundingClientRect().left;
+                const dx = o - lxOf(e);
                 if (Math.abs(dx) > 2) { const t = e.style.transform || 'none'; e.animate([{ transform: `translateX(${dx}px) ${t === 'none' ? '' : t}` }, { transform: t }], { duration: 280, easing: 'cubic-bezier(.2,.8,.3,1)' }); }
             });
         }
@@ -2747,7 +2810,7 @@ ${avatarWrap}
 
         function handleDrawFromStack(player, forcePass = false) {
             if (gameState.pendingDraw > 0) {         // Stack rule: nobody could pass the penalty on, so take every stacked card
-                const n = gameState.pendingDraw; gameState.pendingDraw = 0; playSound('draw');
+                const n = gameState.pendingDraw; gameState.pendingDraw = 0; gameState.pendType = null; gameState.pend4 = null; playSound('draw');
                 drawCardsFromDeck(player, n); showMoveBubble(player.id, '📥 Drew +' + n);
                 advanceTurn(1); return;
             }
@@ -2776,8 +2839,24 @@ ${avatarWrap}
             }
         }
 
+        // challenge a +4: "does the +4 player hold a card of the colour that was in play?"
+        function resolveChallenge(challenger, guessYes) {
+            const g = gameState, c = g.pend4; if (!c) return;
+            const by = g.players.find(p => p.id === c.by); if (!by) { g.pendingDraw = 0; g.pendType = null; g.pend4 = null; return; }
+            const truth = by.hand.some(x => x.color === c.col), correct = guessYes === truth, total = g.pendingDraw, col = c.col.toUpperCase();
+            g.pendingDraw = 0; g.pendType = null; g.pend4 = null;
+            showMoveBubble(by.id, truth ? 'Had a ' + col + ' card!' : 'No ' + col + ' card');
+            if (correct) {
+                drawCardsFromDeck(by, 4); showMoveBubble(challenger.id, '✅ Right guess! ' + by.name + ' draws 4');
+                advanceTurn(0);
+            } else {
+                drawCardsFromDeck(challenger, total + 2); showMoveBubble(challenger.id, '😬 Wrong guess! Draws ' + (total + 2));
+                advanceTurn(1);
+            }
+        }
         function executePlayedCard(player, card) {
             gameState.discardPile.push(card);
+            if (card.color === 'wild') card.pc = gameState.currentColor;
             if (card.color !== 'wild') {
                 gameState.currentColor = card.color;
             }
@@ -2799,9 +2878,13 @@ ${avatarWrap}
 
             let skipSteps = 1;
             const R = gameState.rules;
-            if (R.stack && (card.type === 'draw2' || card.type === 'draw4')) {     // pass the penalty on instead of drawing right away
+            if (card.type === 'draw2' || card.type === 'draw4') {     // the penalty is passed on / challenged instead of drawn right away
+                const below = gameState.discardPile[gameState.discardPile.length - 2];
+                const prev = below ? (below.color === 'wild' ? (below.pc || gameState.currentColor) : below.color) : gameState.currentColor;
                 gameState.pendingDraw = (gameState.pendingDraw || 0) + (card.type === 'draw2' ? 2 : 4);
-                showMoveBubble(player.id, '📚 Stack! Next draws ' + gameState.pendingDraw + ' unless they stack');
+                gameState.pendType = card.type;
+                gameState.pend4 = card.type === 'draw4' ? { by: player.id, col: prev } : null;
+                showMoveBubble(player.id, card.type === 'draw4' ? '🔥 +4! Next: play +4, challenge or draw ' + gameState.pendingDraw : '➕ +2! Next: play +2/+4 or draw ' + gameState.pendingDraw);
                 advanceTurn(1); return;
             }
             if (R.zeroSeven && card.type === 'number' && String(card.value) === '0') { rotateHands(); showMoveBubble(player.id, '🔄 Everyone passes their hand!'); }
@@ -2909,6 +2992,7 @@ ${avatarWrap}
 
             const topCard = gameState.discardPile[gameState.discardPile.length - 1];
 
+            if (gameState.pendType === 'draw4' && gameState.pend4 && Math.random() < 0.35) { resolveChallenge(bot, Math.random() < 0.5); return; }
             const validIndices = [];
             bot.hand.forEach((card, idx) => {
                 if (canPlay(card)) {
@@ -3239,7 +3323,7 @@ ${avatarWrap}
                 document.getElementById('bookModal').classList.add('hidden');
                 document.getElementById('chatPanel').classList.add('hidden'); document.getElementById('voiceModal').classList.add('hidden');
                 gameState.gameStarted = false;
-                document.body.classList.remove('in-game');
+                document.body.classList.remove('in-game'); applyOrientation();
                 document.getElementById('homeView').classList.remove('hidden');
                 ['colorPickerModal','drawnCardChoiceBar'].forEach(id => document.getElementById(id).classList.add('hidden'));
                 gameState.pendingWildCard = null; gameState.drawnCardPendingChoice = null; gameState.autoPlayPaused = false;
@@ -3366,7 +3450,7 @@ ${avatarWrap}
     const memeUnlockedFn = k => { if (!k.startsWith('ach_')) return true; const st = getStats(); return !!(st.rev && st.rev[k.slice(4)]); };
     window.memeUnlocked = memeUnlockedFn;
 
-    const BACKS = [['classic', 'Classic', 1, 'linear-gradient(135deg,#dc2626,#881337)'], ['neon', 'Neon', 2, 'linear-gradient(135deg,#06b6d4,#7c3aed)'], ['gold', 'Gold', 4, 'linear-gradient(135deg,#fde047,#b45309)'], ['galaxy', 'Galaxy', 6, 'radial-gradient(circle at 30% 25%,#f0abfc,#6d28d9 45%,#0f0a2e)'], ['fire', 'Fire', 9, 'linear-gradient(0deg,#7f1d1d,#f97316 60%,#fde047)']];
+    const BACKS = [['classic', 'Classic', 1, '#b91c1c'], ['neon', 'Neon', 2, 'linear-gradient(135deg,#06b6d4,#7c3aed)'], ['gold', 'Gold', 4, 'linear-gradient(135deg,#fde047,#b45309)'], ['galaxy', 'Galaxy', 6, 'radial-gradient(circle at 30% 25%,#f0abfc,#6d28d9 45%,#0f0a2e)'], ['fire', 'Fire', 9, 'linear-gradient(0deg,#7f1d1d,#f97316 60%,#fde047)']];
     const TABLES = [['classic', 'Classic', 1, 'linear-gradient(135deg,#1e293b,#020617)'], ['forest', 'Forest', 3, 'linear-gradient(135deg,#16a34a,#052e16)'], ['sunset', 'Sunset', 5, 'linear-gradient(135deg,#fb923c,#4c0519)'], ['violet', 'Violet', 8, 'linear-gradient(135deg,#a78bfa,#1e1b4b)'], ['ocean', 'Ocean', 11, 'linear-gradient(135deg,#22d3ee,#082f49)']];
     const frameColor = lv => lv >= 10 ? '#fb923c' : lv >= 7 ? '#c084fc' : lv >= 4 ? '#22d3ee' : '#facc15';
     const frameName = lv => lv >= 10 ? 'Flame' : lv >= 7 ? 'Amethyst' : lv >= 4 ? 'Ice' : 'Gold';
@@ -3617,22 +3701,37 @@ ${avatarWrap}
         _rg3.apply(this, arguments);
         try {
             const g = gameState, cur = g.players[g.currentTurnIndex], mine = cur && cur.id === g.localPlayerId;
+            const needSwap = g.gameStarted && g.pendingSwap && mine, pend = g.gameStarted && g.pendingDraw > 0;
             let b = document.getElementById('ruleBadge');
             if (!b) { b = document.createElement('div'); b.id = 'ruleBadge'; document.body.appendChild(b); }
-            const on = g.gameStarted && g.pendingDraw > 0;
-            b.style.display = on ? 'block' : 'none';
-            if (on) b.textContent = '📚 STACK +' + g.pendingDraw + (mine ? ' - play a +2/+4 or draw' : '');
-            let sp = document.getElementById('swapPicker');
-            const need = g.gameStarted && g.pendingSwap && mine;
-            if (!need) { if (sp) sp.remove(); return; }
-            if (sp) return;
-            sp = document.createElement('div'); sp.id = 'swapPicker';
-            sp.innerHTML = '<div class="box"><div style="font:900 1.1rem Fredoka,sans-serif;color:#facc15">🔁 Swap hands with…</div>' + g.players.filter(p => p.id !== g.localPlayerId).map(p => `<button data-id="${p.id}"><span>${p.name}</span><span>🎴 ${p.hand.length}</span></button>`).join('') + '</div>';
-            document.body.appendChild(sp);
-            sp.querySelectorAll('button').forEach(x => x.onclick = () => { sp.remove(); doLocal('swap', x.dataset.id); });
+            b.style.display = (pend || needSwap) ? 'block' : 'none';
+            if (needSwap) b.textContent = '🔁 Tap the player whose cards you want to swap with';
+            else if (pend) b.textContent = '➕ +' + g.pendingDraw + (mine ? (g.pendType === 'draw4' ? ' - play a +4, challenge or draw' : ' - play +2/+4 or draw') : '');
+            // +4 challenge question
+            let cp = document.getElementById('chalPanel');
+            const need = g.gameStarted && mine && g.pendingDraw > 0 && g.pendType === 'draw4' && g.pend4 && !g.pendingWildCard && !g.drawnCardPendingChoice;
+            if (!need) { if (cp) cp.remove(); }
+            else {
+                const by = g.players.find(p => p.id === g.pend4.by), col = g.pend4.col, key = g.pendingDraw + col + g.pend4.by;
+                if (!cp || cp.dataset.k !== key) {
+                    if (cp) cp.remove();
+                    cp = document.createElement('div'); cp.id = 'chalPanel'; cp.dataset.k = key;
+                    cp.innerHTML = `<b>⚔️ Challenge the +4?</b><p>Does <u>${by ? by.name : 'the player'}</u> have a <span style="color:${COLOR_HEX[col]}">${col.toUpperCase()}</span> card?</p><div><button data-a="yes">✅ Yes</button><button data-a="no">❌ No</button></div><button data-a="take" class="take">📥 No challenge - draw ${g.pendingDraw}</button>`;
+                    document.body.appendChild(cp);
+                    cp.querySelectorAll('button').forEach(x => x.onclick = () => { const a = x.dataset.a; cp.remove(); if (a === 'take') doLocal('draw'); else doLocal('challenge', a); });
+                }
+            }
+            // swap: every other player's hand becomes one pile with its card count - tap one
+            if (needSwap) g.players.forEach(p => {
+                if (p.id === g.localPlayerId) return;
+                const seat = seatOf(p.id), wr = seat && seat.querySelector('.seat-cards'); if (!wr) return;
+                wr.innerHTML = `<div class="swap-group"><b>${p.hand.length}</b></div>`;
+                seat.classList.add('swap-pick'); seat.onclick = () => doLocal('swap', p.id);
+            });
         } catch (e) {}
     };
 })();
+
 </script>
 <script>
 (() => {
@@ -3651,7 +3750,7 @@ ${avatarWrap}
         const o = screen.orientation;
         try { if (o && o.lock) { await o.lock('landscape'); auto = true; return; } } catch (e) {}
         try { if (!document.fullscreenElement && document.documentElement.requestFullscreen) await document.documentElement.requestFullscreen(); if (o && o.lock) { await o.lock('landscape'); auto = true; return; } } catch (e) {}
-        hint();                                            // browser needs a tap (or can't lock, e.g. iPhone)
+        applyOrientation();                                // browser can't lock (e.g. iPhone): the page itself is turned sideways
     };
     window.releaseLandscape = function () {
         try { screen.orientation && screen.orientation.unlock && screen.orientation.unlock(); } catch (e) {}
@@ -3659,6 +3758,18 @@ ${avatarWrap}
         auto = false; hide();
     };
     window.addEventListener('resize', () => { if (innerWidth > innerHeight) hide(); });
+})();
+</script>
+<script>
+(() => {
+    // the centre pile glows in the colour that is currently in play (red / yellow / green / blue)
+    const _pd = paintDiscard;
+    paintDiscard = function () {
+        _pd.apply(this, arguments);
+        const dc = document.getElementById('topDiscardCard'), hex = COLOR_HEX[gameState.currentColor];
+        if (dc && hex) dc.style.boxShadow = `0 0 0 3px ${hex}, 0 0 24px 6px ${hex}`;
+    };
+    applyOrientation();
 })();
 </script>
 </body>
