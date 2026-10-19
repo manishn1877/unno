@@ -132,11 +132,11 @@
             border-color: #FFCC00;
         }
 
-        .uno-card.playable:hover {
+        @media (hover: hover) { .uno-card.playable:hover {
             transform: translateY(-28px) scale(1.15) rotate(0deg) !important;
             box-shadow: 0 20px 35px -5px rgba(255, 255, 255, 0.5), 0 10px 15px -5px rgba(0, 0, 0, 0.7);
             z-index: 100 !important;
-        }
+        } }
 
         /* Directional Orbit Ring SVG Animation */
         .orbit-ring {
@@ -411,7 +411,6 @@
         .ucf-c { position: absolute; z-index: 2; font-family: Fredoka, sans-serif; font-weight: 900; color: #fff; font-size: 15cqw; line-height: 1; text-shadow: .6cqw .8cqw 0 rgba(0,0,0,.45); display: flex; }
         .ucf-c svg { width: 15cqw; height: 15cqw; }
         .ucf-c.tl { top: 5.5cqw; left: 7cqw; } .ucf-c.br { bottom: 5.5cqw; right: 7cqw; transform: rotate(180deg); }
-        body.is-landscape .seat-cards.mate .uno-card .ucf-sym { font-size: 40cqw !important; } body.is-landscape .seat-cards.mate .uno-card .ucf-sym.wd { font-size: 17cqw !important; } body.is-landscape .seat-cards.mate .uno-card .ucf-c { font-size: 15cqw !important; }
         .uno-card { border-radius: 12px; }
         #drawDeckBtn > div:first-child { background: radial-gradient(circle at 28% 18%, #f87171, #b91c1c 38%, #450a0a 100%) !important; }
         #drawDeckBtn > div:first-child > div { transform: rotate(-24deg); border-radius: 50% !important; width: 78% !important; height: 62% !important; background: linear-gradient(135deg, #ef4444, #991b1b) !important; border: 2px solid #fde047 !important; box-shadow: 0 3px 8px rgba(0,0,0,.45), inset 0 0 0 2px rgba(0,0,0,.18); }
@@ -475,6 +474,46 @@
         #chalPanel button { flex: 1; padding: .45rem; border-radius: .7rem; background: #1e293b; border: 1px solid rgba(255,255,255,.3); font-weight: 800; font-size: .85rem; color: #fff; }
         #chalPanel button.take { width: 100%; margin-top: .5rem; background: #7f1d1d; font-size: .75rem; }
         #ruleBadge { white-space: normal; text-align: center; max-width: 90vw; }
+
+        /* big numbers, reference style: white oval, huge number, big corner numbers */
+        .ucf::before { display: none !important; }
+        .ucf-oval { width: 88%; height: 76%; }
+        .ucf-sym { font-size: 66cqw; -webkit-text-stroke: 1.2cqw rgba(0,0,0,.28); }
+        .ucf-sym.wl { font-size: 46cqw; }
+        .ucf-sym.wd { font-size: 21cqw; }
+        .ucf-sym.ic svg { width: 58cqw; height: 58cqw; }
+        .ucf-sym.ic svg.wide { width: 64cqw; height: 41cqw; }
+        .ucf-c { font-size: 27cqw; }
+        .ucf-c svg { width: 24cqw; height: 24cqw; }
+        .ucf-c.tl { top: 3cqw; left: 5cqw; } .ucf-c.br { bottom: 3cqw; right: 5cqw; }
+        .uno-card { touch-action: manipulation; -webkit-user-select: none; user-select: none; -webkit-tap-highlight-color: transparent; }
+
+        /* landscape table like the reference game */
+        body.is-landscape .seat-avatar { width: calc(var(--u) * 15) !important; height: calc(var(--u) * 15) !important; font-size: calc(var(--u) * 6.5) !important; border-width: 3px !important; }
+        .seat-pill { position: relative; z-index: 3; margin-top: calc(var(--u) * -2.6); padding: 0 calc(var(--u) * 2.6); min-width: calc(var(--u) * 11); max-width: calc(var(--u) * 19); border-radius: 99px; background: #1d4ed8; border: 2px solid #fff; color: #fff; font: 800 calc(var(--u) * 3.5) / 1.55 Fredoka, sans-serif; text-align: center; box-shadow: 0 2px 6px rgba(0,0,0,.5); }
+        .seat-pill.cur { background: #f59e0b; color: #111; }
+        body.is-landscape .seat-cards > div:not(.uno-card):not(.more) { width: calc(var(--u) * 9) !important; height: calc(var(--u) * 13.5) !important; }
+        body.is-landscape .seat-cards > div:not(.uno-card):not(.more):not(:first-child) { margin-left: calc(var(--u) * -5.8) !important; }
+        .seat-count { margin-left: calc(var(--u) * 1.4); font: 900 calc(var(--u) * 4.6) Fredoka, sans-serif; color: #fde047; text-shadow: 1px 1px 0 #000, 0 0 5px #000; }
+        body.is-landscape #drawDeckBtn > div:first-child, body.is-landscape #topDiscardCard { width: calc(var(--u) * 12.5) !important; height: calc(var(--u) * 18.8) !important; }
+
+        /* seats keep their place when cards come and go (no shaking) */
+        body.is-landscape .seat-cards:not(.mine):not(.mate) { min-width: calc(var(--u) * 30); }
+        body.is-landscape .seat-cards.mate { min-width: calc(var(--u) * 62); }
+        body.is-landscape .seat-cards.rev { justify-content: flex-end; }
+        body.is-landscape .seat-local-row { width: 100%; }
+        body.is-landscape .seat-local-row .seat-cards { flex: 1; justify-content: center; }
+        body.is-landscape .seat-cards.mine { max-width: calc(var(--vw, 100vw) * .97 - var(--u) * 40) !important; }
+        /* big CALL UNO button, bottom-right corner */
+        #bigUno { position: fixed; right: calc(var(--u, 4px) * 2); bottom: calc(var(--u, 4px) * 2); z-index: 60; width: clamp(64px, calc(var(--u, 4px) * 24), 120px); aspect-ratio: 1; border-radius: 50%; background: #dc2626; border: 4px solid #fff; box-shadow: 0 6px 0 #7f1d1d, 0 10px 20px rgba(0,0,0,.55); display: none; flex-direction: column; align-items: center; justify-content: center; line-height: 1; font-family: Fredoka, sans-serif; color: #fff; -webkit-tap-highlight-color: transparent; touch-action: manipulation; }
+        #bigUno span { font-size: clamp(9px, calc(var(--u, 4px) * 4), 16px); font-weight: 900; letter-spacing: .08em; }
+        #bigUno b { font-size: clamp(18px, calc(var(--u, 4px) * 8.5), 34px); font-weight: 900; color: #fde047; -webkit-text-stroke: 1.5px #7f1d1d; text-shadow: 0 2px 0 #7f1d1d; transform: rotate(-8deg); }
+        #bigUno:active { transform: translateY(5px); box-shadow: 0 1px 0 #7f1d1d, 0 4px 10px rgba(0,0,0,.5); }
+        #bigUno.hot { animation: unoHot .7s ease-in-out infinite; }
+        @keyframes unoHot { 50% { transform: scale(1.1); box-shadow: 0 6px 0 #7f1d1d, 0 0 0 5px #fde047, 0 0 26px 8px #fde047; } }
+        /* rotate / swap animation icon */
+        .fx-icon { position: fixed; left: 50%; top: 48%; z-index: 9998; pointer-events: none; font-size: calc(var(--u, 4px) * 16); animation: fxPop 1.3s ease-out forwards; filter: drop-shadow(0 4px 8px rgba(0,0,0,.6)); }
+        @keyframes fxPop { 0% { opacity: 0; transform: translate(-50%, -50%) scale(.3) rotate(0); } 25% { opacity: 1; transform: translate(-50%, -50%) scale(1.15) rotate(120deg); } 100% { opacity: 0; transform: translate(-50%, -50%) scale(1.5) rotate(360deg); } }
     </style>
 </head>
 <body class="dark-theme min-h-screen overflow-y-auto flex flex-col">
@@ -1830,7 +1869,7 @@
                 roomCode: g.roomCode, round: g.round, rounds: g.rounds, book: g.book, started: g.gameStarted, turn: g.currentTurnIndex, dir: g.direction,
                 color: g.currentColor, t: g.turnTimer, deckN: g.deck.length, discard: g.discardPile.slice(-5),
                 called: g.hasCalledUno, wild: !!g.pendingWildCard && mine, drawn: mine ? g.drawnCardPendingChoice : null,
-                specs: (g.spectators || []).map(x => ({ id: x.id, name: x.name })), bubbles: g.activeBubbles, plays: g.activePlays, shouts: g.shouts, chats: g.chats, log: g.log, mins: g.mins, teamMode: g.teamMode, left: g.mins ? Math.max(0, g.matchEndAt - Date.now()) : 0, rules: g.rules, maxP: g.maxP, pend: g.pendingDraw || 0, pt: g.pendType || null, p4: g.pend4 || null, swap: !!g.pendingSwap,
+                specs: (g.spectators || []).map(x => ({ id: x.id, name: x.name })), bubbles: g.activeBubbles, plays: g.activePlays, shouts: g.shouts, chats: g.chats, log: g.log, mins: g.mins, teamMode: g.teamMode, left: g.mins ? Math.max(0, g.matchEndAt - Date.now()) : 0, rules: g.rules, maxP: g.maxP, fx: g.fx || null, pend: g.pendingDraw || 0, pt: g.pendType || null, p4: g.pend4 || null, swap: !!g.pendingSwap,
                 players: g.players.map(p => ({ id: p.id, name: p.name, color: p.color, isHost: p.isHost, isBot: p.isBot, team: p.team, mic: !!p.mic, hand: (p.id === pid || (g.teamMode && p.team && p.team === (g.players.find(x => x.id === pid) || {}).team)) ? p.hand : p.hand.map(() => 0) }))
             };
         }
@@ -2080,7 +2119,7 @@
             g.pendingWildCard = s.wild ? {} : null; g.drawnCardPendingChoice = s.drawn;
             Object.keys(s.plays || {}).forEach(k => { const o = g.activePlays[k], n = s.plays[k]; if (!o || o.id !== n.id) { cardSfx(n); g.discardPile = s.discard; animatePlay(k, n); } });
             Object.keys(s.shouts || {}).forEach(k => { if (!g.shouts[k]) playSound('uno'); });
-            g.activeBubbles = s.bubbles; g.activePlays = s.plays; g.log = s.log || []; g.shouts = s.shouts; g.chats = s.chats || {}; g.mins = s.mins; g.rules = s.rules || g.rules; g.maxP = s.maxP || g.maxP; g.pendingDraw = s.pend || 0; g.pendType = s.pt || null; g.pend4 = s.p4 || null; g.pendingSwap = !!s.swap; g.teamMode = s.teamMode; g.matchEndAt = s.mins ? Date.now() + s.left : Infinity;
+            g.activeBubbles = s.bubbles; g.activePlays = s.plays; g.log = s.log || []; g.shouts = s.shouts; g.chats = s.chats || {}; g.mins = s.mins; g.rules = s.rules || g.rules; g.maxP = s.maxP || g.maxP; g.pendingDraw = s.pend || 0; if (g.fxSeen === undefined) g.fxSeen = s.fx ? s.fx.id : null; else if (s.fx && s.fx.id !== g.fxSeen) { g.fxSeen = s.fx.id; fxRun(s.fx); } g.pendType = s.pt || null; g.pend4 = s.p4 || null; g.pendingSwap = !!s.swap; g.teamMode = s.teamMode; g.matchEndAt = s.mins ? Date.now() + s.left : Infinity;
             setHostControls(false);
             if (!s.started) {
                 g.gameStarted = false; clearInterval(g.timerInterval);
@@ -2621,7 +2660,7 @@
                 const W = container.clientWidth || window.innerWidth, H = container.clientHeight || window.innerHeight;
                 const order = [];
                 for (let k = (localIdx >= 0 ? 1 : 0); k < n; k++) order.push((Math.max(localIdx, 0) + k) % n);
-                const m = order.length;
+                const m = order.length; lpos._W = W;
                 const wOf = i => (gameState.teamMode && gameState.players[i].team && localIdx >= 0 && gameState.players[i].team === gameState.players[localIdx].team ? 3 : 1);
                 const tot = order.reduce((a, i) => a + wOf(i), 0);
                 const sc = m <= 4 ? 1 : m <= 6 ? 0.92 : m <= 8 ? 0.82 : 0.7;
@@ -2630,7 +2669,7 @@
                     const w = wOf(i), f = (cum + w / 2) / tot; cum += w;
                     const th = Math.PI + (0.06 + 0.88 * f) * Math.PI;
                     const t = -Math.sin(th);                       // 0 at the sides, 1 at the top centre
-                    const half = w > 1 ? 31 * (H / 100) : 38 * sc;
+                    const half = w > 1 ? 39 * (H / 100) : 24 * (H / 100) * sc;
                     let x = W * (0.5 + 0.46 * Math.cos(th));
                     x = Math.max(half + 4, Math.min(W - half - 4, x));
                     let y = H * (0.35 - 0.26 * t);
@@ -2644,7 +2683,7 @@
                 const angle = (idx / n) * 2 * Math.PI + base;
                 const leftPercent = 50 + radiusX * Math.cos(angle);
                 const topPercent = 50 + radiusY * Math.sin(angle);
-                const cardsOnLeft = !land && !isLocal && leftPercent > 50;
+                const cardsOnLeft = !isLocal && (land ? !!(lpos[idx] && lpos[idx].x > lpos._W * 0.56) : leftPercent > 50);
                 const isMate = !isLocal && gameState.teamMode && p.team && localIdx >= 0 && p.team === gameState.players[localIdx].team;
                 const bubbleText = gameState.activeBubbles[p.id];
                 const played = gameState.activePlays[p.id];
@@ -2659,7 +2698,7 @@
                 seat.dataset.pid = p.id;
                 seat.style.left = `${leftPercent}%`;
                 seat.style.top = `${topPercent}%`;
-                if (land && isLocal) { seat.style.left = '50%'; seat.style.top = 'auto'; seat.style.bottom = '6px'; seat.style.transform = 'translateX(-50%)'; }
+                if (land && isLocal) { seat.style.left = '1.5%'; seat.style.top = 'auto'; seat.style.bottom = '6px'; seat.style.transform = 'none'; seat.style.width = 'calc(100% - var(--u) * 26 - 3%)'; }
 
                 const avatarWrap = `
                         <div class="relative shrink-0">
@@ -2684,7 +2723,15 @@
 `;
                 const bubbleHTML = bubbleText ? `
                         <div class="absolute -top-6 bg-yellow-400 text-slate-950 font-fun font-extrabold text-[10px] px-2 py-0.5 rounded-2xl shadow-2xl border-2 border-white whitespace-nowrap move-bubble z-50">${bubbleText}</div>` : '';
-                seat.innerHTML = (land && !isLocal) ? `
+                seat.innerHTML = land ? `
+                    ${bubbleHTML}
+                    <div class="flex items-center ${cardsOnLeft ? 'flex-row-reverse' : ''} ${isLocal ? 'seat-local-row' : ''}" style="gap:calc(var(--u) * 1.2)">
+                        <div class="flex flex-col items-center shrink-0">
+                            ${avatarWrap}
+                            <div class="seat-pill ${isCurrent ? 'cur' : ''}"><p class="truncate">${isLocal ? 'YOU' : p.name}</p></div>
+                        </div>
+                        <div class="seat-cards flex ${isLocal ? 'items-end' : isMate ? 'items-start' : 'items-center'}"></div>
+                    </div>` : (land && !isLocal && !isMate) ? `
                     ${bubbleHTML}
                     <div class="flex flex-col items-center">
                         ${avatarWrap}
@@ -2744,13 +2791,15 @@ ${avatarWrap}
                     });
                     if (false) { const mo = document.createElement('div'); mo.className = 'more ml-1 text-[9px] font-bold text-yellow-300'; mo.textContent = '+' + (p.hand.length - 8); wrap.appendChild(mo); }
                 } else {
-                    for (let i = 0; i < Math.min(p.hand.length, land ? 4 : (n > 10 ? 4 : 8)); i++) {
+                    for (let i = 0; i < Math.min(p.hand.length, land ? 7 : (n > 10 ? 4 : 8)); i++) {
                         const el = document.createElement('div');
                         el.className = `${n > 10 ? 'w-5 h-8 md:w-8 md:h-12' : 'w-7 h-10 md:w-11 md:h-16'} rounded-md border-2 border-white bg-gradient-to-br from-red-600 to-rose-900 shadow-lg shrink-0 flex items-center justify-center ${i ? (cardsOnLeft ? '-mr-3 md:-mr-5' : '-ml-3 md:-ml-5') : ''}`;
                         el.innerHTML = '<span class="font-fun font-black text-[7px] md:text-[10px] text-yellow-400 -rotate-12">UNO</span>';
+                        if (land) { el.style.transform = 'rotate(' + ((i - 3) * 6) + 'deg)'; el.style.transformOrigin = '50% 130%'; }
                         wrap.appendChild(el);
                     }
                 }
+                if (land && !isLocal && !isMate && p.hand.length > 0) { const mo = document.createElement('div'); mo.className = 'more seat-count'; mo.textContent = '\u00d7' + p.hand.length; wrap.appendChild(mo); }
                 container.appendChild(seat);
             });
             {   // every card always fits: the more cards, the tighter they overlap (no scrolling)
@@ -2862,7 +2911,7 @@ ${avatarWrap}
             }
 
             let moveText = `Played ${card.color.toUpperCase()} ${card.value}`;
-            if (card.type === 'skip') moveText = "🚫 Played Skip!";
+            if (card.type === 'skip') moveText = (gameState.rules || {}).doubleSkip ? "⛔⛔ Double Skip!" : "🚫 Played Skip!";
             if (card.type === 'reverse') moveText = "🔄 Played Reverse!";
             if (card.type === 'draw2') moveText = "➕ Played Draw 2!";
             if (card.type === 'wild') moveText = `🎨 Wild -> ${gameState.currentColor.toUpperCase()}`;
@@ -2884,7 +2933,7 @@ ${avatarWrap}
                 gameState.pendingDraw = (gameState.pendingDraw || 0) + (card.type === 'draw2' ? 2 : 4);
                 gameState.pendType = card.type;
                 gameState.pend4 = card.type === 'draw4' ? { by: player.id, col: prev } : null;
-                showMoveBubble(player.id, card.type === 'draw4' ? '🔥 +4! Next: play +4, challenge or draw ' + gameState.pendingDraw : '➕ +2! Next: play +2/+4 or draw ' + gameState.pendingDraw);
+                showMoveBubble(player.id, '+' + gameState.pendingDraw);
                 advanceTurn(1); return;
             }
             if (R.zeroSeven && card.type === 'number' && String(card.value) === '0') { rotateHands(); showMoveBubble(player.id, '🔄 Everyone passes their hand!'); }
@@ -2897,7 +2946,7 @@ ${avatarWrap}
                 if (gameState.players.length === 2) skipSteps = 2;
             } else if (card.type === 'skip') {
                 skipSteps = (R.doubleSkip && gameState.players.length > 2) ? 3 : 2;
-                for (let k = 1; k < skipSteps; k++) showMoveBubble(gameState.players[getNextIndex(k)].id, "🚫 Skipped!");
+                for (let k = 1; k < skipSteps; k++) showMoveBubble(gameState.players[getNextIndex(k)].id, R.doubleSkip ? "⛔ Skipped!" : "🚫 Skipped!");
             } else if (card.type === 'draw2') {
                 skipSteps = 2;
                 const targetPlayer = gameState.players[getNextIndex(1)];
@@ -2915,7 +2964,7 @@ ${avatarWrap}
 
         function swapHands(a, b) {
             const t = a.hand; a.hand = b.hand; b.hand = t; playSound('card');
-            showMoveBubble(a.id, '🔁 Swapped hands with ' + b.name); showMoveBubble(b.id, '🔁 Hands swapped!');
+            showMoveBubble(a.id, '🔁 Swapped hands with ' + b.name); showMoveBubble(b.id, '🔁 Hands swapped!'); fxStart({ t: 'swap', a: a.id, b: b.id });
         }
         function botSwap(bot) {
             const others = gameState.players.filter(p => p.id !== bot.id); if (!others.length) return;
@@ -2924,7 +2973,7 @@ ${avatarWrap}
         function rotateHands() {
             const g = gameState, n = g.players.length, hands = g.players.map(p => p.hand);
             g.players.forEach((p, i) => { g.players[(i + g.direction + n) % n].hand = hands[i]; });
-            playSound('card');
+            playSound('card'); fxStart({ t: 'rot', dir: g.direction });
         }
         function botPlay(bot, idx) {
             const card = bot.hand.splice(idx, 1)[0]; playSound('card');
@@ -2962,6 +3011,12 @@ ${avatarWrap}
             return idx;
         }
 
+        // nobody to pass a +2 on to: the cards are added automatically
+        function autoPenalty() {
+            const g = gameState; if (!g.gameStarted || g.pendingDraw <= 0 || g.pendType !== 'draw2') return;
+            const pl = g.players[g.currentTurnIndex]; if (!pl || pl.hand.some(canPlay)) return;
+            setTimeout(() => { if (g.gameStarted && g.pendingDraw > 0 && g.pendType === 'draw2' && g.players[g.currentTurnIndex] === pl && !pl.hand.some(canPlay)) handleDrawFromStack(pl); }, 1100);
+        }
         function advanceTurn(steps = 1) {
             gameState.currentTurnIndex = getNextIndex(steps);
             gameState.hasCalledUno = false;
@@ -2971,6 +3026,7 @@ ${avatarWrap}
             renderGame();
             startTurnTimer();
             processTurnAI();
+            autoPenalty();
         }
 
         // --- SMART BOT AI ENGINE ---
@@ -3695,18 +3751,43 @@ ${avatarWrap}
     window.addEventListener('online', () => { if (net.role === 'client' && net.joined && !net.reconnecting) softReconnect(); });
 </script>
 <script>
+// rotate (0) and swap (7) animations: card backs fly from hand to hand
+function fxStart(fx) { fx.id = Date.now() + ':' + Math.random(); gameState.fx = fx; gameState.fxSeen = fx.id; fxRun(fx); }
+function fxRun(fx) {
+    setTimeout(() => {
+        try {
+            const g = gameState, W = 34, H = 51;
+            const box = pid => { const s = seatOf(pid), a = s && (s.querySelector('.seat-avatar') || s), r = a && rectOf(a); return r && { left: r.left + r.width / 2 - W / 2, top: r.top + r.height / 2 - H / 2, width: W, height: H }; };
+            const ic = document.createElement('div'); ic.className = 'fx-icon'; ic.textContent = fx.t === 'rot' ? '🔄' : '🔁'; document.body.appendChild(ic); setTimeout(() => ic.remove(), 1400);
+            const fly = (a, b, arc) => { for (let k = 0; k < 3; k++) flyCard({ from: box(a), to: box(b), card: null, dur: 760, delay: k * 110, rot: (k - 1) * 14, arc }); };
+            if (fx.t === 'rot') { const n = g.players.length; g.players.forEach((p, i) => fly(p.id, g.players[(i + fx.dir + n) % n].id, 46)); }
+            else { fly(fx.a, fx.b, 46); fly(fx.b, fx.a, -46); }
+        } catch (e) {}
+    }, 150);
+}
+const _fxBirth = {};
 (() => {
     const _rg3 = renderGame;
     renderGame = function () {
         _rg3.apply(this, arguments);
         try {
+            // keep running animations smooth across re-renders (no restarts = no jitter)
+            document.querySelectorAll('.active-turn-spotlight').forEach(e => { e.style.animationDelay = '-' + (Date.now() % 1200) + 'ms'; });
+            const live = {};
+            document.querySelectorAll('.move-bubble').forEach(e => { const k = e.textContent.trim(); live[k] = 1; _fxBirth[k] = _fxBirth[k] || Date.now(); e.style.animationDelay = '-' + Math.min(Date.now() - _fxBirth[k], 6000) + 'ms'; });
+            Object.keys(_fxBirth).forEach(k => { if (!live[k]) delete _fxBirth[k]; });
+            // big CALL UNO button
+            let ub = document.getElementById('bigUno');
+            if (!ub) { ub = document.createElement('button'); ub.id = 'bigUno'; ub.innerHTML = '<span>CALL</span><b>UNO</b>'; ub.onclick = () => { playSound('uno'); doLocal('uno'); }; document.body.appendChild(ub); }
+            const me0 = gameState.players.find(p => p.id === gameState.localPlayerId);
+            ub.style.display = (gameState.gameStarted && me0 && document.body.classList.contains('in-game') && !document.body.classList.contains('spectating')) ? 'flex' : 'none';
+            ub.classList.toggle('hot', !!(me0 && me0.hand.length <= 2 && !gameState.shouts[me0.id]));
             const g = gameState, cur = g.players[g.currentTurnIndex], mine = cur && cur.id === g.localPlayerId;
             const needSwap = g.gameStarted && g.pendingSwap && mine, pend = g.gameStarted && g.pendingDraw > 0;
             let b = document.getElementById('ruleBadge');
             if (!b) { b = document.createElement('div'); b.id = 'ruleBadge'; document.body.appendChild(b); }
-            b.style.display = (pend || needSwap) ? 'block' : 'none';
+            b.style.display = needSwap ? 'block' : 'none';
             if (needSwap) b.textContent = '🔁 Tap the player whose cards you want to swap with';
-            else if (pend) b.textContent = '➕ +' + g.pendingDraw + (mine ? (g.pendType === 'draw4' ? ' - play a +4, challenge or draw' : ' - play +2/+4 or draw') : '');
             // +4 challenge question
             let cp = document.getElementById('chalPanel');
             const need = g.gameStarted && mine && g.pendingDraw > 0 && g.pendType === 'draw4' && g.pend4 && !g.pendingWildCard && !g.drawnCardPendingChoice;
